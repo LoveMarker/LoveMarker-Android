@@ -20,6 +20,7 @@ compose-bom = "2023.08.00"
 
 # third party
 google-places = "3.4.0"
+secrets-gradle = "2.0.1"
 
 [libraries]
 # android
@@ -49,4 +50,4 @@ google-places = { group = "com.google.android.libraries.places", name = "places"
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+secretsGradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets-gradle" }
