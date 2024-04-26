@@ -1,8 +1,11 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.secretsGradle)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.secrets.gradle)
+
+    kotlin("kapt")
+    alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -32,11 +35,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         buildConfig = true
@@ -50,12 +53,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
     // android
     implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.bundles.lifecycle)
+    implementation(libs.bundles.navigation)
+    implementation(libs.fragment.ktx)
+    implementation(libs.exif)
+    implementation(libs.splash.screen)
 
     // test
     testImplementation(libs.junit)
@@ -63,18 +73,32 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
 
-    // compose
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
+    // preview support
     implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
+    debugImplementation(libs.ui.tooling)
 
-    // third party
+    // compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+
+    // kotlinx
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.datetime)
+
+    // dagger-hilt
+    implementation(libs.hilt)
+    kapt(libs.hilt.android.compiler)
+
+    // network
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.bundles.retrofit)
+
+    // google places api
     implementation(platform(libs.kotlin.bom))
     implementation(libs.google.places)
 }
