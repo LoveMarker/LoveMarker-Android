@@ -75,13 +75,13 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.test.manifest)
 
-    // preview support
-    implementation(libs.ui.tooling.preview)
-    debugImplementation(libs.ui.tooling)
-
     // compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
+
+    // preview support
+    implementation(libs.ui.tooling.preview)
+    debugImplementation(libs.ui.tooling)
 
     // kotlinx
     implementation(libs.kotlinx.serialization.json)
