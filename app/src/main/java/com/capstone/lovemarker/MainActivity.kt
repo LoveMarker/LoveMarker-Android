@@ -3,6 +3,7 @@ package com.capstone.lovemarker
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,8 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,105 +40,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val navController = rememberNavController()
+            val viewModel = viewModel<MainViewModel>()
 
-            NavHost(
-                navController = navController,
-                startDestination = "first",
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                composable("first") {
-                    FirstScreen(navController)
-                }
-                composable("second") {
-                    SecondScreen(navController)
-                }
-                composable("third/{value}") { backStackEntry ->
-                    ThirdScreen(
-                        navController = navController,
-                        value = backStackEntry.arguments?.getString("value") ?: "",
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FirstScreen(
-    navController: NavController
-) {
-    val (value, setValue) = remember {
-        mutableStateOf("")
-    }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "첫 화면")
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            navController.navigate("second")
-        }) {
-            Text("두 번째")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(value = value, onValueChange = setValue)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            if (value.isNotBlank()) {
-                keyboardController?.hide()
-                navController.navigate(
-                    route = "third/$value",
+                Text(
+                    text = viewModel.data.value,
+                    fontSize = 30.sp,
                 )
+                Spacer(modifier = Modifier.padding(12.dp))
+                Button(onClick = {
+                    viewModel.updateText("World")
+                }) {
+                    Text("변경")
+                }
             }
-        }) {
-            Text("세 번째")
         }
     }
 }
 
-@Composable
-fun SecondScreen(
-    navController: NavController
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "두번째 화면")
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            navController.navigateUp()
-        }) {
-            Text("뒤로가기")
-        }
-    }
-}
+class MainViewModel: ViewModel() {
+    private val _data = mutableStateOf("Hello")
+    val data: State<String> = _data // 읽기 전용 state
 
-@Composable
-fun ThirdScreen(
-    navController: NavController,
-    value: String = ""
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "세번째 화면")
-        Text(
-            modifier = Modifier.padding(6.dp),
-            text = value
-        )
-        Button(onClick = {
-            navController.popBackStack()
-        }) {
-            Text("뒤로가기")
-        }
+    // 데이터는 UI가 아니라 뷰모델에서 수정한다. (외부에서 함부로 조작하지 못하도록)
+    fun updateText(value: String) {
+        _data.value = value
     }
 }
