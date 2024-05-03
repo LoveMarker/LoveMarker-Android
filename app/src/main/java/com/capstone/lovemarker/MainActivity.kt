@@ -39,6 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -51,17 +52,23 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LoveMarkerTheme {
+                val viewModel = viewModel<MainViewModel>()
                 val navController = rememberNavController()
+                val bmi = viewModel.bmi.value
 
                 NavHost(
                     navController = navController,
                     startDestination = "home"
                 ) {
                     composable(route = "home") {
-                        HomeScreen(navController)
+                        HomeScreen { height, weight ->
+                            // bmi state 변경 -> recomposition -> 결과 화면으로 bmi 전달
+                            viewModel.calcBMI(height, weight)
+                            navController.navigate("result")
+                        }
                     }
                     composable(route = "result") {
-                        ResultScreen(navController, 0.0)
+                        ResultScreen(navController, bmi)
                     }
                 }
             }
@@ -71,7 +78,9 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(
+    onResultClick: (Double, Double) -> Unit
+) {
     val (height, setHeight) = rememberSaveable {
         mutableStateOf("")
     }
@@ -125,7 +134,10 @@ fun HomeScreen(navController: NavHostController) {
             Button(
                 modifier = Modifier.align(Alignment.End),
                 onClick = {
-                    navController.navigate("result")
+                    if (height.isNotBlank() and weight.isNotBlank()) {
+                        keyboardController?.hide()
+                        onResultClick(height.toDouble(), weight.toDouble())
+                    }
                 }
             ) {
                 Text("결과")
@@ -140,6 +152,21 @@ fun ResultScreen(
     navController: NavHostController,
     bmi: Double
 ) {
+    val result = when {
+        bmi >= 35 -> "고도 비만"
+        bmi >= 30 -> "2단계 비만"
+        bmi >= 25 -> "1단계 비만"
+        bmi >= 23 -> "과체중"
+        bmi >= 18.5 -> "정상"
+        else -> "저체중"
+    }
+
+    val imgRes = when {
+        bmi >= 23 -> R.drawable.ic_sentiment_very_dissatisfied
+        bmi >= 18.5 -> R.drawable.ic_sentiment_satisfied
+        else -> R.drawable.ic_sentiment_dissatisfied
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -148,9 +175,11 @@ fun ResultScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "home",
-                        modifier = Modifier.clickable {
-                            navController.popBackStack()
-                        }
+                        modifier = Modifier
+                            .padding(6.dp)
+                            .clickable {
+                                navController.popBackStack()
+                            }
                     )
                 }
             )
@@ -164,12 +193,12 @@ fun ResultScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "과체중",
+                text = result,
                 fontSize = 30.sp
             )
             Spacer(modifier = Modifier.height(50.dp))
             Image(
-                painter = painterResource(id = R.drawable.ic_sentiment_dissatisfied),
+                painter = painterResource(id = imgRes),
                 contentDescription = null,
                 colorFilter = ColorFilter.tint(color = Color.Blue),
                 modifier = Modifier.size(100.dp)
