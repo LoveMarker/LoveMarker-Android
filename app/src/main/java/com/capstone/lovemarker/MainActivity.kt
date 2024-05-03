@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -40,9 +42,9 @@ class MainActivity : ComponentActivity() {
             LoveMarkerTheme {
                 val viewModel = viewModel<MainViewModel>()
 
+                val isRunning = viewModel.isRunning.value
                 val sec = viewModel.sec.value
                 val millis = viewModel.millis.value
-                val isRunning = viewModel.isRunning.value
                 val lapTimes = viewModel.lapTimes.value
 
                 MainScreen(
@@ -91,32 +93,43 @@ fun MainScreen(
         ) {
             Spacer(modifier = Modifier.height(40.dp))
 
+            // 타이머 시간 표시
             Row(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text("$sec", fontSize = 100.sp)
                 Text("$millis")
             }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            Column(
-                modifier = Modifier
-                    .weight(1F) // 수직 방향으로 남은 영역 모두 차지
-                    .verticalScroll(rememberScrollState())
+            // 랩 타임 목록 표시
+            LazyColumn(
+                modifier = Modifier.weight(1F) // 수직 방향으로 남은 영역 모두 차지
             ) {
-                lapTimes.forEach { time ->
+                items(items = lapTimes) { time ->
                     Text(time)
                 }
             }
 
+//            Column(
+//                modifier = Modifier
+//                    .weight(1F)
+//                    .verticalScroll(rememberScrollState())
+//            ) {
+//                lapTimes.forEach { time ->
+//                    Text(time)
+//                }
+//            }
+
+            // 타이머 제어 부분
             Row(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(12.dp)
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // 타이머 초기화
                 FloatingActionButton(
                     onClick = { onReset() },
                     containerColor = Color.Red
@@ -127,20 +140,22 @@ fun MainScreen(
                     )
                 }
 
+                // 타이머 실행, 중지
                 FloatingActionButton(
                     onClick = { onToggle(isRunning) },
                     containerColor = Color.Green
                 ) {
                     Image(
                         painter = painterResource(
-                            id =
-                            if (isRunning) R.drawable.ic_pause_24
+                            // 초기화 버튼을 누르면 실행 상태가 변하면서 recomposition -> 버튼 아이콘 변경
+                            id = if (isRunning) R.drawable.ic_pause_24
                             else R.drawable.ic_play_arrow_24
                         ),
                         contentDescription = "start or pause"
                     )
                 }
 
+                // 랩 타임 기록
                 Button(
                     onClick = { onLapTime() }
                 ) {
@@ -149,10 +164,4 @@ fun MainScreen(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun MainPreview(modifier: Modifier = Modifier) {
-
 }

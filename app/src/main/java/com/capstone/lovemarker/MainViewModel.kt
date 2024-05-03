@@ -42,7 +42,7 @@ class MainViewModel: ViewModel() {
         timerTask?.cancel()
 
         time = 0
-        lap = 0
+        lap = 1
         _lapTimes.value.clear()
 
         _isRunning.value = false
