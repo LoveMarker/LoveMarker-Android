@@ -25,11 +25,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.ui.theme.LoveMarkerTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +44,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LoveMarkerTheme {
-                HomeScreen()
+                val viewModel = viewModel<MainViewModel>()
+                HomeScreen(viewModel)
             }
         }
     }
@@ -46,7 +53,16 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    viewModel: MainViewModel,
+) {
+    val (inputUrl, setUrl) = rememberSaveable {
+        mutableStateOf("https://")
+    }
+
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -81,25 +97,28 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 .fillMaxSize()
         ) {
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = inputUrl,
+                onValueChange = setUrl,
                 label = { Text("https://") },
+                maxLines = 1,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                keyboardActions = KeyboardActions(onSearch = {
-
-                })
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        focusManager.clearFocus()
+                        viewModel.updateUrl(inputUrl)
+                    })
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
-            MyWebView()
+            MyWebView(viewModel)
         }
     }
 }
 
 @Composable
-fun MyWebView(modifier: Modifier = Modifier) {
+fun MyWebView(
+    viewModel: MainViewModel,
+) {
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = {
@@ -109,8 +128,8 @@ fun MyWebView(modifier: Modifier = Modifier) {
                 loadUrl("https://www.google.com")
             }
         },
-        update = {
-
+        update = { webView ->
+            webView.loadUrl(viewModel.url.value)
         }
     )
 }
