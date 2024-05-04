@@ -106,7 +106,7 @@ fun MyWebView(modifier: Modifier = Modifier) {
             WebView(it).apply {
                 settings.javaScriptEnabled = true
                 webViewClient = WebViewClient()
-                loadUrl("https://google.com")
+                loadUrl("https://www.google.com")
             }
         },
         update = {
