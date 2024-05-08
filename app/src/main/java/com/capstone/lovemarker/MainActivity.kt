@@ -3,19 +3,21 @@ package com.capstone.lovemarker
 import android.os.Build
 import android.os.Bundle
 import android.os.ext.SdkExtensions.getExtensionVersion
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 
 class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             if (isPhotoPickerAvailable()) {
-                launchPhotoPicker()
+                launchMultiplePhotoPicker()
             } else {
                 launchGallery()
             }
@@ -32,17 +34,26 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun launchPhotoPicker() {
+    private fun launchSinglePhotoPicker() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-
-                } else {
 
                 }
             }
 
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+    }
+
+    private fun launchMultiplePhotoPicker() {
+        val pickMultipleMedia =
+            registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(5)) { uris ->
+                if (uris.isNotEmpty()) {
+                    viewModel.fetchPhotos(uris)
+                }
+            }
+
+        pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     private fun launchGallery() {
