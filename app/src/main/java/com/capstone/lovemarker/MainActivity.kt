@@ -1,8 +1,11 @@
 package com.capstone.lovemarker
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -14,12 +17,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.capstone.lovemarker.ui.theme.LoveMarkerTheme
 
 class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<MainViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 화면이 꺼지지 않도록
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        // 화면을 가로 모드로 고정
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+        // 라이프사이클 이벤트 옵저버 등록
+        lifecycle.addObserver(viewModel)
+
         setContent {
             LoveMarkerTheme {
-
+                TiltScreen(x = viewModel.x.value, y = viewModel.y.value)
             }
         }
     }

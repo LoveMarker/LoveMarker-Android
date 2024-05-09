@@ -13,13 +13,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 
-class MainViewModel(application: Application) :
-    AndroidViewModel(application), SensorEventListener, LifecycleEventObserver {
+class MainViewModel(application: Application) : AndroidViewModel(application), SensorEventListener,
+    LifecycleEventObserver {
     private val _x = mutableStateOf(0f)
-    val x : State<Float> = _x
+    val x: State<Float> = _x
 
     private val _y = mutableStateOf(0f)
-    val y : State<Float> = _y
+    val y: State<Float> = _y
 
     private val sensorManager by lazy {
         application.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -39,7 +39,7 @@ class MainViewModel(application: Application) :
         // 액티비티가 유저와 상호작용 할 수 있을 때만 센서를 등록한다.
         if (event == Lifecycle.Event.ON_RESUME) {
             registerSensor()
-        } else if(event == Lifecycle.Event.ON_PAUSE) {
+        } else if (event == Lifecycle.Event.ON_PAUSE) {
             unregisterSensor()
         }
     }
