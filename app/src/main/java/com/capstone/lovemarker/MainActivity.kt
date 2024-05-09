@@ -45,14 +45,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.lerp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
@@ -125,7 +128,7 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val MAX_ITEMS = 3
+        private const val MAX_ITEMS = 5
     }
 }
 
@@ -165,7 +168,7 @@ fun HomeScreen(
                     } else {
                         coroutineScope.launch {
                             snackBarHostState.showSnackbar(
-                                 message = "이미지를 선택해주세요",
+                                message = "이미지를 선택해주세요",
                                 duration = SnackbarDuration.Short
                             )
                         }
@@ -218,7 +221,31 @@ fun PhotoScreen(
                     .padding(16.dp)
                     .fillMaxSize()
             ) { pageIndex ->
-                Card() {
+                Card(
+                    modifier = Modifier
+                        .graphicsLayer {
+                            // 스크롤 위치에서 현재 페이지의 절댓값 오프셋을 계산합니다.
+                            // 양방향의 모든 효과를 미러링할 수 있는 절댓값을 사용합니다.
+                            val pageOffset =
+                                ((pagerState.currentPage - pageIndex) + pagerState.currentPageOffsetFraction).absoluteValue
+
+                            // coerceIn : minValue ~ maxValue 사이의 값을 강제함.
+                            lerp(
+                                start = 0.85f,
+                                stop = 1f,
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            ).also { scale ->
+                                scaleX = scale
+                                scaleY = scale
+                            }
+
+                            alpha = lerp(
+                                start = 0.5f,
+                                stop = 1f,
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            )
+                        }
+                ) {
                     Image(
                         painter = rememberAsyncImagePainter(
                             model = photoUris[pageIndex]
