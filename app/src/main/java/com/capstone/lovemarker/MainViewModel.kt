@@ -28,11 +28,14 @@ class MainViewModel(application: Application) :
     private val locationCallback: MyLocationCallBack
     private val locationRequest: LocationRequest
 
-    private val _location = mutableStateOf<Location?>(null)
-    val location: State<Location?> = _location
-
-    private val _polylineOptions = mutableStateOf(PolylineOptions().width(5f).color(Color.RED))
-    val polylineOptions: State<PolylineOptions> = _polylineOptions
+    private val _mapState =
+        mutableStateOf(
+            MapState(
+                location = null,
+                polylineOptions = PolylineOptions().width(5f).color(Color.RED)
+            )
+        )
+    val mapState: State<MapState> = _mapState
 
     init {
         // 위치 정보를 얻었을 때의 동작 정의
@@ -50,11 +53,15 @@ class MainViewModel(application: Application) :
             super.onLocationResult(locationResult)
 
             val location = locationResult.lastLocation
-            _location.value = location
-            _polylineOptions.value = polylineOptions.value.add(
-                LatLng(
-                    location?.latitude ?: 0.0,
-                    location?.longitude ?: 0.0,
+            val polylineOptions = mapState.value.polylineOptions
+
+            _mapState.value = mapState.value.copy(
+                location = location,
+                polylineOptions = polylineOptions.add(
+                    LatLng(
+                        location?.latitude ?: 0.0,
+                        location?.longitude ?: 0.0,
+                    )
                 )
             )
         }
@@ -85,3 +92,8 @@ class MainViewModel(application: Application) :
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 }
+
+data class MapState(
+    val location: Location?,
+    val polylineOptions: PolylineOptions,
+)

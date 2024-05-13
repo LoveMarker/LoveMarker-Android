@@ -87,20 +87,19 @@ fun MyMapView(
     viewModel: MainViewModel,
 ) {
     val map = rememberMapView()
-    val location = viewModel.location.value
-    val polylineOptions = viewModel.polylineOptions.value
+    val mapState = viewModel.mapState.value
 
     AndroidView(
         factory = { map },
         update = { mapView ->
             mapView.getMapAsync { googleMap ->
-                location?.let {
+                mapState.location?.let {
                     val latLng = LatLng(it.latitude, it.longitude)
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         latLng,
                         17f
                     ))
-                    googleMap.addPolyline(polylineOptions)
+                    googleMap.addPolyline(mapState.polylineOptions)
                 }
             }
         }
