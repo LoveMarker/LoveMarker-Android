@@ -1,16 +1,34 @@
 package com.capstone.lovemarker
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.ui.theme.LoveMarkerTheme
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
@@ -23,19 +41,56 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LoveMarkerTheme {
-                MyMapView()
+                var granted by remember { mutableStateOf(false) }
+                val launcher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.RequestPermission()
+                ) { isGranted ->
+                    granted = isGranted
+                }
+
+                if (ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                    granted = true
+                }
+
+                if (granted) {
+                    val viewModel = viewModel<MainViewModel>()
+                    lifecycle.addObserver(viewModel)
+                    MyMapView(viewModel)
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "권한이 허용되지 않았습니다",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                        Button(onClick = {
+                            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                        }) {
+                            Text("권한 요청")
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun MyMapView() {
+fun MyMapView(
+    viewModel: MainViewModel,
+) {
     val map = rememberMapView()
     AndroidView(
         factory = { map },
         update = { mapView ->
-            mapView.getMapAsync  { googleMap ->
+            mapView.getMapAsync { googleMap ->
                 val sydney = LatLng(-34.0, 151.0)
                 googleMap.addMarker(
                     MarkerOptions().position(sydney).title("Marker in Sydney")
