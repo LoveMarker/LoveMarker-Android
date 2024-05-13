@@ -88,6 +88,7 @@ fun MyMapView(
 ) {
     val map = rememberMapView()
     val location = viewModel.location.value
+    val polylineOptions = viewModel.polylineOptions.value
 
     AndroidView(
         factory = { map },
@@ -99,6 +100,7 @@ fun MyMapView(
                         latLng,
                         17f
                     ))
+                    googleMap.addPolyline(polylineOptions)
                 }
             }
         }

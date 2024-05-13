@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
 
 class MainViewModel(application: Application) :
@@ -29,6 +30,9 @@ class MainViewModel(application: Application) :
 
     private val _location = mutableStateOf<Location?>(null)
     val location: State<Location?> = _location
+
+    private val _polylineOptions = mutableStateOf(PolylineOptions().width(5f).color(Color.RED))
+    val polylineOptions: State<PolylineOptions> = _polylineOptions
 
     init {
         // 위치 정보를 얻었을 때의 동작 정의
@@ -44,7 +48,15 @@ class MainViewModel(application: Application) :
     inner class MyLocationCallBack : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
-            _location.value = locationResult.lastLocation
+
+            val location = locationResult.lastLocation
+            _location.value = location
+            _polylineOptions.value = polylineOptions.value.add(
+                LatLng(
+                    location?.latitude ?: 0.0,
+                    location?.longitude ?: 0.0,
+                )
+            )
         }
     }
 
