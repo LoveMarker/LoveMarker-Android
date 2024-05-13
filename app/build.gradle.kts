@@ -98,7 +98,9 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.bundles.retrofit)
 
-    // google places api
+    // google map
     implementation(platform(libs.kotlin.bom))
     implementation(libs.google.places)
+    implementation(libs.google.maps)
+    implementation(libs.google.location)
 }
