@@ -29,8 +29,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
 @Composable
 fun MyMapView() {
     val map = rememberMapView()
