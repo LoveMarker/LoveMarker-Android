@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.exif)
     implementation(libs.splash.screen)
+    implementation(libs.androidx.appcompat)
 
     // test
     testImplementation(libs.junit)
