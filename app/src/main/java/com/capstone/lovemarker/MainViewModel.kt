@@ -25,8 +25,8 @@ class MainViewModel(application: Application) :
     private val fusedLocationProviderClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(application)
 
-    private val locationCallback: MyLocationCallBack
     private val locationRequest: LocationRequest
+    private val locationCallback: MyLocationCallBack
 
     private val _mapState =
         mutableStateOf(
@@ -38,14 +38,14 @@ class MainViewModel(application: Application) :
     val mapState: State<MapState> = _mapState
 
     init {
-        // 위치 정보를 얻었을 때의 동작 정의
-        locationCallback = MyLocationCallBack()
-
         // 현위치를 얻을 때 필요한 설정을 저장하는 객체
         locationRequest = LocationRequest.Builder(10000) // 10초 간격으로 업데이트
             .setPriority(Priority.PRIORITY_HIGH_ACCURACY) // 정확한 위치
             .setMinUpdateIntervalMillis(5000) // 최소 5초 간격
             .build()
+
+        // 위치 정보를 얻었을 때의 동작 정의
+        locationCallback = MyLocationCallBack()
     }
 
     inner class MyLocationCallBack : LocationCallback() {
@@ -55,6 +55,7 @@ class MainViewModel(application: Application) :
             val location = locationResult.lastLocation
             val polylineOptions = mapState.value.polylineOptions
 
+            // 갱신된 현재 위치를 state에 저장
             _mapState.value = mapState.value.copy(
                 location = location,
                 polylineOptions = polylineOptions.add(
@@ -67,6 +68,7 @@ class MainViewModel(application: Application) :
         }
     }
 
+    // 액티비티 생명주기에 따라 위치 요청 리스너 등록/해제
     override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
         if (event == Lifecycle.Event.ON_RESUME) {
             addLocationListener()
@@ -78,7 +80,7 @@ class MainViewModel(application: Application) :
     @SuppressLint("MissingPermission")
     private fun addLocationListener() {
         Looper.myLooper()?.let { looper ->
-            // 주기적인 위치 요청을 위한 리스너 등록
+            // 주기적인 위치 갱신을 위한 리스너 등록
             fusedLocationProviderClient.requestLocationUpdates(
                 locationRequest,
                 locationCallback,
@@ -88,7 +90,7 @@ class MainViewModel(application: Application) :
     }
 
     private fun removeLocationListener() {
-        // 위치 요청 리스너 해제
+        // 위치 갱신 리스너 해제
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 }

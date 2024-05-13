@@ -41,41 +41,47 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LoveMarkerTheme {
-                var granted by remember { mutableStateOf(false) }
-                val launcher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestPermission()
-                ) { isGranted ->
-                    granted = isGranted
-                }
+                requestLocationPermission()
+            }
+        }
+    }
 
-                if (ContextCompat.checkSelfPermission(
-                        this,
-                        Manifest.permission.ACCESS_FINE_LOCATION
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                    granted = true
-                }
+    @Composable
+    private fun requestLocationPermission() {
+        var granted by remember { mutableStateOf(false) }
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            granted = isGranted
+        }
 
-                if (granted) {
-                    val viewModel = viewModel<MainViewModel>()
-                    lifecycle.addObserver(viewModel)
-                    MyMapView(viewModel)
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "권한이 허용되지 않았습니다",
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        Button(onClick = {
-                            launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-                        }) {
-                            Text("권한 요청")
-                        }
-                    }
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            granted = true
+        }
+
+        if (granted) {
+            // 액티비티 라이프사이클에 따라 현위치 요청 리스너 등록/해제
+            val viewModel = viewModel<MainViewModel>()
+            lifecycle.addObserver(viewModel)
+            MyMapView(viewModel)
+        } else {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "권한이 허용되지 않았습니다",
+                    modifier = Modifier.padding(16.dp)
+                )
+                Button(onClick = {
+                    launcher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }) {
+                    Text("권한 요청")
                 }
             }
         }
@@ -95,10 +101,16 @@ fun MyMapView(
             mapView.getMapAsync { googleMap ->
                 mapState.location?.let {
                     val latLng = LatLng(it.latitude, it.longitude)
-                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        latLng,
-                        17f
-                    ))
+
+                    // 현위치로 이동
+                    googleMap.animateCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            latLng,
+                            17f
+                        )
+                    )
+
+                    // 현위치 변경에 따라 경로선 표시
                     googleMap.addPolyline(mapState.polylineOptions)
                 }
             }
@@ -109,13 +121,12 @@ fun MyMapView(
 @Composable
 fun rememberMapView(): MapView {
     val context = LocalContext.current
-    val mapView = remember {
-        MapView(context)
-    }
-
+    val mapView = remember { MapView(context) }
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    // If `lifecycleOwner` changes, dispose and reset the effect
     DisposableEffect(lifecycleOwner) {
+        // 액티비티의 생명주기에 따라 지도 뷰가 동작하도록 옵저버 생성
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_CREATE -> mapView.onCreate(Bundle())
