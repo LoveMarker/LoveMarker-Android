@@ -2,9 +2,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.secrets.gradle)
-
-    kotlin("kapt")
     alias(libs.plugins.hilt.plugin)
 }
 
@@ -53,9 +52,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    kapt {
-        correctErrorTypes = true
-    }
 }
 
 dependencies {
@@ -66,6 +62,9 @@ dependencies {
     implementation(libs.fragment.ktx)
     implementation(libs.exif)
     implementation(libs.splash.screen)
+    implementation(libs.room)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
 
     // test
     testImplementation(libs.junit)
@@ -90,7 +89,7 @@ dependencies {
 
     // dagger-hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // network
     implementation(platform(libs.okhttp.bom))
