@@ -50,12 +50,12 @@ fun MainScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text("오늘 할 일") }
             )
         },
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -93,10 +93,10 @@ fun MainScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                items(viewModel.items.value) { todo ->
+                items(viewModel.items.value) { todoItem ->
                     Column {
                         TodoItem(
-                            todo = todo,
+                            todo = todoItem,
                             onClick = { todo ->
                                 viewModel.toggleDoneState(todo.uid)
                             },
@@ -104,12 +104,12 @@ fun MainScreen(
                                 viewModel.deleteTodo(todo.uid)
 
                                 coroutineScope.launch {
-                                    val result = snackbarHostState.showSnackbar(
+                                    val snackbarResult = snackbarHostState.showSnackbar(
                                         message = "할 일 삭제 완료",
                                         actionLabel = "취소"
                                     )
 
-                                    if (result == SnackbarResult.ActionPerformed) {
+                                    if (snackbarResult == SnackbarResult.ActionPerformed) {
                                         viewModel.restoreTodo()
                                     }
                                 }

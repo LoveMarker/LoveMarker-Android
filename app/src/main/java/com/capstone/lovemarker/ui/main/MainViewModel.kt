@@ -11,12 +11,20 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     application: Application,
-    private val todoRepository: TodoRepository
+    private val todoRepository: TodoRepository,
 ) : AndroidViewModel(application) {
     private val _items = mutableStateOf(emptyList<Todo>())
-    val items : State<List<Todo>> = _items
+    val items: State<List<Todo>> = _items
 
     private var recentDeleteTodo: Todo? = null
+
+    init {
+        viewModelScope.launch {
+            todoRepository.observeTodoList().collect { todos ->
+                _items.value = todos
+            }
+        }
+    }
 
     fun addTodo(text: String) {
         viewModelScope.launch {

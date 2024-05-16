@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.capstone.lovemarker.domain.util.TodoAndroidViewModelFactory
 import com.capstone.lovemarker.ui.main.MainScreen
 import com.capstone.lovemarker.ui.main.MainViewModel
 import com.capstone.lovemarker.ui.theme.LoveMarkerTheme
@@ -14,8 +15,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             LoveMarkerTheme {
-                val viewModel = viewModel<MainViewModel>()
-                MainScreen(viewModel)
+                val viewModel: MainViewModel = viewModel(
+                    factory = TodoAndroidViewModelFactory(application)
+                )
+                MainScreen(viewModel = viewModel)
             }
         }
     }
