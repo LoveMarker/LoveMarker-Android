@@ -20,12 +20,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +49,7 @@ fun MainScreen(
     var itemTitle by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -102,14 +104,14 @@ fun MainScreen(
                             },
                             onDeleteClick = { todo ->
                                 viewModel.deleteTodo(todo.uid)
-
-                                coroutineScope.launch {
-                                    val snackbarResult = snackbarHostState.showSnackbar(
+                                scope.launch {
+                                    val result = snackbarHostState.showSnackbar(
                                         message = "할 일 삭제 완료",
-                                        actionLabel = "취소"
+                                        actionLabel = "취소",
+                                        duration = SnackbarDuration.Short
                                     )
 
-                                    if (snackbarResult == SnackbarResult.ActionPerformed) {
+                                    if (result == SnackbarResult.ActionPerformed) {
                                         viewModel.restoreTodo()
                                     }
                                 }
