@@ -3,17 +3,18 @@
 agp = "8.2.2"
 
 # kotlin
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 kotlinx-serialization-json = "1.6.0"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.1"
+ksp = "1.9.22-1.0.16"
 
 # android
-core-ktx = "1.13.0"
-lifecycle = "2.7.0"
+core-ktx = "1.13.1"
+lifecycle = "2.8.0"
 navigation = "2.7.7"
-fragment-ktx = "1.6.2"
+fragment-ktx = "1.7.1"
 exif = "1.3.7"
 splash-screen = "1.0.1"
 dagger-hilt = "2.48.1"
@@ -25,7 +26,7 @@ espresso-core = "3.5.1"
 
 # compose
 activity-compose = "1.9.0"
-compose-bom = "2024.04.01"
+compose-bom = "2024.05.00"
 
 # google places api
 google-places = "3.4.0"
@@ -95,6 +96,7 @@ google-places = { group = "com.google.android.libraries.places", name = "places"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 secrets-gradle = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secrets-gradle" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }

@@ -2,9 +2,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.secrets.gradle)
-
-    kotlin("kapt")
     alias(libs.plugins.hilt.plugin)
 }
 
@@ -14,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.capstone.lovemarker"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -46,15 +45,12 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-    kapt {
-        correctErrorTypes = true
     }
 }
 
@@ -90,7 +86,7 @@ dependencies {
 
     // dagger-hilt
     implementation(libs.hilt)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // network
     implementation(platform(libs.okhttp.bom))
