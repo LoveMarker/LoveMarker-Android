@@ -57,11 +57,13 @@ android {
 dependencies {
     // android
     implementation(libs.core.ktx)
+    implementation(libs.appcompat)
     implementation(libs.bundles.lifecycle)
     implementation(libs.bundles.navigation)
     implementation(libs.fragment.ktx)
     implementation(libs.exif)
     implementation(libs.splash.screen)
+    implementation(libs.material)
 
     // test
     testImplementation(libs.junit)
@@ -94,7 +96,10 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.bundles.retrofit)
 
-    // google places api
+    // google map
     implementation(platform(libs.kotlin.bom))
     implementation(libs.google.places)
+
+    // third part
+    implementation(libs.timber)
 }
