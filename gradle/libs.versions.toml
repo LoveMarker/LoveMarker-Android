@@ -101,7 +101,7 @@ okhttp-bom = { module = "com.squareup.okhttp3:okhttp-bom", version.ref = "okhttp
 okhttp = { module = "com.squareup.okhttp3:okhttp" }
 okhttp-logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-kotlin-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization-converter" }
+retrofit-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "kotlinx-serialization-converter" }
 
 # google map
 kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
@@ -122,4 +122,4 @@ hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hil
 navigation = ["navigation-fragment", "navigation-ui"]
 lifecycle = ["lifecycle", "lifecycle-viewmodel", "lifecycle-livedata"]
 compose = ["ui", "ui-graphics", "ui-tooling", "ui-tooling-preview", "material3-compose", "activity-compose", "coil-compose", "lifecycle-compose", "navigation-compose"]
-retrofit = ["retrofit", "retrofit-kotlin-serialization-converter"]
+retrofit = ["retrofit", "retrofit-kotlinx-serialization-converter"]
