@@ -9,7 +9,7 @@ versionCode = "1"
 agp = "8.4.2"
 
 # kotlin
-kotlin = "1.9.23"
+kotlin = "1.9.24"
 kotlinx-serialization-json = "1.6.3"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines = "1.7.3"
