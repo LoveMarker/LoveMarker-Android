@@ -19,31 +19,31 @@ gradlePlugin {
     plugins {
         create("android-application") {
             id = "com.capstone.lovemarker.application"
-            implementationClass = "AndroidApplicationPlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.AndroidApplicationPlugin"
         }
         create("android-library") {
             id = "com.capstone.lovemarker.library"
-            implementationClass = "AndroidLibraryPlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.AndroidLibraryPlugin"
         }
         create("android-kotlin") {
             id = "com.capstone.lovemarker.kotlin"
-            implementationClass = "AndroidKotlinPlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.AndroidKotlinPlugin"
         }
         create("android-hilt") {
             id = "com.capstone.lovemarker.hilt"
-            implementationClass = "AndroidHiltPlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.AndroidHiltPlugin"
         }
         create("android-compose") {
             id = "com.capstone.lovemarker.compose"
-            implementationClass = "AndroidComposePlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.AndroidComposePlugin"
         }
         create("kotlin-serialization") {
             id = "com.capstone.lovemarker.serialization"
-            implementationClass = "KotlinSerializationPlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.KotlinSerializationPlugin"
         }
         create("retrofit") {
             id = "com.capstone.lovemarker.retrofit"
-            implementationClass = "RetrofitPlugin"
+            implementationClass = "com.capstone.lovemarker.plugin.RetrofitPlugin"
         }
     }
 }

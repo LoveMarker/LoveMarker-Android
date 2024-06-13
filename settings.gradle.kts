@@ -1,3 +1,5 @@
+gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))
+
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -16,3 +18,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "LoveMarker"
 include(":app")
+include(":data")
