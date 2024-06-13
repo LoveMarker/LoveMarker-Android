@@ -5,8 +5,13 @@ plugins {
 group = "com.capstone.lovemarker.buildlogic"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
@@ -40,6 +45,10 @@ gradlePlugin {
         create("kotlin-serialization") {
             id = "com.capstone.lovemarker.serialization"
             implementationClass = "com.capstone.lovemarker.plugin.KotlinSerializationPlugin"
+        }
+        create("kotlin-jvm") {
+            id = "com.capstone.lovemarker.jvm"
+            implementationClass = "com.capstone.lovemarker.plugin.KotlinJvmPlugin"
         }
         create("retrofit") {
             id = "com.capstone.lovemarker.retrofit"

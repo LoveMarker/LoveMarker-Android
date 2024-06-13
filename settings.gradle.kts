@@ -19,3 +19,4 @@ dependencyResolutionManagement {
 rootProject.name = "LoveMarker"
 include(":app")
 include(":data")
+include(":domain")
