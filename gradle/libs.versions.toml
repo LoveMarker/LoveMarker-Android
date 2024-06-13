@@ -3,21 +3,21 @@
 agp = "8.2.2"
 
 # kotlin
-kotlin = "1.9.22"
-kotlinx-serialization-json = "1.6.0"
+kotlin = "1.9.23"
+kotlinx-serialization-json = "1.6.3"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines = "1.7.3"
 kotlinx-datetime = "0.4.1"
-ksp = "1.9.22-1.0.16"
+ksp = "1.9.23-1.0.20"
 
 # android
 core-ktx = "1.13.1"
-lifecycle = "2.8.0"
+lifecycle = "2.8.2"
 navigation = "2.7.7"
-fragment-ktx = "1.7.1"
+fragment-ktx = "1.8.0"
 exif = "1.3.7"
 splash-screen = "1.0.1"
-dagger-hilt = "2.48.1"
+dagger-hilt = "2.51.1"
 
 # test
 junit = "4.13.2"
@@ -26,10 +26,10 @@ espresso-core = "3.5.1"
 
 # compose
 activity-compose = "1.9.0"
-compose-bom = "2024.05.00"
+compose-bom = "2024.06.00"
 
 # google places api
-google-places = "3.4.0"
+google-places = "3.5.0"
 secrets-gradle = "2.0.1"
 
 # third party
