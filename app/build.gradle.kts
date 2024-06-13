@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.capstone.lovemarker"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -45,7 +45,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.13"
+        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -57,11 +57,13 @@ android {
 dependencies {
     // android
     implementation(libs.core.ktx)
+    implementation(libs.appcompat)
     implementation(libs.bundles.lifecycle)
     implementation(libs.bundles.navigation)
     implementation(libs.fragment.ktx)
     implementation(libs.exif)
     implementation(libs.splash.screen)
+    implementation(libs.material)
 
     // test
     testImplementation(libs.junit)
@@ -94,7 +96,10 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.bundles.retrofit)
 
-    // google places api
+    // google map
     implementation(platform(libs.kotlin.bom))
     implementation(libs.google.places)
+
+    // third part
+    implementation(libs.timber)
 }
