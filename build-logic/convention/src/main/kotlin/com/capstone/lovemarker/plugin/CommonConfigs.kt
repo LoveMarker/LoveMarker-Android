@@ -13,12 +13,13 @@ internal fun Project.configureAndroidCommonPlugin() {
         load(rootProject.file("local.properties").inputStream())
     }
 
-//    apply<AndroidKotlinPlugin>()
-//    apply<KotlinSerializationPlugin>()
+    apply<AndroidKotlinPlugin>()
+    apply<KotlinSerializationPlugin>()
+    apply<RetrofitPlugin>()
     with(plugins) {
         apply("kotlin-parcelize")
     }
-//    apply<AndroidHiltPlugin>()
+    apply<AndroidHiltPlugin>()
 
     extensions.getByType<BaseExtension>().apply {
         defaultConfig {
