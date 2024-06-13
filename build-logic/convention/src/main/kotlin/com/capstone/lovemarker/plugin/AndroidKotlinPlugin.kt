@@ -34,10 +34,17 @@ class AndroidKotlinPlugin : Plugin<Project> {
                 targetCompatibility = JavaVersion.VERSION_17
             }
 
-            extensions.getByType<KotlinAndroidProjectExtension>().apply {
-                compilerOptions {
-                    jvmTarget.set(JvmTarget.JVM_17)
+            packagingOptions {
+                resources.excludes.apply {
+                    add("/META-INF/AL2.0")
+                    add("/META-INF/LGPL2.1")
                 }
+            }
+        }
+
+        extensions.getByType<KotlinAndroidProjectExtension>().apply {
+            compilerOptions {
+                jvmTarget.set(JvmTarget.JVM_17)
             }
         }
 
