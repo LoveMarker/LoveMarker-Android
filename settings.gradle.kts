@@ -1,24 +1,31 @@
+gradle.startParameter.excludedTaskNames.addAll(listOf(":build-logic:convention:testClasses"))
+
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
 }
+
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
         google()
         mavenCentral()
     }
 }
 
-rootProject.name = "LoveMarker"
+rootProject.name = "TodoListApp"
 include(":app")
- 
+
+//include(
+//    ":core:common",
+//    ":core:datastore",
+//    ":core:designsystem",
+//    ":core:network",
+//    ":core:navigation",
+//    ":core:model"
+//)
