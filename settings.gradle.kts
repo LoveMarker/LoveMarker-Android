@@ -21,11 +21,11 @@ dependencyResolutionManagement {
 rootProject.name = "TodoListApp"
 include(":app")
 
-//include(
-//    ":core:common",
-//    ":core:datastore",
-//    ":core:designsystem",
-//    ":core:network",
-//    ":core:navigation",
-//    ":core:model"
-//)
+include(
+    ":core:common",
+    ":core:datastore",
+    ":core:designsystem",
+    ":core:network",
+    ":core:navigation",
+    ":core:model"
+)
