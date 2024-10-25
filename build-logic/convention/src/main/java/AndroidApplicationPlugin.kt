@@ -25,8 +25,8 @@ class AndroidApplicationPlugin : Plugin<Project> {
                     versionCode = libs.findVersion("versionCode").get().requiredVersion.toInt()
                     versionName = libs.findVersion("versionName").get().requiredVersion
 
-//                    val imageBaseUrl = properties["image.base.url"] as? String ?: ""
-//                    buildConfigField("String", "IMAGE_BASE_URL", imageBaseUrl)
+                    val authBaseUrl = properties["auth.base.url"] as? String ?: ""
+                    buildConfigField("String", "AUTH_BASE_URL", authBaseUrl)
                 }
             }
         }
