@@ -1,11 +1,11 @@
 plugins {
+//    alias(libs.plugins.lovemarker.android.application)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.capstone.lovemarker"
-    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.capstone.lovemarker"

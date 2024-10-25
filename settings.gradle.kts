@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "LoveMarker"
 include(":app")
- 
+include(":build-logic")
+include(":build-logic:convention")

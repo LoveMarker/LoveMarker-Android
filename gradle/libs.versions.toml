@@ -126,12 +126,12 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 
 # custom convention plugin
-todolistapp-android-application = { id = "todolistapp.android.application", version = "unspecified" }
-todolistapp-android-library = { id = "todolistapp.android.library", version = "unspecified" }
-todolistapp-android-compose = { id = "todolistapp.android.compose", version = "unspecified" }
-todolistapp-kotlin-library = { id = "todolistapp.kotlin.library", version = "unspecified" }
-todolistapp-android-data = { id = "todolistapp.android.data", version = "unspecified" }
-todolistapp-android-feature = { id = "todolistapp.android.feature", version = "unspecified" }
+lovemarker-android-application = { id = "lovemarker.android.application", version = "unspecified" }
+lovemarker-android-library = { id = "lovemarker.android.library", version = "unspecified" }
+lovemarker-android-compose = { id = "lovemarker.android.compose", version = "unspecified" }
+lovemarker-kotlin-library = { id = "lovemarker.kotlin.library", version = "unspecified" }
+lovemarker-feature = { id = "lovemarker.feature", version = "unspecified" }
+lovemarker-data = { id = "lovemarker.data", version = "unspecified" }
 
 [bundles]
 compose = [
