@@ -1,9 +1,14 @@
+import com.capstone.lovemarker.convention.setNamespace
+
 plugins {
-    id("java-library")
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.lovemarker.android.library)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+android {
+    setNamespace("core.datastore")
+}
+
+dependencies {
+    implementation(projects.core.model)
+    implementation(libs.datastore.pref)
 }
