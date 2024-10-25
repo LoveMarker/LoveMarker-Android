@@ -29,3 +29,7 @@ include(
     ":core:navigation",
     ":core:model"
 )
+
+include(
+    ":feature:login"
+)
