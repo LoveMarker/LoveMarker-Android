@@ -18,7 +18,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TodoListApp"
+rootProject.name = "LoveMarker"
 include(":app")
 
 include(
