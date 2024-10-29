@@ -9,4 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services)
+    implementation(libs.googleid)
 }
