@@ -23,9 +23,7 @@ android {
 
 dependencies {
     // module
-//    implementation(projects.feature.main)
-//    implementation(projects.data)
-//    implementation(projects.domain)
+    implementation(projects.feature.login)
 
     // android
     implementation(libs.core.ktx)
