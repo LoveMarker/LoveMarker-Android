@@ -26,8 +26,4 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services)
     implementation(libs.googleid)
-
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
 }
