@@ -31,7 +31,8 @@ include(
 )
 
 include(
-    ":feature:login"
+    ":feature:login",
+    ":feature:main"
 )
 
 include(
