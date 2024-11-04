@@ -1,8 +1,10 @@
 package com.capstone.lovemarker
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class LoveMarkerApplication: Application() {
     override fun onCreate() {
         super.onCreate()
