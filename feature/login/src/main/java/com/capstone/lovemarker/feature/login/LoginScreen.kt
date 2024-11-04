@@ -12,6 +12,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,19 +24,47 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LoginRoute(
     navigateToNickname: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-    viewModel: LoginViewModel,
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
 
+    LaunchedEffect(viewModel.loginSideEffect, lifecycleOwner) {
+        viewModel.loginSideEffect
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is LoginSideEffect.NavigateToNickname -> {
+                        //navigateToNickname()
+                    }
+
+                    is LoginSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
+                }
+            }
+    }
+
+    LoginScreen(
+        onLoginButtonClick = {
+            viewModel.signIn()
+        }
+    )
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(
+    onLoginButtonClick: () -> Unit,
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = LoveMarkerTheme.colorScheme.surfaceContainer
@@ -58,12 +87,11 @@ fun LoginScreen() {
             )
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { onLoginButtonClick() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 48.dp, end = 48.dp, bottom = 74.dp)
-                    .heightIn(42.dp)
-                ,
+                    .heightIn(42.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
@@ -82,6 +110,6 @@ fun LoginScreen() {
 @Composable
 private fun LoginPreview() {
     LoveMarkerTheme {
-        LoginScreen()
+
     }
 }
