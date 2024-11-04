@@ -6,14 +6,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.scopes.ActivityScoped
 
 @Module
 @InstallIn(ActivityComponent::class)
-object OAuthModule {
-    @Module
-    @InstallIn(ActivityComponent::class)
-    interface Binder {
-        @Binds
-        fun bindGoogleAuthService(service: GoogleAuthService): OAuthService
-    }
+abstract class OAuthModule {
+    @ActivityScoped
+    @Binds
+    abstract fun bindGoogleAuthService(service: GoogleAuthService): OAuthService
 }
