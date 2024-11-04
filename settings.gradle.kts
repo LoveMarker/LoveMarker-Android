@@ -36,5 +36,11 @@ include(
 )
 
 include(
-    ":domain:auth"
+    ":domain:auth",
+    ":domain:oauth"
+)
+
+include(
+    ":data:auth",
+    ":data:oauth"
 )

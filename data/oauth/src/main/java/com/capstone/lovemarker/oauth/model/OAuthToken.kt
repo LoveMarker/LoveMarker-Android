@@ -1,6 +1,6 @@
-package com.capstone.lovemarker.feature.login.model
+package com.capstone.lovemarker.oauth.model
 
-import com.capstone.lovemarker.auth.entity.GoogleOAuthToken
+import com.capstone.lovemarker.oauth.entity.GoogleOAuthToken
 
 typealias GoogleToken = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 

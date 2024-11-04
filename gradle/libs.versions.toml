@@ -160,6 +160,12 @@ android-test = [
     "androidx-espresso-core"
 ]
 
+google-login = [
+    "credentials",
+    "credentials-play-services",
+    "googleid"
+]
+
 navigation = ["navigation-fragment", "navigation-ui"]
 lifecycle = ["lifecycle", "lifecycle-viewmodel", "lifecycle-livedata"]
 okhttp = ["okhttp", "okhttp-logging-interceptor"]

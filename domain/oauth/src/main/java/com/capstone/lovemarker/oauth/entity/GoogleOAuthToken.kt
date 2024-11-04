@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.auth.entity
+package com.capstone.lovemarker.oauth.entity
 
 sealed interface OAuthToken {
     val accessToken: String
