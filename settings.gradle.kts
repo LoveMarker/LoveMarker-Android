@@ -33,3 +33,7 @@ include(
 include(
     ":feature:login"
 )
+
+include(
+    ":domain:auth"
+)
