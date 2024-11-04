@@ -56,7 +56,7 @@ fun LoginRoute(
 
     LoginScreen(
         onLoginButtonClick = {
-            viewModel.signIn()
+            // TODO: 구글 로그인
         }
     )
 }
