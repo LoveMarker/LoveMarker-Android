@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -42,7 +43,7 @@ import timber.log.Timber
 fun LoginRoute(
     navigateToNickname: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-    viewModel: LoginViewModel = LoginViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val googleAuthService = rememberGoogleAuthService() ?: return
@@ -53,6 +54,7 @@ fun LoginRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is LoginSideEffect.NavigateToNickname -> {
+                        Timber.d("Success Login to Server")
                         //navigateToNickname()
                     }
 
@@ -69,7 +71,7 @@ fun LoginRoute(
                 runCatching {
                     googleAuthService.signIn()
                 }.onSuccess { oauthToken ->
-                    viewModel.postLogin(oauthToken.accessToken)
+                    viewModel.postLogin(socialToken = oauthToken.accessToken)
                 }.onFailure {
                     showErrorSnackbar(it)
                 }

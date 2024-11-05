@@ -1,22 +1,39 @@
 package com.capstone.lovemarker.feature.login
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.capstone.lovemarker.auth.repository.AuthRepository
-import com.capstone.lovemarker.oauth.service.OAuthService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
     private val _loginSideEffect = MutableSharedFlow<LoginSideEffect>()
     val loginSideEffect: SharedFlow<LoginSideEffect> = _loginSideEffect.asSharedFlow()
 
-    fun postLogin(accessToken: String) {
-        Timber.d("GOOGLE TOKEN: $accessToken")
+    fun postLogin(socialToken: String) {
+        Timber.d("GOOGLE TOKEN: $socialToken")
 
-        // todo: 서버 연결 -> 성공/실패 여부에 따라 사이드 이펙트 발생 -> UI에서 처리
+        viewModelScope.launch {
+            authRepository.postLogin(
+                socialToken = socialToken,
+                provider = OAUTH_PROVIDER
+            ).onSuccess {
+                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+            }.onFailure {
+                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
+            }
+        }
+    }
+
+    companion object {
+        private const val OAUTH_PROVIDER = "GOOGLE"
     }
 }
