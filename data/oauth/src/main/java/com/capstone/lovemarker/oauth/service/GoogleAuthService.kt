@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.oauth.repository
+package com.capstone.lovemarker.oauth.service
 
 import android.content.Context
 import androidx.credentials.CredentialManager
@@ -14,9 +14,9 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
-class GoogleAuthRepositoryImpl @Inject constructor(
+class GoogleAuthService @Inject constructor(
     @ActivityContext private val context: Context,
-): GoogleAuthRepository {
+): OAuthService {
     private val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(false)
         .setServerClientId(BuildConfig.WEB_CLIENT_ID)

@@ -1,8 +1,8 @@
-package com.capstone.lovemarker.oauth.repository
+package com.capstone.lovemarker.oauth.service
 
 import com.capstone.lovemarker.oauth.entity.OAuthToken
 
-interface GoogleAuthRepository {
+interface OAuthService {
     suspend fun signIn() : OAuthToken
     suspend fun signOut()
 }

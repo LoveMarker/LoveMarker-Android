@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.oauth.di
 
-import com.capstone.lovemarker.oauth.repository.GoogleAuthRepository
-import com.capstone.lovemarker.oauth.repository.GoogleAuthRepositoryImpl
+import com.capstone.lovemarker.oauth.service.GoogleAuthService
+import com.capstone.lovemarker.oauth.service.OAuthService
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,7 +13,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 abstract class OAuthModule {
     @ActivityScoped
     @Binds
-    abstract fun bindGoogleAuthRepository(
-        googleAuthRepositoryImpl: GoogleAuthRepositoryImpl,
-    ): GoogleAuthRepository
+    abstract fun bindGoogleAuthService(
+        googleAuthService: GoogleAuthService,
+    ): OAuthService
 }

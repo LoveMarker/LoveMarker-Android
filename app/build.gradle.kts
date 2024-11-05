@@ -22,8 +22,11 @@ android {
 }
 
 dependencies {
-    // module
-    implementation(projects.feature.login)
+    // feature
+    implementation(projects.feature.main)
+
+    // data
+    implementation(projects.data.oauth)
 
     // android
     implementation(libs.core.ktx)

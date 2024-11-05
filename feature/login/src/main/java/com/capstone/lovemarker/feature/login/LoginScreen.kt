@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.feature.login
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,10 +14,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -24,19 +27,25 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
+import com.capstone.lovemarker.feature.login.di.OAuthEntryPoint
+import com.capstone.lovemarker.oauth.service.OAuthService
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun LoginRoute(
     navigateToNickname: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = LoginViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val googleAuthService = rememberGoogleAuthService()
 
     LaunchedEffect(viewModel.loginSideEffect, lifecycleOwner) {
         viewModel.loginSideEffect
@@ -56,9 +65,26 @@ fun LoginRoute(
 
     LoginScreen(
         onLoginButtonClick = {
-            // TODO: 구글 로그인
+            lifecycleOwner.lifecycleScope.launch {
+                runCatching {
+                    googleAuthService.signIn()
+                }.onSuccess { oauthToken ->
+                    // viewModel.postLogin(oauthToken.accessToken)
+                    Timber.d("GOOGLE TOKEN: ${oauthToken.accessToken}")
+                }.onFailure {
+                    showErrorSnackbar(it)
+                }
+            }
         }
     )
+}
+
+@Composable
+private fun rememberGoogleAuthService(): OAuthService {
+    val activityContext = LocalContext.current as? ComponentActivity
+        ?: throw IllegalStateException("Activity context is required")
+    val entryPoint = EntryPointAccessors.fromActivity<OAuthEntryPoint>(activityContext)
+    return remember { entryPoint.googleAuthService() }
 }
 
 @Composable
