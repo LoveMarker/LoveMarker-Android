@@ -3,4 +3,5 @@
     <string name="app_name">LoveMarker</string>
     <string name="login_title">login title</string>
     <string name="login_image">login image</string>
+    <string name="login_btn_text">Sign in with Google</string>
 </resources>

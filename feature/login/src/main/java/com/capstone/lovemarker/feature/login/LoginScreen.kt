@@ -3,6 +3,7 @@ package com.capstone.lovemarker.feature.login
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -122,8 +123,8 @@ fun LoginScreen(
                 onClick = { onLoginButtonClick() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 48.dp, end = 48.dp, bottom = 74.dp)
-                    .heightIn(42.dp),
+                    .padding(start = 50.dp, end = 50.dp, bottom = 74.dp)
+                    .heightIn(40.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
@@ -132,7 +133,18 @@ fun LoginScreen(
                     defaultElevation = 2.dp
                 )
             ) {
-                Text(text = "Sign in with Google")
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_login_google_logo),
+                        contentDescription = stringResource(id = R.string.login_btn_text),
+                        modifier = Modifier.padding(end = 10.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.login_btn_text)
+                    )
+                }
             }
         }
     }
@@ -142,6 +154,8 @@ fun LoginScreen(
 @Composable
 private fun LoginPreview() {
     LoveMarkerTheme {
-
+        LoginScreen(
+            onLoginButtonClick = { }
+        )
     }
 }
