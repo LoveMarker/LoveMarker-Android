@@ -1,11 +1,12 @@
 package com.capstone.lovemarker.auth.repository
 
-class AuthRepositoryImpl : AuthRepository {
-    override suspend fun login() {
-        TODO("Not yet implemented")
-    }
+import com.capstone.lovemarker.auth.source.AuthDataSource
+import javax.inject.Inject
 
-    override suspend fun logout() {
+class AuthRepositoryImpl @Inject constructor(
+    private val authDataSource: AuthDataSource
+) : AuthRepository {
+    override suspend fun login() {
         TODO("Not yet implemented")
     }
 }
