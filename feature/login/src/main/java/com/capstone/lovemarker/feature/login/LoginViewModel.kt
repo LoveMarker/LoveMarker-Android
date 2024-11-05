@@ -14,8 +14,8 @@ class LoginViewModel : ViewModel() {
     private val _loginSideEffect = MutableSharedFlow<LoginSideEffect>()
     val loginSideEffect: SharedFlow<LoginSideEffect> = _loginSideEffect.asSharedFlow()
 
-    fun postLogin(socialToken: String) {
-        Timber.d(socialToken)
+    fun postLogin(accessToken: String) {
+        Timber.d("GOOGLE TOKEN: $accessToken")
 
         // todo: 서버 연결 -> 성공/실패 여부에 따라 사이드 이펙트 발생 -> UI에서 처리
     }

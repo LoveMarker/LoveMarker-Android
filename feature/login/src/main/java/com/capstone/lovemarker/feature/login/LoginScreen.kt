@@ -45,7 +45,7 @@ fun LoginRoute(
     viewModel: LoginViewModel = LoginViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val googleAuthService = rememberGoogleAuthService()
+    val googleAuthService = rememberGoogleAuthService() ?: return
 
     LaunchedEffect(viewModel.loginSideEffect, lifecycleOwner) {
         viewModel.loginSideEffect
@@ -69,8 +69,7 @@ fun LoginRoute(
                 runCatching {
                     googleAuthService.signIn()
                 }.onSuccess { oauthToken ->
-                    // viewModel.postLogin(oauthToken.accessToken)
-                    Timber.d("GOOGLE TOKEN: ${oauthToken.accessToken}")
+                    viewModel.postLogin(oauthToken.accessToken)
                 }.onFailure {
                     showErrorSnackbar(it)
                 }
@@ -80,11 +79,16 @@ fun LoginRoute(
 }
 
 @Composable
-private fun rememberGoogleAuthService(): OAuthService {
+private fun rememberGoogleAuthService(): OAuthService? {
     val activityContext = LocalContext.current as? ComponentActivity
-        ?: throw IllegalStateException("Activity context is required")
-    val entryPoint = EntryPointAccessors.fromActivity<OAuthEntryPoint>(activityContext)
-    return remember { entryPoint.googleAuthService() }
+    return runCatching {
+        requireNotNull(activityContext) { "Activity context is required for getting OAuthService" }
+        val entryPoint = EntryPointAccessors.fromActivity<OAuthEntryPoint>(activityContext)
+        entryPoint.googleAuthService()
+    }.getOrElse { throwable ->
+        Timber.e(throwable.message)
+        null
+    }
 }
 
 @Composable
