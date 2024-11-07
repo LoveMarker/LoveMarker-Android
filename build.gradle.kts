@@ -10,6 +10,10 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
 }
 
+apply {
+    from("gradle/projectDependencyGraph.gradle")
+}
+
 tasks.register("clean", Delete::class) {
     delete(rootProject.layout.buildDirectory)
 }
