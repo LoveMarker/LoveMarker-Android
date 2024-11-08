@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.main
+package com.capstone.lovemarker.feature.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

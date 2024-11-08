@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.main
+package com.capstone.lovemarker.feature.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
