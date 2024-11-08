@@ -11,20 +11,15 @@ class AuthInterceptor @Inject constructor(
     private val userPreferencesDataSource: UserPreferencesDataSource,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val encodedToken = runBlocking {
-            "$BEARER ${userPreferencesDataSource.userData.first().accessToken}"
+        val accessToken = runBlocking {
+            "Bearer ${userPreferencesDataSource.userData.first().accessToken}"
         }
 
         val originalRequest = chain.request()
         val headerRequest = originalRequest.newBuilder()
-            .header(AUTHORIZATION, encodedToken)
+            .header("Authorization", accessToken)
             .build()
 
         return chain.proceed(headerRequest)
-    }
-
-    companion object {
-        private const val BEARER = "Bearer"
-        private const val AUTHORIZATION = "Authorization"
     }
 }
