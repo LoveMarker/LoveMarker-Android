@@ -1,11 +1,12 @@
 package com.capstone.lovemarker.core.datastore.source
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import javax.inject.Inject
+import com.capstone.lovemarker.core.datastore.model.UserData
+import kotlinx.coroutines.flow.Flow
 
-class UserPreferencesDataSource @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
-) {
-
+interface UserPreferencesDataSource {
+    val userData: Flow<UserData>
+    suspend fun updateAccessToken(token: String)
+    suspend fun updateRefreshToken(token: String)
+    suspend fun updateAutoLogin(configured: Boolean)
+    suspend fun clear()
 }
