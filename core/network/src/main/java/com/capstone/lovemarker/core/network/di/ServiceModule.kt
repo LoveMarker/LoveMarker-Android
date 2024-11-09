@@ -1,11 +1,13 @@
 package com.capstone.lovemarker.core.network.di
 
+import com.capstone.lovemarker.core.network.qualifier.AuthNotRequired
 import com.capstone.lovemarker.core.network.service.ReissueTokenService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -13,6 +15,6 @@ import javax.inject.Singleton
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideReissueTokenService(retrofit: Retrofit): ReissueTokenService =
-        retrofit.create(ReissueTokenService::class.java)
+    fun provideReissueTokenService(@AuthNotRequired retrofit: Retrofit): ReissueTokenService =
+        retrofit.create()
 }

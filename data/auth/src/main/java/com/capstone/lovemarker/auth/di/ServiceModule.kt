@@ -1,6 +1,7 @@
 package com.capstone.lovemarker.auth.di
 
 import com.capstone.lovemarker.auth.service.AuthService
+import com.capstone.lovemarker.core.network.qualifier.AuthRequired
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,5 +15,5 @@ import javax.inject.Singleton
 object ServiceModule {
     @Provides
     @Singleton
-    fun provideAuthService(retrofit: Retrofit): AuthService = retrofit.create()
+    fun provideAuthService(@AuthRequired retrofit: Retrofit): AuthService = retrofit.create()
 }
