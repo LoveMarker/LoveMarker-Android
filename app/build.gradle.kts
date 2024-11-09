@@ -26,6 +26,7 @@ dependencies {
     implementation(projects.feature.main)
 
     // data
+    implementation(projects.data.auth)
     implementation(projects.data.oauth)
 
     // android
