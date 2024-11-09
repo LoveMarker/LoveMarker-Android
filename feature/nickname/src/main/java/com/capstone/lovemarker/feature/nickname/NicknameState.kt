@@ -20,7 +20,5 @@ sealed interface InputUiState {
         DUPLICATED
     }
 
-    data class Success(
-        val input: String,
-    ) : InputUiState
+    data object Success : InputUiState
 }

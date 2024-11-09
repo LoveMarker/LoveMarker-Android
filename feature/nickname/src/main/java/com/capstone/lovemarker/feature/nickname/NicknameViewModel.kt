@@ -58,7 +58,7 @@ class NicknameViewModel : ViewModel() {
 
             }.onSuccess {
                 updateInputUiState(
-                    InputUiState.Success(input = nicknameState.value.nickname)
+                    InputUiState.Success
                 )
             }.onFailure {
                 updateInputUiState(
