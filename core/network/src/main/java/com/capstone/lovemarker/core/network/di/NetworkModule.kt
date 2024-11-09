@@ -1,12 +1,12 @@
 package com.capstone.lovemarker.core.network.di
 
 import com.capstone.lovemarker.core.network.BuildConfig
-import com.capstone.lovemarker.core.network.authenticator.DemoAuthenticator
+import com.capstone.lovemarker.core.network.authenticator.LoveMarkerAuthenticator
 import com.capstone.lovemarker.core.network.interceptor.AuthInterceptor
 import com.capstone.lovemarker.core.network.qualifier.Auth
 import com.capstone.lovemarker.core.network.qualifier.Logging
-import com.capstone.lovemarker.core.network.qualifier.Secured
-import com.capstone.lovemarker.core.network.qualifier.Unsecured
+import com.capstone.lovemarker.core.network.qualifier.AuthRequired
+import com.capstone.lovemarker.core.network.qualifier.AuthNotRequired
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
@@ -59,7 +59,7 @@ object NetworkModule {
     @Provides
     fun provideAuthInterceptor(interceptor: AuthInterceptor): Interceptor = interceptor
 
-    @Secured
+    @AuthRequired
     @Singleton
     @Provides
     fun provideOkHttpClient(
@@ -72,44 +72,45 @@ object NetworkModule {
         .authenticator(authenticator)
         .build()
 
-    @Unsecured
+    @AuthNotRequired
     @Singleton
     @Provides
-    fun provideOkHttpClientUnsecured(
-        @Logging loggingInterceptor: Interceptor
+    fun provideOkHttpClientAuthNotRequired(
+        @Logging logInterceptor: Interceptor,
     ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
+        .addInterceptor(logInterceptor)
         .build()
 
-    @Secured
+    @AuthRequired
     @Singleton
     @Provides
     fun provideRetrofit(
-        @Secured client: OkHttpClient,
+        @AuthRequired client: OkHttpClient,
         converterFactory: Converter.Factory
     ): Retrofit = Retrofit.Builder()
-        .baseUrl("")
+        .baseUrl(BuildConfig.AUTH_BASE_URL)
         .client(client)
         .addConverterFactory(converterFactory)
         .build()
 
-    @Unsecured
+    @AuthNotRequired
     @Singleton
     @Provides
-    fun provideRetrofitUnsecured(
-        @Unsecured client: OkHttpClient,
-        converterFactory: Converter.Factory
+    fun provideRetrofitAuthNotRequired(
+        @AuthNotRequired client: OkHttpClient,
+        converterFactory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
-        .baseUrl("")
+        .baseUrl(BuildConfig.AUTH_BASE_URL)
         .client(client)
         .addConverterFactory(converterFactory)
         .build()
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    interface AuthenticatorBinder {
+        @Binds
+        @Singleton
+        fun provideAuthenticator(authenticator: LoveMarkerAuthenticator): Authenticator
+    }
 }
 
-@Module
-@InstallIn(SingletonComponent::class)
-interface AuthenticatorBinder {
-    @Binds
-    @Singleton
-    fun provideAuthenticator(authenticator: DemoAuthenticator): Authenticator
-}
