@@ -22,10 +22,12 @@ android {
 }
 
 dependencies {
-    // module
-//    implementation(projects.feature.main)
-//    implementation(projects.data)
-//    implementation(projects.domain)
+    // feature
+    implementation(projects.feature.main)
+
+    // data
+    implementation(projects.data.auth)
+    implementation(projects.data.oauth)
 
     // android
     implementation(libs.core.ktx)

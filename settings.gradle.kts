@@ -29,3 +29,18 @@ include(
     ":core:navigation",
     ":core:model"
 )
+
+include(
+    ":feature:login",
+    ":feature:main"
+)
+
+include(
+    ":domain:auth",
+    ":domain:oauth"
+)
+
+include(
+    ":data:auth",
+    ":data:oauth"
+)
