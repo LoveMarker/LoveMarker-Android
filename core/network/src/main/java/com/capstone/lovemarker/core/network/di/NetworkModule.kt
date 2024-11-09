@@ -5,6 +5,8 @@ import com.capstone.lovemarker.core.network.authenticator.LoveMarkerAuthenticato
 import com.capstone.lovemarker.core.network.interceptor.AuthInterceptor
 import com.capstone.lovemarker.core.network.qualifier.Auth
 import com.capstone.lovemarker.core.network.qualifier.Logging
+import com.capstone.lovemarker.core.network.qualifier.AuthRequired
+import com.capstone.lovemarker.core.network.qualifier.AuthNotRequired
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
@@ -57,6 +59,7 @@ object NetworkModule {
     @Provides
     fun provideAuthInterceptor(interceptor: AuthInterceptor): Interceptor = interceptor
 
+    @AuthRequired
     @Singleton
     @Provides
     fun provideOkHttpClient(
@@ -69,11 +72,33 @@ object NetworkModule {
         .authenticator(authenticator)
         .build()
 
+    @AuthNotRequired
+    @Singleton
+    @Provides
+    fun provideOkHttpClientAuthNotRequired(
+        @Logging logInterceptor: Interceptor,
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(logInterceptor)
+        .build()
+
+    @AuthRequired
     @Singleton
     @Provides
     fun provideRetrofit(
-        client: OkHttpClient,
+        @AuthRequired client: OkHttpClient,
         converterFactory: Converter.Factory
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(BuildConfig.AUTH_BASE_URL)
+        .client(client)
+        .addConverterFactory(converterFactory)
+        .build()
+
+    @AuthNotRequired
+    @Singleton
+    @Provides
+    fun provideRetrofitAuthNotRequired(
+        @AuthNotRequired client: OkHttpClient,
+        converterFactory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(BuildConfig.AUTH_BASE_URL)
         .client(client)
