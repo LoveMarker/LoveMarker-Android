@@ -1,5 +1,9 @@
 package com.capstone.lovemarker.feature.nickname
 
-class NicknameSideEffect {
+sealed interface NicknameSideEffect {
+    data object NavigateToMatching : NicknameSideEffect
 
+    data class ShowErrorSnackbar(
+        val throwable: Throwable
+    ) : NicknameSideEffect
 }
