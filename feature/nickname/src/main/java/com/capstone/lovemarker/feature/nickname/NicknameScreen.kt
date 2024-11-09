@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun NicknameRoute(
+    navigateUp: () -> Unit,
     navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: NicknameViewModel = NicknameViewModel()
