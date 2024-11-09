@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.nickname
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.core.navigation.Route
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,26 +19,30 @@ class NicknameViewModel : ViewModel() {
     private val _nicknameSideEffect = MutableSharedFlow<NicknameSideEffect>()
     val nicknameSideEffect: SharedFlow<NicknameSideEffect> = _nicknameSideEffect.asSharedFlow()
 
-    fun updateNickname(nickname: String){
+    private fun updateInputUiState(uiState: InputUiState) {
+        _nicknameState.update {
+            it.copy(uiState = uiState)
+        }
+    }
+
+    fun updateNickname(nickname: String) {
         _nicknameState.update {
             it.copy(nickname = nickname)
         }
     }
 
-    fun validateNickname(nickname: String): Boolean {
-        // todo: 공백이나 특수문자 포함하지 않는지 검사
-        return true
-    }
-
-    fun updateGuideTitle(guideTitle: String) {
-        _nicknameState.update {
-            it.copy(guideTitle = guideTitle)
+    // TODO: 공백이나 특수문자 포함하지 않는지 검사
+    fun validateNickname(nickname: String) {
+        if (nickname.isNotBlank()) {
+            updateInputUiState(uiState = InputUiState.Valid)
+        } else {
+            updateInputUiState(uiState = InputUiState.Error.NOT_ALLOWED_CHAR)
         }
     }
 
-    fun updateCompleteButtonText(text: String){
+    fun updateSupportingText(text: String) {
         _nicknameState.update {
-            it.copy(completeButtonText = text)
+            it.copy(supportingText = text)
         }
     }
 
@@ -47,15 +52,41 @@ class NicknameViewModel : ViewModel() {
         }
     }
 
-    fun updateCloseButtonVisibility(visible: Boolean) {
-        _nicknameState.update {
-            it.copy(closeButtonVisible = visible)
+    fun patchNickname(nickname: String) {
+        viewModelScope.launch {
+            runCatching {
+
+            }.onSuccess {
+                updateInputUiState(
+                    InputUiState.Success(input = nicknameState.value.nickname)
+                )
+            }.onFailure {
+                updateInputUiState(
+                    InputUiState.Error.DUPLICATED
+                )
+            }
         }
     }
 
-    fun patchNickname(nickname: String) {
-        viewModelScope.launch {
-            // todo: 서버 API 호출
+    /**
+     * from Login vs from MyPage
+     * 이전 화면에 따라 달라져야 하는 state
+     * */
+    fun updateGuideTitle(guideTitle: String) {
+        _nicknameState.update {
+            it.copy(guideTitle = guideTitle)
+        }
+    }
+
+    fun updateCompleteButtonText(text: String) {
+        _nicknameState.update {
+            it.copy(completeButtonText = text)
+        }
+    }
+
+    fun updateCloseButtonVisibility(visible: Boolean) {
+        _nicknameState.update {
+            it.copy(closeButtonVisible = visible)
         }
     }
 }
