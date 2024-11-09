@@ -48,6 +48,7 @@ okhttp = "4.12.0"
 retrofit = "2.9.0"
 coil = "2.7.0"
 timber = "5.0.1"
+process-pheonix = "3.0.0"
 
 [libraries]
 # gradle
@@ -119,6 +120,7 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+process-phoenix = { module = "com.jakewharton:process-phoenix", version.ref = "process-pheonix" }
 
 
 

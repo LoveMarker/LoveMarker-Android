@@ -61,12 +61,12 @@ object NetworkModule {
     @Provides
     fun provideOkHttpClient(
         @Logging loggingInterceptor: Interceptor,
-       // @Auth authInterceptor: Interceptor,
-       // authenticator: Authenticator
+        @Auth authInterceptor: Interceptor,
+        authenticator: Authenticator
     ): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
-      //  .addInterceptor(authInterceptor)
-      //  .authenticator(authenticator)
+        .addInterceptor(authInterceptor)
+        .authenticator(authenticator)
         .build()
 
     @Singleton
@@ -80,11 +80,12 @@ object NetworkModule {
         .addConverterFactory(converterFactory)
         .build()
 
-//    @Module
-//    @InstallIn(SingletonComponent::class)
-//    interface AuthenticatorBinder {
-//        @Binds
-//        @Singleton
-//        fun provideAuthenticator(authenticator: LoveMarkerAuthenticator): Authenticator
-//    }
+    @Module
+    @InstallIn(SingletonComponent::class)
+    interface AuthenticatorBinder {
+        @Binds
+        @Singleton
+        fun provideAuthenticator(authenticator: LoveMarkerAuthenticator): Authenticator
+    }
 }
+

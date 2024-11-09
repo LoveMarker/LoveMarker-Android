@@ -33,4 +33,5 @@ dependencies {
     implementation(libs.bundles.retrofit)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.timber)
+    implementation(libs.process.phoenix)
 }
