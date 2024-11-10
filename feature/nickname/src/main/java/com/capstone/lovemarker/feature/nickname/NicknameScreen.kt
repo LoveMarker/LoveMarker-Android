@@ -24,9 +24,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
@@ -39,10 +41,12 @@ fun NicknameRoute(
     navigateUp: () -> Unit,
     navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-    viewModel: NicknameViewModel = NicknameViewModel(),
+    viewModel: NicknameViewModel = viewModel(),
 ) {
     val state by viewModel.nicknameState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    UpdateStateByPreviousRoute(prevRoute, viewModel)
 
     LaunchedEffect(viewModel.nicknameSideEffect, lifecycleOwner) {
         viewModel.nicknameSideEffect
@@ -91,8 +95,6 @@ fun NicknameRoute(
             }
         }
     }
-
-    UpdateStateByPreviousRoute(prevRoute, viewModel)
 
     NicknameScreen(
         nickname = state.nickname,
@@ -220,7 +222,6 @@ fun NicknameScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 38.dp)
-
                 )
             }
             Spacer(modifier = Modifier.weight(1f))

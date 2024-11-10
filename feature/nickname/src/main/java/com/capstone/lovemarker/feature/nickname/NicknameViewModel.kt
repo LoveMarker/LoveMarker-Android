@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class NicknameViewModel : ViewModel() {
     private val _nicknameState = MutableStateFlow(NicknameState())
@@ -18,12 +19,6 @@ class NicknameViewModel : ViewModel() {
 
     private val _nicknameSideEffect = MutableSharedFlow<NicknameSideEffect>()
     val nicknameSideEffect: SharedFlow<NicknameSideEffect> = _nicknameSideEffect.asSharedFlow()
-
-    private fun updateInputUiState(uiState: InputUiState) {
-        _nicknameState.update {
-            it.copy(uiState = uiState)
-        }
-    }
 
     fun updateNickname(nickname: String) {
         _nicknameState.update {
@@ -37,6 +32,12 @@ class NicknameViewModel : ViewModel() {
             updateInputUiState(uiState = InputUiState.Valid)
         } else {
             updateInputUiState(uiState = InputUiState.Error.NOT_ALLOWED_CHAR)
+        }
+    }
+
+    private fun updateInputUiState(uiState: InputUiState) {
+        _nicknameState.update {
+            it.copy(uiState = uiState)
         }
     }
 
