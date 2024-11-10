@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.feature.nickname
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -103,9 +104,12 @@ fun NicknameRoute(
                 validateNickname(it)
             }
         },
+        guideTitle = state.guideTitle,
         isError = state.uiState is InputUiState.Error,
         supportingText = state.supportingText,
-        guideTitle = state.guideTitle,
+        onClearIconClick = {
+            viewModel.updateNickname("")
+        },
         completeButtonText = state.completeButtonText,
         completeButtonEnabled = state.completeButtonEnabled,
         onCompleteButtonClick = {
@@ -148,6 +152,7 @@ fun NicknameScreen(
     isError: Boolean,
     guideTitle: String,
     supportingText: String,
+    onClearIconClick: () -> Unit,
     completeButtonText: String,
     completeButtonEnabled: Boolean,
     onCompleteButtonClick: () -> Unit,
@@ -216,6 +221,9 @@ fun NicknameScreen(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_input_clear),
                                 contentDescription = stringResource(R.string.nickname_clear_icon_desc),
+                                modifier = Modifier.clickable {
+                                    onClearIconClick()
+                                }
                             )
                         }
                     },
@@ -257,6 +265,7 @@ private fun NicknamePreview() {
             isError = false,
             guideTitle = stringResource(id = R.string.nickname_guide_title_from_login),
             supportingText = stringResource(id = R.string.nickname_duplicate_error_msg),
+            onClearIconClick = {},
             completeButtonText = stringResource(id = R.string.nickname_complete_btn_text_from_login),
             completeButtonEnabled = false,
             onCompleteButtonClick = {},
