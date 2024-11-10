@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.capstone.lovemarker.core.common.extension.addFocusCleaner
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
@@ -98,9 +100,9 @@ fun NicknameRoute(
         }
     }
 
-    // todo: 화면 클릭 시 키보드 내리기
-    //  키보드 위에 하단 버튼이 보이도록 변경
+    // todo: 키보드 위에 하단 버튼이 보이도록 변경
     //  텍스트 필드 핸들러 색상 변경
+    //  닉네임 변경하는 서버 api 호출 (뷰모델 코드 수정)
     NicknameScreen(
         guideTitle = state.guideTitle,
         nickname = state.nickname,
@@ -164,8 +166,12 @@ fun NicknameScreen(
     onCloseButtonClick: () -> Unit,
     onClearIconClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .addFocusCleaner(focusManager),
         color = LoveMarkerTheme.colorScheme.surfaceContainer
     ) {
         Column(
