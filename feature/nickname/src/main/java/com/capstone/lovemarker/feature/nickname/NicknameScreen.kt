@@ -5,19 +5,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -183,12 +181,26 @@ fun NicknameScreen(
                 Text(
                     text = stringResource(id = R.string.nickname_guide_detail),
                     style = LoveMarkerTheme.typography.label13M,
-                    color = LoveMarkerTheme.colorScheme.onSurface,
+                    color = LoveMarkerTheme.colorScheme.onSurface700,
                     modifier = Modifier.padding(top = 13.dp)
                 )
                 OutlinedTextField(
                     value = nickname,
                     onValueChange = onNicknameChanged,
+                    colors = TextFieldDefaults.colors(
+                        unfocusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
+                        unfocusedIndicatorColor = LoveMarkerTheme.colorScheme.onSurface400,
+                        unfocusedTextColor = LoveMarkerTheme.colorScheme.onSurface400,
+                        focusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
+                        focusedIndicatorColor = LoveMarkerTheme.colorScheme.outlineBrown,
+                        focusedTextColor = LoveMarkerTheme.colorScheme.onSurface700,
+                        focusedTrailingIconColor = LoveMarkerTheme.colorScheme.outlineBrown,
+                        unfocusedTrailingIconColor = LoveMarkerTheme.colorScheme.onSurface400,
+                        errorContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
+                        errorIndicatorColor = LoveMarkerTheme.colorScheme.error,
+                        errorSupportingTextColor = LoveMarkerTheme.colorScheme.error,
+                        errorTrailingIconColor = LoveMarkerTheme.colorScheme.error,
+                    ),
                     isError = isError,
                     supportingText = {
                         if (isError) {
@@ -196,10 +208,12 @@ fun NicknameScreen(
                         }
                     },
                     trailingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_input_clear),
-                            contentDescription = stringResource(R.string.nickname_clear_icon_desc)
-                        )
+                        if (nickname.isNotBlank()) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_input_clear),
+                                contentDescription = stringResource(R.string.nickname_clear_icon_desc),
+                            )
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -210,6 +224,12 @@ fun NicknameScreen(
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = onCompleteButtonClick,
+                colors = ButtonColors(
+                    containerColor = LoveMarkerTheme.colorScheme.secondaryContainer,
+                    contentColor = LoveMarkerTheme.colorScheme.onSecondaryContainer,
+                    disabledContainerColor = LoveMarkerTheme.colorScheme.onSurface200,
+                    disabledContentColor = LoveMarkerTheme.colorScheme.onSurface500
+                ),
                 enabled = completeButtonEnabled,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -218,7 +238,6 @@ fun NicknameScreen(
             ) {
                 Text(
                     text = completeButtonText,
-                    color = LoveMarkerTheme.colorScheme.onSurface
                 )
             }
         }
