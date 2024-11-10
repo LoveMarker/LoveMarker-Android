@@ -96,7 +96,10 @@ fun NicknameRoute(
         }
     }
 
+    // todo: 화면 클릭 시 키보드 내리기
+    //  하단 버튼이 키보드 위로 올라오도록 구현
     NicknameScreen(
+        guideTitle = state.guideTitle,
         nickname = state.nickname,
         onNicknameChanged = {
             viewModel.apply {
@@ -104,19 +107,18 @@ fun NicknameRoute(
                 validateNickname(it)
             }
         },
-        guideTitle = state.guideTitle,
         isError = state.uiState is InputUiState.Error,
         supportingText = state.supportingText,
-        onClearIconClick = {
-            viewModel.updateNickname("")
-        },
         completeButtonText = state.completeButtonText,
         completeButtonEnabled = state.completeButtonEnabled,
         onCompleteButtonClick = {
             viewModel.patchNickname(state.nickname)
         },
         closeButtonVisible = state.closeButtonVisible,
-        onCloseButtonClick = navigateUp
+        onCloseButtonClick = navigateUp,
+        onClearIconClick = {
+            viewModel.updateNickname("")
+        },
     )
 }
 
@@ -147,17 +149,17 @@ fun UpdateStateByPreviousRoute(prevRoute: Route, viewModel: NicknameViewModel) {
 
 @Composable
 fun NicknameScreen(
+    guideTitle: String,
     nickname: String,
     onNicknameChanged: (String) -> Unit,
     isError: Boolean,
-    guideTitle: String,
     supportingText: String,
-    onClearIconClick: () -> Unit,
     completeButtonText: String,
     completeButtonEnabled: Boolean,
     onCompleteButtonClick: () -> Unit,
     closeButtonVisible: Boolean,
     onCloseButtonClick: () -> Unit,
+    onClearIconClick: () -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
