@@ -24,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -63,7 +62,7 @@ fun NicknameRoute(
     }
 
     when (val uiState = state.uiState) {
-        is InputUiState.Blank -> {
+        is InputUiState.Empty -> {
             viewModel.updateCompleteButtonEnabled(enabled = false)
         }
 
@@ -101,7 +100,7 @@ fun NicknameRoute(
         onNicknameChanged = {
             viewModel.apply {
                 updateNickname(it)
-                validateNickname(it) // todo: 입력할 때마다 상태가 잘 변하는지 확인
+                validateNickname(it)
             }
         },
         isError = state.uiState is InputUiState.Error,

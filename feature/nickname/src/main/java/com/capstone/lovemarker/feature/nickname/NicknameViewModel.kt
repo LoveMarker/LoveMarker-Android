@@ -2,7 +2,6 @@ package com.capstone.lovemarker.feature.nickname
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.capstone.lovemarker.core.navigation.Route
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -26,9 +25,13 @@ class NicknameViewModel : ViewModel() {
         }
     }
 
-    // TODO: 공백이나 특수문자 포함하지 않는지 검사
     fun validateNickname(nickname: String) {
-        if (nickname.isNotBlank()) {
+        if (nickname.isEmpty()) {
+            updateInputUiState(uiState = InputUiState.Empty)
+            return
+        }
+
+        if (nickname.matches(REGEX_PATTERN.toRegex())) {
             updateInputUiState(uiState = InputUiState.Valid)
         } else {
             updateInputUiState(uiState = InputUiState.Error.NOT_ALLOWED_CHAR)
@@ -89,5 +92,9 @@ class NicknameViewModel : ViewModel() {
         _nicknameState.update {
             it.copy(closeButtonVisible = visible)
         }
+    }
+
+    companion object {
+        private const val REGEX_PATTERN = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$"
     }
 }

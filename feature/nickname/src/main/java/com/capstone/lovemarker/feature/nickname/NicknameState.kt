@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.feature.nickname
 
 data class NicknameState(
-    val uiState: InputUiState = InputUiState.Blank,
+    val uiState: InputUiState = InputUiState.Empty,
     val nickname: String = "",
     val guideTitle: String = "",
     val supportingText: String = "",
@@ -11,7 +11,7 @@ data class NicknameState(
 )
 
 sealed interface InputUiState {
-    data object Blank : InputUiState
+    data object Empty : InputUiState
 
     data object Valid : InputUiState
 
