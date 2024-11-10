@@ -202,7 +202,7 @@ fun loveMarkerLightColorScheme(
     surfaceContainer: Color = Beige400,
     surfaceVariant: Color = Beige600,
     onSurfaceVariant: Color = Gray700,
-    outlineBrown: Color = Brown800,
+    outlineBrown: Color = Brown700,
     outlineGray: Color = Gray400,
     outlineVariant: Color = Gray300,
     error: Color = Error,
