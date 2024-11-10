@@ -14,7 +14,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Login
+    val startDestination = Route.Nickname
 
 //    fun navigateToNickname(navOptions: NavOptions) {
 //        navController.navigateToNickname(navOptions)

@@ -11,14 +11,14 @@ fun NavController.navigateToNickname() {
 }
 
 fun NavGraphBuilder.nicknameNavGraph(
-    pervRoute: Route,
+    prevRoute: Route,
     navigateUp: () -> Unit, // from MyPage
     navigateToMatching: () -> Unit, // from Login
     showErrorSnackbar: (Throwable?) -> Unit
 ) {
     composable<Route.Nickname> {
         NicknameRoute(
-            prevRoute = pervRoute,
+            prevRoute = prevRoute,
             navigateUp = navigateUp,
             navigateToMatching = navigateToMatching,
             showErrorSnackbar = showErrorSnackbar

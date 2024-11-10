@@ -187,6 +187,7 @@ fun NicknameScreen(
                 OutlinedTextField(
                     value = nickname,
                     onValueChange = onNicknameChanged,
+                    singleLine = true,
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
                         unfocusedIndicatorColor = LoveMarkerTheme.colorScheme.onSurface400,
@@ -200,6 +201,7 @@ fun NicknameScreen(
                         errorIndicatorColor = LoveMarkerTheme.colorScheme.error,
                         errorSupportingTextColor = LoveMarkerTheme.colorScheme.error,
                         errorTrailingIconColor = LoveMarkerTheme.colorScheme.error,
+                        cursorColor = LoveMarkerTheme.colorScheme.outlineBrown,
                     ),
                     isError = isError,
                     supportingText = {
