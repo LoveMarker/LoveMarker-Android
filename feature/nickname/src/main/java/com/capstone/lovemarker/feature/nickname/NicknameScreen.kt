@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -97,7 +99,8 @@ fun NicknameRoute(
     }
 
     // todo: 화면 클릭 시 키보드 내리기
-    //  하단 버튼이 키보드 위로 올라오도록 구현
+    //  키보드 위에 하단 버튼이 보이도록 변경
+    //  텍스트 필드 핸들러 색상 변경
     NicknameScreen(
         guideTitle = state.guideTitle,
         nickname = state.nickname,
@@ -244,6 +247,7 @@ fun NicknameScreen(
                     disabledContentColor = LoveMarkerTheme.colorScheme.onSurface500
                 ),
                 enabled = completeButtonEnabled,
+                shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(74.dp)
