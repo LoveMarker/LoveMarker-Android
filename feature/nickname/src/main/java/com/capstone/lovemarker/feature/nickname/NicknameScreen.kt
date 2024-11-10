@@ -203,6 +203,7 @@ fun NicknameScreen(
                         errorSupportingTextColor = LoveMarkerTheme.colorScheme.error,
                         errorTrailingIconColor = LoveMarkerTheme.colorScheme.error,
                         cursorColor = LoveMarkerTheme.colorScheme.outlineBrown,
+                        errorCursorColor = LoveMarkerTheme.colorScheme.error
                     ),
                     isError = isError,
                     supportingText = {
