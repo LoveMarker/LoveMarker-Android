@@ -2,6 +2,8 @@ package com.capstone.lovemarker.feature.nickname
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.domain.nickname.repository.NicknameRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -11,8 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class NicknameViewModel : ViewModel() {
+@HiltViewModel
+class NicknameViewModel @Inject constructor(
+    private val nicknameRepository: NicknameRepository,
+) : ViewModel() {
     private val _nicknameState = MutableStateFlow(NicknameState())
     val nicknameState: StateFlow<NicknameState> = _nicknameState.asStateFlow()
 
@@ -59,17 +65,20 @@ class NicknameViewModel : ViewModel() {
 
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
-            runCatching {
+            updateInputUiState(
+                InputUiState.Error.DUPLICATED
+            )
 
-            }.onSuccess {
-                updateInputUiState(
-                    InputUiState.Success
-                )
-            }.onFailure {
-                updateInputUiState(
-                    InputUiState.Error.DUPLICATED
-                )
-            }
+//            nicknameRepository.patchNickname(nickname)
+//                .onSuccess {
+//                    updateInputUiState(
+//                        InputUiState.Success
+//                    )
+//                }.onFailure {
+//                    updateInputUiState(
+//                        InputUiState.Error.DUPLICATED
+//                    )
+//                }
         }
     }
 

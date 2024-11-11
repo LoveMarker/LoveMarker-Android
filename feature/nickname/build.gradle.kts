@@ -9,6 +9,5 @@ android {
 }
 
 dependencies {
-    // domain
-    // other
+    implementation(projects.domain.nickname)
 }
