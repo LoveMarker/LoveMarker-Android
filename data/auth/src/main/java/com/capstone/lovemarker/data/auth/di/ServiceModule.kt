@@ -1,6 +1,6 @@
-package com.capstone.lovemarker.auth.di
+package com.capstone.lovemarker.data.auth.di
 
-import com.capstone.lovemarker.auth.service.AuthService
+import com.capstone.lovemarker.data.auth.service.AuthService
 import com.capstone.lovemarker.core.network.qualifier.AuthRequired
 import dagger.Module
 import dagger.Provides

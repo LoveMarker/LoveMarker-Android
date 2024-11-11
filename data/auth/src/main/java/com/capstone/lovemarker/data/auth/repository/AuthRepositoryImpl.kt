@@ -1,8 +1,9 @@
-package com.capstone.lovemarker.auth.repository
+package com.capstone.lovemarker.data.auth.repository
 
-import com.capstone.lovemarker.auth.dto.request.LoginRequest
+import com.capstone.lovemarker.data.auth.dto.request.LoginRequest
 import com.capstone.lovemarker.auth.entity.LoginEntity
-import com.capstone.lovemarker.auth.source.AuthDataSource
+import com.capstone.lovemarker.auth.repository.AuthRepository
+import com.capstone.lovemarker.data.auth.source.AuthDataSource
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(

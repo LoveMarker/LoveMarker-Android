@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.oauth.model
+package com.capstone.lovemarker.data.oauth.model
 
 import com.capstone.lovemarker.oauth.entity.GoogleOAuthToken
 

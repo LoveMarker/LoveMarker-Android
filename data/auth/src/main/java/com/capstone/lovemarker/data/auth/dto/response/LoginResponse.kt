@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.auth.dto.response
+package com.capstone.lovemarker.data.auth.dto.response
 
 import com.capstone.lovemarker.auth.entity.LoginEntity
 import kotlinx.serialization.SerialName

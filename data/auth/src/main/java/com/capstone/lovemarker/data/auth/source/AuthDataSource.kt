@@ -1,7 +1,7 @@
-package com.capstone.lovemarker.auth.source
+package com.capstone.lovemarker.data.auth.source
 
-import com.capstone.lovemarker.auth.dto.request.LoginRequest
-import com.capstone.lovemarker.auth.dto.response.LoginResponse
+import com.capstone.lovemarker.data.auth.dto.request.LoginRequest
+import com.capstone.lovemarker.data.auth.dto.response.LoginResponse
 import com.capstone.lovemarker.core.network.model.BaseResponse
 
 interface AuthDataSource {
