@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -26,7 +27,13 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -104,9 +111,9 @@ fun NicknameRoute(
         }
     }
 
-    // todo: 키보드 위에 하단 버튼이 보이도록 변경
-    //  텍스트 필드 핸들러 색상 변경
+    // todo: 텍스트 필드 핸들러 색상 변경
     //  닉네임 변경하는 서버 api 호출 (뷰모델 코드 수정)
+    //  Base Component 분리
     NicknameScreen(
         guideTitle = state.guideTitle,
         nickname = state.nickname,
@@ -171,6 +178,8 @@ fun NicknameScreen(
     onClearIconClick: () -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
+//    val focusRequester = remember { FocusRequester() }
+    var isFocused by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
     Surface(
@@ -214,13 +223,13 @@ fun NicknameScreen(
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
-                        unfocusedIndicatorColor = LoveMarkerTheme.colorScheme.onSurface400,
-                        unfocusedTextColor = LoveMarkerTheme.colorScheme.onSurface400,
+                        unfocusedIndicatorColor = LoveMarkerTheme.colorScheme.onSurface500,
+                        unfocusedTextColor = LoveMarkerTheme.colorScheme.onSurface500,
                         focusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
                         focusedIndicatorColor = LoveMarkerTheme.colorScheme.outlineBrown,
                         focusedTextColor = LoveMarkerTheme.colorScheme.onSurface700,
                         focusedTrailingIconColor = LoveMarkerTheme.colorScheme.outlineBrown,
-                        unfocusedTrailingIconColor = LoveMarkerTheme.colorScheme.onSurface400,
+                        unfocusedTrailingIconColor = LoveMarkerTheme.colorScheme.onSurface500,
                         errorContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
                         errorIndicatorColor = LoveMarkerTheme.colorScheme.error,
                         errorSupportingTextColor = LoveMarkerTheme.colorScheme.error,
@@ -239,15 +248,22 @@ fun NicknameScreen(
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_input_clear),
                                 contentDescription = stringResource(R.string.nickname_clear_icon_desc),
-                                modifier = Modifier.clickable {
+                                modifier = Modifier.clickable(enabled = isFocused) {
                                     onClearIconClick()
                                 }
                             )
                         }
                     },
+                    keyboardActions = KeyboardActions(onDone = {
+                        focusManager.clearFocus()
+                    }),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 38.dp)
+//                        .focusRequester(focusRequester)
+                        .onFocusChanged { focusState ->
+                            isFocused = focusState.isFocused
+                        }
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
