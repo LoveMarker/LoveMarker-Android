@@ -29,7 +29,6 @@ class NicknameViewModel : ViewModel() {
     private fun validateNickname(nickname: String) {
         if (nickname.isEmpty()) {
             updateInputUiState(uiState = InputUiState.Empty)
-            Timber.d("nickname: $nickname, state: ${nicknameState.value.uiState}")
             return
         }
 
@@ -38,7 +37,6 @@ class NicknameViewModel : ViewModel() {
         } else {
             updateInputUiState(uiState = InputUiState.Error.NOT_ALLOWED_CHAR)
         }
-        Timber.d("nickname: $nickname, state: ${nicknameState.value.uiState}")
     }
 
     private fun updateInputUiState(uiState: InputUiState) {
