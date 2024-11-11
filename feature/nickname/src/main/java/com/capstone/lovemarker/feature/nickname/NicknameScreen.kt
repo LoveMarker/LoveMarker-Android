@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
-import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -19,20 +16,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +31,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.capstone.lovemarker.core.common.extension.addFocusCleaner
+import com.capstone.lovemarker.core.common.extension.hideKeyboard
+import com.capstone.lovemarker.core.designsystem.component.textfield.LoveMarkerTextField
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
@@ -167,26 +158,20 @@ fun NicknameScreen(
     onNicknameChanged: (String) -> Unit,
     isError: Boolean,
     supportingText: String,
+    onClearIconClick: () -> Unit,
     completeButtonText: String,
     completeButtonEnabled: Boolean,
     onCompleteButtonClick: () -> Unit,
     closeButtonVisible: Boolean,
     onCloseButtonClick: () -> Unit,
-    onClearIconClick: () -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-    var isFocused by remember { mutableStateOf(false) }
+    val keyboardController = LocalSoftwareKeyboardController.current
     val scrollState = rememberScrollState()
-
-    val textSelectionColors = TextSelectionColors(
-        handleColor = LoveMarkerTheme.colorScheme.primary,
-        backgroundColor = LoveMarkerTheme.colorScheme.primary.copy(alpha = 0.4f)
-    )
 
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .addFocusCleaner(focusManager),
+            .hideKeyboard(keyboardController),
         color = LoveMarkerTheme.colorScheme.surfaceContainer
     ) {
         Column(
@@ -218,56 +203,26 @@ fun NicknameScreen(
                     color = LoveMarkerTheme.colorScheme.onSurface700,
                     modifier = Modifier.padding(top = 13.dp)
                 )
-
-                CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
-                    OutlinedTextField(
-                        value = nickname,
-                        onValueChange = onNicknameChanged,
-                        singleLine = true,
-                        isError = isError,
-                        supportingText = {
-                            if (isError) {
-                                Text(text = supportingText)
-                            }
-                        },
-                        trailingIcon = {
-                            if (nickname.isNotBlank()) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_input_clear),
-                                    contentDescription = stringResource(R.string.nickname_clear_icon_desc),
-                                    modifier = Modifier.clickable(enabled = isFocused) {
-                                        onClearIconClick()
-                                    }
-                                )
-                            }
-                        },
-                        keyboardActions = KeyboardActions(onDone = {
-                            focusManager.clearFocus()
-                        }),
-                        colors = TextFieldDefaults.colors(
-                            unfocusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
-                            unfocusedIndicatorColor = LoveMarkerTheme.colorScheme.onSurface500,
-                            unfocusedTextColor = LoveMarkerTheme.colorScheme.onSurface500,
-                            focusedContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
-                            focusedIndicatorColor = LoveMarkerTheme.colorScheme.outlineBrown,
-                            focusedTextColor = LoveMarkerTheme.colorScheme.onSurface700,
-                            focusedTrailingIconColor = LoveMarkerTheme.colorScheme.outlineBrown,
-                            unfocusedTrailingIconColor = LoveMarkerTheme.colorScheme.onSurface500,
-                            errorContainerColor = LoveMarkerTheme.colorScheme.surfaceContainer,
-                            errorIndicatorColor = LoveMarkerTheme.colorScheme.error,
-                            errorSupportingTextColor = LoveMarkerTheme.colorScheme.error,
-                            errorTrailingIconColor = LoveMarkerTheme.colorScheme.error,
-                            cursorColor = LoveMarkerTheme.colorScheme.outlineBrown,
-                            errorCursorColor = LoveMarkerTheme.colorScheme.error
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 38.dp)
-                            .onFocusChanged { focusState ->
-                                isFocused = focusState.isFocused
-                            }
-                    )
-                }
+                LoveMarkerTextField(
+                    value = nickname,
+                    onValueChanged = onNicknameChanged,
+                    placeholder = stringResource(id = R.string.nickname_placeholder),
+                    modifier = Modifier.padding(top = 38.dp),
+                    isError = isError,
+                    supportingText = supportingText,
+                    trailingIcon = { isFocused, iconTint ->
+                        if (nickname.isNotBlank()) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_input_clear),
+                                contentDescription = stringResource(R.string.nickname_clear_icon_desc),
+                                tint = iconTint,
+                                modifier = Modifier.clickable(enabled = isFocused) {
+                                    onClearIconClick()
+                                }
+                            )
+                        }
+                    },
+                )
             }
             Spacer(modifier = Modifier.weight(1f))
             Button(
@@ -298,7 +253,7 @@ fun NicknameScreen(
 private fun NicknamePreview() {
     LoveMarkerTheme {
         NicknameScreen(
-            nickname = "leeeha",
+            nickname = "",
             onNicknameChanged = {},
             isError = false,
             guideTitle = stringResource(id = R.string.nickname_guide_title_from_login),
