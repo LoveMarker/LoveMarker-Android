@@ -6,9 +6,9 @@ import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialRequest.Builder
 import com.capstone.lovemarker.data.oauth.BuildConfig
-import com.capstone.lovemarker.oauth.entity.OAuthToken
+import com.capstone.lovemarker.domain.oauth.entity.OAuthToken
 import com.capstone.lovemarker.data.oauth.model.toDomainEntity
-import com.capstone.lovemarker.oauth.service.OAuthService
+import com.capstone.lovemarker.domain.oauth.service.OAuthService
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException

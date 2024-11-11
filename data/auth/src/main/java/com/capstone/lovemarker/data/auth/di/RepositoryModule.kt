@@ -1,6 +1,6 @@
 package com.capstone.lovemarker.data.auth.di
 
-import com.capstone.lovemarker.auth.repository.AuthRepository
+import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import com.capstone.lovemarker.data.auth.repository.AuthRepositoryImpl
 import com.capstone.lovemarker.data.auth.source.AuthDataSource
 import com.capstone.lovemarker.data.auth.source.AuthDataSourceImpl

@@ -2,7 +2,7 @@ package com.capstone.lovemarker.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.capstone.lovemarker.auth.repository.AuthRepository
+import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow

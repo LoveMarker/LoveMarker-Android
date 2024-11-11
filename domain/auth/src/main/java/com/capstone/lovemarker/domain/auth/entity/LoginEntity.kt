@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.auth.entity
+package com.capstone.lovemarker.domain.auth.entity
 
 data class LoginEntity(
     val accessToken: String,

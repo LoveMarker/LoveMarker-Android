@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.data.oauth.di
 
 import com.capstone.lovemarker.data.oauth.service.GoogleAuthService
-import com.capstone.lovemarker.oauth.service.OAuthService
+import com.capstone.lovemarker.domain.oauth.service.OAuthService
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

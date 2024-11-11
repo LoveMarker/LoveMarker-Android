@@ -1,6 +1,6 @@
-package com.capstone.lovemarker.auth.repository
+package com.capstone.lovemarker.domain.auth.repository
 
-import com.capstone.lovemarker.auth.entity.LoginEntity
+import com.capstone.lovemarker.domain.auth.entity.LoginEntity
 
 interface AuthRepository {
     suspend fun postLogin(
