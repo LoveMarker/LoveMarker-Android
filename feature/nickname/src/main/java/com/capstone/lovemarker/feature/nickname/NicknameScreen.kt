@@ -4,16 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -32,6 +27,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.hideKeyboard
+import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.textfield.LoveMarkerTextField
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.navigation.MainTabRoute
@@ -103,14 +99,11 @@ fun NicknameRoute(
     // todo: Base Component 분리
     //  닉네임 변경하는 서버 api 호출 (뷰모델 코드 수정)
     NicknameScreen(
-        guideTitle = state.guideTitle,
         nickname = state.nickname,
         onNicknameChanged = {
-            viewModel.apply {
-                updateNickname(it)
-                validateNickname(it)
-            }
+            viewModel.updateNickname(nickname = it)
         },
+        guideTitle = state.guideTitle,
         isError = state.uiState is InputUiState.Error,
         supportingText = state.supportingText,
         completeButtonText = state.completeButtonText,
@@ -121,7 +114,7 @@ fun NicknameRoute(
         closeButtonVisible = state.closeButtonVisible,
         onCloseButtonClick = navigateUp,
         onClearIconClick = {
-            viewModel.updateNickname("")
+            viewModel.updateNickname(nickname = "")
         },
     )
 }
@@ -225,25 +218,11 @@ fun NicknameScreen(
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
-            Button(
+            LoveMarkerButton(
                 onClick = onCompleteButtonClick,
-                colors = ButtonColors(
-                    containerColor = LoveMarkerTheme.colorScheme.secondaryContainer,
-                    contentColor = LoveMarkerTheme.colorScheme.onSecondaryContainer,
-                    disabledContainerColor = LoveMarkerTheme.colorScheme.onSurface200,
-                    disabledContentColor = LoveMarkerTheme.colorScheme.onSurface500
-                ),
-                enabled = completeButtonEnabled,
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(74.dp)
-                    .padding(horizontal = 16.dp, vertical = 14.dp)
-            ) {
-                Text(
-                    text = completeButtonText,
-                )
-            }
+                buttonText = completeButtonText,
+                enabled = completeButtonEnabled
+            )
         }
     }
 }
