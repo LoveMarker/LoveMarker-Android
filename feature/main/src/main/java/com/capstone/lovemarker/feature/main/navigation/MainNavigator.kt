@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.feature.main
+package com.capstone.lovemarker.feature.main.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

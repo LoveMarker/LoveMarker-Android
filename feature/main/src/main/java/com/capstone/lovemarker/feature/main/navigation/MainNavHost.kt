@@ -1,12 +1,10 @@
-package com.capstone.lovemarker.feature.main
+package com.capstone.lovemarker.feature.main.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
-import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
 
 @Composable

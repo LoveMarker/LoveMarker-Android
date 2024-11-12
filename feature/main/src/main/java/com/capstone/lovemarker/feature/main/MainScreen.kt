@@ -10,7 +10,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.capstone.lovemarker.feature.main.R
+import com.capstone.lovemarker.feature.main.navigation.MainNavHost
+import com.capstone.lovemarker.feature.main.navigation.MainNavigator
+import com.capstone.lovemarker.feature.main.navigation.rememberMainNavigator
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
