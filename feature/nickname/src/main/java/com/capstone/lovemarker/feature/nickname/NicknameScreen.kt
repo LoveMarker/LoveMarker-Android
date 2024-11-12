@@ -97,7 +97,6 @@ fun NicknameRoute(
         }
     }
 
-    // todo: 닉네임 변경하는 서버 api 호출 (뷰모델 코드 수정)
     NicknameScreen(
         nickname = state.nickname,
         onNicknameChanged = {

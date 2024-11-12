@@ -55,8 +55,7 @@ fun LoginRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is LoginSideEffect.NavigateToNickname -> {
-                        Timber.d("Success Login to Server")
-                        //navigateToNickname()
+                        navigateToNickname()
                     }
 
                     is LoginSideEffect.ShowErrorSnackbar -> {

@@ -65,6 +65,7 @@ class NicknameViewModel @Inject constructor(
 
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
+            // todo: 임시로 스낵바 띄우기
             updateInputUiState(
                 InputUiState.Error.DUPLICATED
             )

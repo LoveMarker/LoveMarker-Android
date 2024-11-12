@@ -22,14 +22,16 @@ class LoginViewModel @Inject constructor(
         Timber.d("GOOGLE TOKEN: $socialToken")
 
         viewModelScope.launch {
-            authRepository.postLogin(
-                socialToken = socialToken,
-                provider = OAUTH_PROVIDER
-            ).onSuccess {
-                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
-            }.onFailure {
-                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
-            }
+            _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+
+//            authRepository.postLogin(
+//                socialToken = socialToken,
+//                provider = OAUTH_PROVIDER
+//            ).onSuccess {
+//                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+//            }.onFailure {
+//                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
+//            }
         }
     }
 
