@@ -10,11 +10,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.capstone.lovemarker.core.designsystem.component.snackbar.LoveMarkerSnackbar
 import com.capstone.lovemarker.feature.main.navigation.MainNavHost
 import com.capstone.lovemarker.feature.main.navigation.MainNavigator
 import com.capstone.lovemarker.feature.main.navigation.rememberMainNavigator
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
+
+private const val SNACK_BAR_DURATION = 2000L
 
 @Composable
 fun MainScreen(
@@ -22,16 +26,20 @@ fun MainScreen(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-    val localContextResource = LocalContext.current.resources
+    val resources = LocalContext.current.resources
 
     val onShowErrorSnackBar: (throwable: Throwable?) -> Unit = { throwable ->
         coroutineScope.launch {
-            snackBarHostState.showSnackbar(
-                when (throwable) {
-                    is UnknownHostException -> localContextResource.getString(R.string.error_message_network)
-                    else -> throwable?.message.toString()
-                }
-            )
+            val job = launch {
+                snackBarHostState.showSnackbar(
+                    when (throwable) {
+                        is UnknownHostException -> resources.getString(R.string.error_message_network)
+                        else -> throwable?.message.toString()
+                    }
+                )
+            }
+            delay(SNACK_BAR_DURATION)
+            job.cancel()
         }
     }
 
@@ -73,7 +81,12 @@ fun MainScreenContent(
 //            }
 //        },
         snackbarHost = {
-            SnackbarHost(snackbarHostState)
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { snackbarData ->
+                    LoveMarkerSnackbar(message = snackbarData.visuals.message)
+                }
+            )
         }
     )
 }
