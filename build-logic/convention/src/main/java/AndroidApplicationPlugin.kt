@@ -25,8 +25,8 @@ class AndroidApplicationPlugin : Plugin<Project> {
                     versionCode = libs.findVersion("versionCode").get().requiredVersion.toInt()
                     versionName = libs.findVersion("versionName").get().requiredVersion
 
-                    val authBaseUrl = properties["auth.base.url"] as? String ?: ""
-                    buildConfigField("String", "AUTH_BASE_URL", authBaseUrl)
+                    val baseUrl = properties["lovemarker.base.url"] as? String ?: ""
+                    buildConfigField("String", "LOVE_MARKER_BASE_URL", baseUrl)
                 }
             }
         }
