@@ -10,13 +10,29 @@ sealed interface Route {
     data object Nickname : Route
 
     @Serializable
-    data object Matching : Route
-
-    @Serializable
-    data object Upload : Route
-
-    @Serializable
     data object Detail : Route
+}
+
+sealed interface Matching: Route {
+    @Serializable
+    data object Home : Matching
+
+    @Serializable
+    data object Sender : Matching
+
+    @Serializable
+    data object Receiver : Matching
+}
+
+sealed interface Upload: Route {
+    @Serializable
+    data object Photo : Upload
+
+    @Serializable
+    data object Content : Upload
+
+    @Serializable
+    data object PlaceSearch : Upload
 }
 
 sealed interface MainTabRoute : Route {
