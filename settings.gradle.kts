@@ -32,7 +32,8 @@ include(
 
 include(
     ":feature:login",
-    ":feature:main"
+    ":feature:main",
+    ":feature:matching"
 )
 
 include(
