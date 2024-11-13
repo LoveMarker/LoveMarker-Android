@@ -15,7 +15,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -107,8 +106,8 @@ fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = stringResource(id = R.string.app_name),
-                fontFamily = FontFamily(Font(R.font.ribeye_regular)),
+                text = stringResource(id = com.capstone.lovemarker.core.designsystem.R.string.app_name),
+                fontFamily = FontFamily(Font(resId = com.capstone.lovemarker.core.designsystem.R.font.ribeye_regular)),
                 fontSize = 40.sp,
                 modifier = Modifier.padding(bottom = 120.dp)
             )
