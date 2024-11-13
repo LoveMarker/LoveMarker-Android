@@ -28,6 +28,7 @@ dependencies {
     // data
     implementation(projects.data.auth)
     implementation(projects.data.oauth)
+    implementation(projects.data.nickname)
     // todo: data.matching
 
     // android

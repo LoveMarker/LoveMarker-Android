@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nickname_guide_title_from_login">앱에서 사용할\n닉네임을 입력해주세요 :)</string>
+    <string name="nickname_guide_title_from_mypage">어떤 닉네임으로\n바꾸고 싶나요?</string>
+    <string name="nickname_guide_detail">공백이나 특수문자는 사용할 수 없습니다</string>
+    <string name="nickname_placeholder">닉네임</string>
+    <string name="nickname_not_allowed_char_error_msg">공백이나 특수문자는 사용할 수 없습니다 :(</string>
+    <string name="nickname_duplicate_error_msg">중복된 닉네임입니다 :(</string>
+    <string name="nickname_complete_btn_text_from_login">시작하기</string>
+    <string name="nickname_complete_btn_text_from_mypage">완료</string>
+    <string name="nickname_close_icon_desc">Close</string>
+    <string name="nickname_clear_icon_desc">Clear</string>
+</resources>

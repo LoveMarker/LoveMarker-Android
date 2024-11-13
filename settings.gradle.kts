@@ -33,15 +33,18 @@ include(
 include(
     ":feature:login",
     ":feature:main",
-    ":feature:matching"
+    ":feature:nickname",
+    ":feature:matching",
 )
 
 include(
     ":domain:auth",
-    ":domain:oauth"
+    ":domain:oauth",
+    ":domain:nickname"
 )
 
 include(
     ":data:auth",
-    ":data:oauth"
+    ":data:oauth",
+    ":data:nickname"
 )

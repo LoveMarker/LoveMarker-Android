@@ -28,14 +28,26 @@ class LoveMarkerColorScheme(
 
     // beige
     surface: Color,
-    onSurface: Color,
+    onSurface50: Color,
+    onSurface100: Color,
+    onSurface200: Color,
+    onSurface300: Color,
+    onSurface400: Color,
+    onSurface500: Color,
+    onSurface600: Color,
+    onSurface700: Color,
+    onSurface800: Color,
+    onSurface900: Color,
+
+    // bottom navigation bar
     surfaceVariant: Color,
     onSurfaceVariant: Color,
     surfaceContainer: Color,
 
     // gray
-    outline: Color,
-    outlineVariant: Color,
+    outlineBrown: Color, // 배경이 베이지일 때
+    outlineGray: Color, // 배경이 흰색일 때
+    outlineVariant: Color, // divider
 
     // semantic
     error: Color,
@@ -50,6 +62,7 @@ class LoveMarkerColorScheme(
         private set
     var onPrimaryContainer by mutableStateOf(onPrimaryContainer)
         private set
+
     var secondary by mutableStateOf(secondary)
         private set
     var onSecondary by mutableStateOf(onSecondary)
@@ -58,20 +71,44 @@ class LoveMarkerColorScheme(
         private set
     var onSecondaryContainer by mutableStateOf(onSecondaryContainer)
         private set
+
     var surface by mutableStateOf(surface)
         private set
-    var onSurface by mutableStateOf(onSurface)
+    var onSurface50 by mutableStateOf(onSurface50)
         private set
+    var onSurface100 by mutableStateOf(onSurface100)
+        private set
+    var onSurface200 by mutableStateOf(onSurface200)
+        private set
+    var onSurface300 by mutableStateOf(onSurface300)
+        private set
+    var onSurface400 by mutableStateOf(onSurface400)
+        private set
+    var onSurface500 by mutableStateOf(onSurface500)
+        private set
+    var onSurface600 by mutableStateOf(onSurface600)
+        private set
+    var onSurface700 by mutableStateOf(onSurface700)
+        private set
+    var onSurface800 by mutableStateOf(onSurface800)
+        private set
+    var onSurface900 by mutableStateOf(onSurface900)
+        private set
+
     var surfaceVariant by mutableStateOf(surfaceVariant)
         private set
     var onSurfaceVariant by mutableStateOf(onSurfaceVariant)
         private set
     var surfaceContainer by mutableStateOf(surfaceContainer)
         private set
-    var outline by mutableStateOf(outline)
+
+    var outlineBrown by mutableStateOf(outlineBrown)
+        private set
+    var outlineGray by mutableStateOf(outlineGray)
         private set
     var outlineVariant by mutableStateOf(outlineVariant)
         private set
+
     var error by mutableStateOf(error)
         private set
     var success by mutableStateOf(success)
@@ -89,11 +126,21 @@ class LoveMarkerColorScheme(
         secondaryContainer = secondaryContainer,
         onSecondaryContainer = onSecondaryContainer,
         surface = surface,
-        onSurface = onSurface,
+        onSurface50 = onSurface50,
+        onSurface100 = onSurface100,
+        onSurface200 = onSurface200,
+        onSurface300 = onSurface300,
+        onSurface400 = onSurface400,
+        onSurface500 = onSurface500,
+        onSurface600 = onSurface600,
+        onSurface700 = onSurface700,
+        onSurface800 = onSurface800,
+        onSurface900 = onSurface900,
         surfaceVariant = surfaceVariant,
         onSurfaceVariant = onSurfaceVariant,
         surfaceContainer = surfaceContainer,
-        outline = outline,
+        outlineBrown = outlineBrown,
+        outlineGray = outlineGray,
         outlineVariant = outlineVariant,
         error = error,
         success = success,
@@ -110,11 +157,21 @@ class LoveMarkerColorScheme(
         secondaryContainer = other.secondaryContainer
         onSecondaryContainer = other.onSecondaryContainer
         surface = other.surface
-        onSurface = other.onSurface
+        onSurface50 = other.onSurface50
+        onSurface100 = other.onSurface100
+        onSurface200 = other.onSurface200
+        onSurface300 = other.onSurface300
+        onSurface400 = other.onSurface400
+        onSurface500 = other.onSurface500
+        onSurface600 = other.onSurface600
+        onSurface700 = other.onSurface700
+        onSurface800 = other.onSurface800
+        onSurface900 = other.onSurface900
         surfaceVariant = other.surfaceVariant
         onSurfaceVariant = other.onSurfaceVariant
         surfaceContainer = other.surfaceContainer
-        outline = other.outline
+        outlineBrown = other.outlineBrown
+        outlineGray = other.outlineGray
         outlineVariant = other.outlineVariant
         error = other.error
         success = other.success
@@ -132,11 +189,21 @@ fun loveMarkerLightColorScheme(
     secondaryContainer: Color = Brown100,
     onSecondaryContainer: Color = Gray800,
     surface: Color = White,
-    onSurface: Color = Black,
+    onSurface50: Color = Gray50,
+    onSurface100: Color = Gray100,
+    onSurface200: Color = Gray200,
+    onSurface300: Color = Gray300,
+    onSurface400: Color = Gray400,
+    onSurface500: Color = Gray500,
+    onSurface600: Color = Gray600,
+    onSurface700: Color = Gray700,
+    onSurface800: Color = Gray800,
+    onSurface900: Color = Gray900,
     surfaceContainer: Color = Beige400,
     surfaceVariant: Color = Beige600,
     onSurfaceVariant: Color = Gray700,
-    outline: Color = Gray400,
+    outlineBrown: Color = Brown700,
+    outlineGray: Color = Gray400,
     outlineVariant: Color = Gray300,
     error: Color = Error,
     success: Color = Success,
@@ -151,11 +218,21 @@ fun loveMarkerLightColorScheme(
     secondaryContainer,
     onSecondaryContainer,
     surface,
-    onSurface,
+    onSurface50,
+    onSurface100,
+    onSurface200,
+    onSurface300,
+    onSurface400,
+    onSurface500,
+    onSurface600,
+    onSurface700,
+    onSurface800,
+    onSurface900,
     surfaceVariant,
     onSurfaceVariant,
     surfaceContainer,
-    outline,
+    outlineBrown,
+    outlineGray,
     outlineVariant,
     error,
     success,
