@@ -88,7 +88,7 @@ object NetworkModule {
         @AuthRequired client: OkHttpClient,
         converterFactory: Converter.Factory
     ): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.AUTH_BASE_URL)
+        .baseUrl(BuildConfig.LOVE_MARKER_BASE_URL)
         .client(client)
         .addConverterFactory(converterFactory)
         .build()
@@ -100,7 +100,7 @@ object NetworkModule {
         @AuthNotRequired client: OkHttpClient,
         converterFactory: Converter.Factory,
     ): Retrofit = Retrofit.Builder()
-        .baseUrl(BuildConfig.AUTH_BASE_URL)
+        .baseUrl(BuildConfig.LOVE_MARKER_BASE_URL)
         .client(client)
         .addConverterFactory(converterFactory)
         .build()

@@ -2,7 +2,7 @@ package com.capstone.lovemarker.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.capstone.lovemarker.auth.repository.AuthRepository
+import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -22,14 +22,16 @@ class LoginViewModel @Inject constructor(
         Timber.d("GOOGLE TOKEN: $socialToken")
 
         viewModelScope.launch {
-            authRepository.postLogin(
-                socialToken = socialToken,
-                provider = OAUTH_PROVIDER
-            ).onSuccess {
-                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
-            }.onFailure {
-                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
-            }
+            _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+
+//            authRepository.postLogin(
+//                socialToken = socialToken,
+//                provider = OAUTH_PROVIDER
+//            ).onSuccess {
+//                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+//            }.onFailure {
+//                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
+//            }
         }
     }
 

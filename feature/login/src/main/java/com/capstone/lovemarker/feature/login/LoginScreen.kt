@@ -34,7 +34,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.login.di.OAuthEntryPoint
-import com.capstone.lovemarker.oauth.service.OAuthService
+import com.capstone.lovemarker.domain.oauth.service.OAuthService
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -55,8 +55,7 @@ fun LoginRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is LoginSideEffect.NavigateToNickname -> {
-                        Timber.d("Success Login to Server")
-                        //navigateToNickname()
+                        navigateToNickname()
                     }
 
                     is LoginSideEffect.ShowErrorSnackbar -> {
