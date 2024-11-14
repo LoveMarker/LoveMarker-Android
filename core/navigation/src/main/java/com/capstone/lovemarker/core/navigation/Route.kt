@@ -17,26 +17,26 @@ sealed interface Route {
     data object Detail : Route
 }
 
-sealed interface Matching: Route {
+sealed interface MatchingRoute: Route {
     @Serializable
-    data object Home : Matching
+    data object Home : MatchingRoute
 
     @Serializable
-    data object Sender : Matching
+    data object Sender : MatchingRoute
 
     @Serializable
-    data object Receiver : Matching
+    data object Receiver : MatchingRoute
 }
 
-sealed interface Upload: Route {
+sealed interface UploadRoute: Route {
     @Serializable
-    data object Photo : Upload
+    data object Photo : UploadRoute
 
     @Serializable
-    data object Content : Upload
+    data object Content : UploadRoute
 
     @Serializable
-    data object PlaceSearch : Upload
+    data object PlaceSearch : UploadRoute
 }
 
 sealed interface MainTabRoute : Route {
