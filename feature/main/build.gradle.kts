@@ -11,4 +11,5 @@ android {
 dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.nickname)
+    implementation(projects.feature.matching)
 }

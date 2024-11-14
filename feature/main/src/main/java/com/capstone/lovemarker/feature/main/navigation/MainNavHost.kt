@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
+import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
 
 @Composable
@@ -38,8 +39,12 @@ fun MainNavHost(
         nicknameNavGraph(
             prevRoute = Route.Login,
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToMatching = { /* TODO */ },
+            navigateToMatching = { navigator.navigateToMatching() },
             showErrorSnackbar = showErrorSnackbar
+        )
+        matchingNavGraph(
+            navigateToSender = { navigator.navigateToSender() },
+            navigateToReceiver = { navigator.navigateToReceiver() }
         )
     }
 }
