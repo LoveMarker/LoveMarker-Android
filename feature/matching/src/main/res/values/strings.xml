@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="matching_img_desc">couple matching image</string>
+    <string name="matching_sender_anniversary_title">두 분의 기념일이 언제인가요?</string>
+    <string name="matching_sender_guide_detail">고유한 초대 코드를 만들어드릴게요!</string>
 </resources>
