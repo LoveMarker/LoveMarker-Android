@@ -25,22 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.matching.R
 
 @Composable
-fun MatchingRoute(
-    navigateToSender: () -> Unit,
-    navigateToReceiver: () -> Unit,
-    showErrorSnackbar: (Throwable?) -> Unit,
-    viewModel: MatchingViewModel = viewModel(),
-) {
-
-}
-
-@Composable
 fun MatchingScreen(
-    modifier: Modifier = Modifier
+    onCreateButtonClick: () -> Unit,
+    onInputButtonClick: () -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -63,6 +55,15 @@ fun MatchingScreen(
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.weight(1f))
+            LoveMarkerButton(
+                onClick = onCreateButtonClick,
+                buttonText = "초대 코드 생성하기"
+            )
+            LoveMarkerButton(
+                onClick = onInputButtonClick,
+                buttonText = "초대 코드 입력하기",
+                modifier = Modifier.padding(bottom = 55.dp)
+            )
         }
     }
 }
@@ -71,6 +72,9 @@ fun MatchingScreen(
 @Composable
 private fun MatchingPreview() {
     LoveMarkerTheme {
-        MatchingScreen()
+        MatchingScreen(
+            onCreateButtonClick = {},
+            onInputButtonClick = {}
+        )
     }
 }
