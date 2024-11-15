@@ -7,4 +7,5 @@
     <string name="matching_sender_trailing_icon_desc">Select date</string>
     <string name="matching_sender_dismiss_btn_text">취소</string>
     <string name="matching_sender_confirm_btn_text">완료</string>
+    <string name="matching_sender_complete_btn_text">완료</string>
 </resources>

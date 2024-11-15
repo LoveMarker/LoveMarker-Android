@@ -34,6 +34,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Beige500
 import com.capstone.lovemarker.core.designsystem.theme.Beige600
@@ -53,7 +54,6 @@ import java.util.Locale
 @Composable
 fun SenderScreen(
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -85,6 +85,13 @@ fun SenderScreen(
                 Spacer(modifier = Modifier.padding(top = 24.dp))
                 DatePickerFieldToModal()
             }
+            Spacer(modifier = Modifier.weight(1f))
+            LoveMarkerButton(
+                onClick = {
+                    // todo: 코드 공유 다이얼로그 표시
+                },
+                buttonText = stringResource(R.string.matching_sender_complete_btn_text)
+            )
         }
     }
 }
@@ -170,7 +177,7 @@ fun DatePickerModal(
         colors = DatePickerDefaults.colors(
             containerColor = Beige400,
 
-        )
+            )
     ) {
         DatePicker(
             state = datePickerState,
