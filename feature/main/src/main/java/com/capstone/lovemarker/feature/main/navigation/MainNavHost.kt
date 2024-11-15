@@ -44,7 +44,8 @@ fun MainNavHost(
         )
         matchingNavGraph(
             navigateToSender = { navigator.navigateToSender() },
-            navigateToReceiver = { navigator.navigateToReceiver() }
+            navigateToReceiver = { navigator.navigateToReceiver() },
+            navigateUp = { navigator.navigateUpIfNotHome() }
         )
     }
 }
