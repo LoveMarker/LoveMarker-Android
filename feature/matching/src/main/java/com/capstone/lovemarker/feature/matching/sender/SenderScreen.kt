@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -34,6 +35,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
+import com.capstone.lovemarker.core.designsystem.theme.Beige500
+import com.capstone.lovemarker.core.designsystem.theme.Beige600
+import com.capstone.lovemarker.core.designsystem.theme.Brown100
+import com.capstone.lovemarker.core.designsystem.theme.Brown200
+import com.capstone.lovemarker.core.designsystem.theme.Brown300
+import com.capstone.lovemarker.core.designsystem.theme.Brown400
+import com.capstone.lovemarker.core.designsystem.theme.Brown600
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
@@ -145,16 +153,42 @@ fun DatePickerModal(
                 onDateSelected(datePickerState.selectedDateMillis)
                 onDismiss()
             }) {
-                Text(text = stringResource(R.string.matching_sender_confirm_btn_text))
+                Text(
+                    text = stringResource(R.string.matching_sender_confirm_btn_text),
+                    color = Brown700
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.matching_sender_dismiss_btn_text))
+                Text(
+                    text = stringResource(R.string.matching_sender_dismiss_btn_text),
+                    color = Brown700
+                )
             }
-        }
+        },
+        colors = DatePickerDefaults.colors(
+            containerColor = Beige400,
+
+        )
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(
+            state = datePickerState,
+            colors = DatePickerDefaults.colors(
+                containerColor = Beige400,
+                dateTextFieldColors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Brown700,
+                    unfocusedIndicatorColor = Brown700,
+                    focusedContainerColor = Beige400,
+                    unfocusedContainerColor = Beige400,
+                    cursorColor = Brown700,
+                    focusedLabelColor = Brown700
+                ),
+                todayContentColor = Brown700,
+                todayDateBorderColor = Brown700,
+                selectedDayContainerColor = Brown700
+            )
+        )
     }
 }
 
