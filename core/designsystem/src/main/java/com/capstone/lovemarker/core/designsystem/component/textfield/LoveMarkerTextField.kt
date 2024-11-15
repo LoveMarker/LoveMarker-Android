@@ -32,15 +32,25 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Error
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
+import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 
+/**
+ * unfocused Gray600
+ * focused Brown700
+ *
+ * 바깥 화면 터치했을 때의 동작
+ * - 평상시: clearFocus (테두리 Gray600)
+ * - 에러 상태: hideKeyboard (테두리 Error)
+ * */
 @Composable
 fun LoveMarkerTextField(
     value: String,
@@ -55,12 +65,11 @@ fun LoveMarkerTextField(
     trailingIcon: @Composable (isFocused: Boolean, iconTint: Color) -> Unit = { _, _ -> },
 ) {
     val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
 
-    val borderColor = if (isError) Error else Brown700
-    val supportingTextColor = if (isError) Error else Gray700
-    val iconTint = if (isError) Error else Brown700
+    val borderColor = if (isError) Error else if (isFocused) Brown700 else Gray500
     val textSelectionColors = TextSelectionColors(
         handleColor = if (isError) Error else Brown700,
         backgroundColor = if (isError) Error.copy(alpha = 0.4f) else Brown700.copy(alpha = 0.4f)
@@ -88,6 +97,13 @@ fun LoveMarkerTextField(
                 singleLine = true,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (isError) {
+                            keyboardController?.hide()
+                        } else {
+                            focusManager.clearFocus()
+                        }
+                    },
                     onSearch = {
                         focusManager.clearFocus()
                     }
@@ -99,7 +115,8 @@ fun LoveMarkerTextField(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        leadingIcon(isFocused, iconTint)
+                        // todo: 아이콘 인자 변경
+                        leadingIcon(isFocused, borderColor)
                         Box(modifier = Modifier.weight(1f)) {
                             innerTextField()
                             if (value.isEmpty()) {
@@ -110,7 +127,7 @@ fun LoveMarkerTextField(
                                 )
                             }
                         }
-                        trailingIcon(isFocused, iconTint)
+                        trailingIcon(isFocused, borderColor)
                     }
                 }
             )
@@ -119,7 +136,7 @@ fun LoveMarkerTextField(
         if (isError) {
             Text(
                 text = supportingText,
-                color = supportingTextColor,
+                color = Error,
                 style = LoveMarkerTheme.typography.label12M,
                 modifier = Modifier.padding(top = 4.dp, start = 16.dp)
             )
