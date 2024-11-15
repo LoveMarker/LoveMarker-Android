@@ -140,25 +140,25 @@ class LoveMarkerTypography internal constructor(
 @Composable
 fun LoveMarkerTypography() = LoveMarkerTypography(
     headline28B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp,
         lineHeight = 30.sp
     ),
     headline24B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 28.sp
     ),
     headline20B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 24.sp
     ),
     headline18B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
         lineHeight = 24.sp
@@ -170,7 +170,7 @@ fun LoveMarkerTypography() = LoveMarkerTypography(
         lineHeight = 24.sp
     ),
     body16B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 22.sp
@@ -182,7 +182,7 @@ fun LoveMarkerTypography() = LoveMarkerTypography(
         lineHeight = 22.sp
     ),
     body15B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 15.sp,
         lineHeight = 22.sp
@@ -194,7 +194,7 @@ fun LoveMarkerTypography() = LoveMarkerTypography(
         lineHeight = 22.sp
     ),
     body14B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 20.sp
@@ -206,7 +206,7 @@ fun LoveMarkerTypography() = LoveMarkerTypography(
         lineHeight = 20.sp
     ),
     label13B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
         lineHeight = 18.sp
@@ -218,7 +218,7 @@ fun LoveMarkerTypography() = LoveMarkerTypography(
         lineHeight = 18.sp
     ),
     label12B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 17.sp
@@ -230,7 +230,7 @@ fun LoveMarkerTypography() = LoveMarkerTypography(
         lineHeight = 17.sp
     ),
     label11B = TextStyle(
-        fontFamily = PretendardBold,
+        fontFamily = PretendardSemiBold,
         fontWeight = FontWeight.Bold,
         fontSize = 11.sp,
         lineHeight = 15.sp
