@@ -12,21 +12,17 @@ class AuthInterceptor @Inject constructor(
     private val userPreferencesDataSource: UserPreferencesDataSource,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val accessToken = runBlocking {
-            "Bearer ${userPreferencesDataSource.userData.first().accessToken}"
+        val userData = runBlocking {
+            userPreferencesDataSource.userData.first()
         }
-        val refreshToken = runBlocking {
-            userPreferencesDataSource.userData.first().refreshToken
-        }
-
-        Timber.d("Access Token: $accessToken")
-        Timber.d("Refresh Token: $refreshToken")
 
         val originalRequest = chain.request()
         val headerRequest = originalRequest.newBuilder()
-            .addHeader("Authorization", accessToken)
-            .addHeader("refreshToken", refreshToken)
+            .addHeader("accessToken", userData.accessToken)
+            .addHeader("refreshToken", userData.refreshToken)
             .build()
+
+        Timber.d("Headers: ${headerRequest.headers}")
 
         return chain.proceed(headerRequest)
     }
