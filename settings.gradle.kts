@@ -31,10 +31,11 @@ include(
 )
 
 include(
-    ":feature:login",
     ":feature:main",
+    ":feature:login",
     ":feature:nickname",
     ":feature:matching",
+    ":feature:map",
 )
 
 include(

@@ -12,4 +12,7 @@ dependencies {
     implementation(projects.feature.login)
     implementation(projects.feature.nickname)
     implementation(projects.feature.matching)
+    implementation(projects.feature.map)
+
+    implementation(projects.domain.auth)
 }

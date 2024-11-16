@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.domain.auth.entity.Token
 import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -13,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _loginSideEffect = MutableSharedFlow<LoginSideEffect>()
     val loginSideEffect: SharedFlow<LoginSideEffect> = _loginSideEffect.asSharedFlow()
@@ -22,16 +23,24 @@ class LoginViewModel @Inject constructor(
         Timber.d("GOOGLE TOKEN: $socialToken")
 
         viewModelScope.launch {
-            _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+            authRepository.postLogin(
+                socialToken = socialToken,
+                provider = OAUTH_PROVIDER
+            ).onSuccess { response ->
+                authRepository.apply {
+                    saveTokens(
+                        Token(
+                            accessToken = response.accessToken,
+                            refreshToken = response.refreshToken
+                        )
+                    )
+                    updateAutoLogin(configured = true)
+                }
 
-//            authRepository.postLogin(
-//                socialToken = socialToken,
-//                provider = OAUTH_PROVIDER
-//            ).onSuccess {
-//                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
-//            }.onFailure {
-//                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
-//            }
+                _loginSideEffect.emit(LoginSideEffect.LoginSuccess(response.isRegistered))
+            }.onFailure {
+                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
+            }
         }
     }
 

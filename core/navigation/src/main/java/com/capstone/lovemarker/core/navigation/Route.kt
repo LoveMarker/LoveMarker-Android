@@ -3,10 +3,9 @@ package com.capstone.lovemarker.core.navigation
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
-    /**
-     * 초기 설치: Login -> Nickname -> Matching -> Main (Map)
-     * 로그아웃: Login -> Main (Map)
-     * */
+    @Serializable
+    data object Splash: Route
+
     @Serializable
     data object Login : Route
 

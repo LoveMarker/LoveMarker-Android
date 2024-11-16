@@ -10,10 +10,8 @@ class AuthDataSourceImpl @Inject constructor(
     private val authService: AuthService,
 ) : AuthDataSource {
     override suspend fun postLogin(
-        socialToken: String,
         requestBody: LoginRequest,
     ): BaseResponse<LoginResponse> = authService.postLogin(
-        socialToken = socialToken,
         requestBody = requestBody
     )
 }

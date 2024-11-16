@@ -42,6 +42,7 @@ import timber.log.Timber
 @Composable
 fun LoginRoute(
     navigateToNickname: () -> Unit,
+    navigateToMap: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -53,8 +54,12 @@ fun LoginRoute(
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
-                    is LoginSideEffect.NavigateToNickname -> {
-                        navigateToNickname()
+                    is LoginSideEffect.LoginSuccess -> {
+                        if (sideEffect.isRegistered) {
+                            navigateToMap()
+                        } else {
+                            navigateToNickname()
+                        }
                     }
 
                     is LoginSideEffect.ShowErrorSnackbar -> {
