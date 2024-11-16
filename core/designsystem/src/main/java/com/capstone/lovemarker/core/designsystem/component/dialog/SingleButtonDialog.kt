@@ -56,7 +56,8 @@ fun SingleButtonDialog(
                 Spacer(modifier = Modifier.height(6.dp))
                 LoveMarkerButton(
                     onClick = onConfirmButtonClick,
-                    buttonText = buttonText
+                    buttonText = buttonText,
+                    enabled = true
                 )
             }
         }

@@ -59,11 +59,13 @@ fun MatchingScreen(
             LoveMarkerButton(
                 onClick = onCreateButtonClick,
                 buttonText = "초대 코드 생성하기",
+                enabled = true,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             )
             LoveMarkerButton(
                 onClick = onInputButtonClick,
                 buttonText = "초대 코드 입력하기",
+                enabled = true,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             )
             Spacer(modifier = Modifier.height(55.dp))

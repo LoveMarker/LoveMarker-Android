@@ -27,8 +27,8 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 fun LoveMarkerButton(
     onClick: () -> Unit,
     buttonText: String,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -53,6 +53,10 @@ fun LoveMarkerButton(
 @Composable
 private fun LoveMarkerButtonPreview() {
     LoveMarkerTheme {
-        LoveMarkerButton(onClick = { /*TODO*/ }, buttonText = "완료")
+        LoveMarkerButton(
+            onClick = { /*TODO*/ },
+            buttonText = "완료",
+            enabled = false
+        )
     }
 }

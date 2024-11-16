@@ -65,11 +65,13 @@ fun DoubleButtonDialog(
                     LoveMarkerButton(
                         onClick = onDismissButtonClick,
                         buttonText = dismissButtonText,
+                        enabled = true,
                         modifier = Modifier.weight(1f)
                     )
                     LoveMarkerButton(
                         onClick = onConfirmButtonClick,
                         buttonText = confirmButtonText,
+                        enabled = true,
                         modifier = Modifier.weight(1f)
                     )
                 }
