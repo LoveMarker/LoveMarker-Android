@@ -15,7 +15,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +42,7 @@ import timber.log.Timber
 @Composable
 fun LoginRoute(
     navigateToNickname: () -> Unit,
+    navigateToMap: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
@@ -54,8 +54,12 @@ fun LoginRoute(
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
-                    is LoginSideEffect.NavigateToNickname -> {
-                        navigateToNickname()
+                    is LoginSideEffect.LoginSuccess -> {
+                        if (sideEffect.isRegistered) {
+                            navigateToMap()
+                        } else {
+                            navigateToNickname()
+                        }
                     }
 
                     is LoginSideEffect.ShowErrorSnackbar -> {

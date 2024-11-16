@@ -13,11 +13,13 @@ fun NavController.navigateToLogin(navOptions: NavOptions) {
 
 fun NavGraphBuilder.loginNavGraph(
     navigateToNickname: () -> Unit,
+    navigateToMap: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<Route.Login> {
         LoginRoute(
             navigateToNickname = navigateToNickname,
+            navigateToMap = navigateToMap,
             showErrorSnackbar = showErrorSnackbar
         )
     }

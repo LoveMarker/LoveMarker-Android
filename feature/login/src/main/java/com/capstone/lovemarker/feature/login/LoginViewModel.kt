@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.domain.auth.entity.Token
 import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -25,9 +26,18 @@ class LoginViewModel @Inject constructor(
             authRepository.postLogin(
                 socialToken = socialToken,
                 provider = OAUTH_PROVIDER
-            ).onSuccess {
-                // todo: 토큰을 데이터스토어에 저장
-                _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
+            ).onSuccess { response ->
+                authRepository.apply {
+                    saveTokens(
+                        Token(
+                            accessToken = response.accessToken,
+                            refreshToken = response.refreshToken
+                        )
+                    )
+                    updateAutoLogin(configured = true)
+                }
+
+                _loginSideEffect.emit(LoginSideEffect.LoginSuccess(response.isRegistered))
             }.onFailure {
                 _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
             }
