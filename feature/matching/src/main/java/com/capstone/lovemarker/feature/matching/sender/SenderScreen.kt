@@ -35,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
+import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
@@ -49,6 +50,7 @@ fun SenderScreen(
     navigateUp: () -> Unit,
 ) {
     var buttonEnabled by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -62,10 +64,7 @@ fun SenderScreen(
                 )
             }
             Column(
-                modifier = Modifier.padding(
-                    horizontal = 24.dp,
-                    vertical = 42.dp
-                )
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 42.dp)
             ) {
                 Text(
                     text = stringResource(R.string.matching_sender_anniversary_title),
@@ -84,13 +83,22 @@ fun SenderScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
-                onClick = {
-                    // todo: 코드 공유 다이얼로그 표시
-                },
+                onClick = { showDialog = true },
                 buttonText = stringResource(R.string.matching_sender_complete_btn_text),
                 enabled = buttonEnabled,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
             )
+
+            if (showDialog) {
+                DoubleButtonDialog(
+                    title = "상대방에게 코드를 공유해주세요",
+                    description = "", // TODO: 기념일 바탕으로, 서버로부터 초대 코드 받기
+                    confirmButtonText = "공유",
+                    dismissButtonText = "취소",
+                    onConfirmButtonClick = { /* TODO: 초대 코드 공유하는 바텀시트 띄우기 */ },
+                    onDismissButtonClick = { showDialog = false },
+                )
+            }
         }
     }
 }
