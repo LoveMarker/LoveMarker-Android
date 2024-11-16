@@ -33,7 +33,8 @@ include(
 include(
     ":feature:login",
     ":feature:main",
-    ":feature:nickname"
+    ":feature:nickname",
+    ":feature:map",
 )
 
 include(

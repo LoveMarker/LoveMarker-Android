@@ -88,7 +88,10 @@ fun NicknameRoute(
 
         is InputUiState.Success -> {
             when (prevRoute) {
-                is Route.Login -> navigateToMatching()
+                is Route.Login -> {
+                    Timber.d("SUCCESS PATCH NICKNAME")
+                    //navigateToMatching()
+                }
                 is MainTabRoute.MyPage -> navigateUp()
                 else -> {
                     Timber.e("invalid navigation path on the nickname screen.")
