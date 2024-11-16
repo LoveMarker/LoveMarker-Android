@@ -36,13 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
-import com.capstone.lovemarker.core.designsystem.theme.Beige500
-import com.capstone.lovemarker.core.designsystem.theme.Beige600
-import com.capstone.lovemarker.core.designsystem.theme.Brown100
-import com.capstone.lovemarker.core.designsystem.theme.Brown200
-import com.capstone.lovemarker.core.designsystem.theme.Brown300
-import com.capstone.lovemarker.core.designsystem.theme.Brown400
-import com.capstone.lovemarker.core.designsystem.theme.Brown600
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
@@ -55,6 +48,8 @@ import java.util.Locale
 fun SenderScreen(
     navigateUp: () -> Unit,
 ) {
+    var buttonEnabled by remember { mutableStateOf(false) }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = LoveMarkerTheme.colorScheme.surfaceContainer
@@ -63,7 +58,7 @@ fun SenderScreen(
             IconButton(onClick = navigateUp) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "navigate up"
+                    contentDescription = stringResource(R.string.matching_sender_up_btn_desc)
                 )
             }
             Column(
@@ -83,7 +78,9 @@ fun SenderScreen(
                     modifier = Modifier.padding(top = 13.dp)
                 )
                 Spacer(modifier = Modifier.padding(top = 24.dp))
-                DatePickerFieldToModal()
+                DatePickerFieldToModal(
+                    onDateSelected = { buttonEnabled = it }
+                )
             }
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
@@ -91,20 +88,27 @@ fun SenderScreen(
                     // todo: 코드 공유 다이얼로그 표시
                 },
                 buttonText = stringResource(R.string.matching_sender_complete_btn_text),
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                enabled = buttonEnabled,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
             )
         }
     }
 }
 
 @Composable
-fun DatePickerFieldToModal(modifier: Modifier = Modifier) {
+fun DatePickerFieldToModal(
+    onDateSelected: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
     var selectedDate by remember { mutableStateOf<Long?>(null) }
     var showModal by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = selectedDate?.let { convertMillisToDate(it) } ?: "",
-        onValueChange = { /* todo: 날짜가 입력되면 하단 버튼 활성화 */ },
+        value = selectedDate?.let {
+            onDateSelected(true)
+            convertMillisToDate(it)
+        } ?: "",
+        onValueChange = {}, // 주의: 읽기 전용일 때는 호출되지 않는다.
         readOnly = true,
         placeholder = {
             Text(
@@ -140,7 +144,9 @@ fun DatePickerFieldToModal(modifier: Modifier = Modifier) {
 
     if (showModal) {
         DatePickerModal(
-            onDateSelected = { selectedDate = it },
+            onDateSelected = {
+                selectedDate = it
+             },
             onDismiss = { showModal = false }
         )
     }
