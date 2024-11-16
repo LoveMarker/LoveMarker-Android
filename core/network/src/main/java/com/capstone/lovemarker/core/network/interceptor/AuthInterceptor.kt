@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthInterceptor @Inject constructor(
@@ -14,10 +15,17 @@ class AuthInterceptor @Inject constructor(
         val accessToken = runBlocking {
             "Bearer ${userPreferencesDataSource.userData.first().accessToken}"
         }
+        val refreshToken = runBlocking {
+            userPreferencesDataSource.userData.first().refreshToken
+        }
+
+        Timber.d("Access Token: $accessToken")
+        Timber.d("Refresh Token: $refreshToken")
 
         val originalRequest = chain.request()
         val headerRequest = originalRequest.newBuilder()
-            .header("Authorization", accessToken)
+            .addHeader("Authorization", accessToken)
+            .addHeader("refreshToken", refreshToken)
             .build()
 
         return chain.proceed(headerRequest)

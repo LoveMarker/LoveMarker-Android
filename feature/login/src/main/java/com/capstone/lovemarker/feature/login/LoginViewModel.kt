@@ -35,6 +35,9 @@ class LoginViewModel @Inject constructor(
                         )
                     )
                     updateAutoLogin(configured = true)
+
+                    Timber.d("Server Access Token: ${response.accessToken}")
+                    Timber.d("Server Refresh Token: ${response.refreshToken}")
                 }
 
                 _loginSideEffect.emit(LoginSideEffect.LoginSuccess(response.isRegistered))
