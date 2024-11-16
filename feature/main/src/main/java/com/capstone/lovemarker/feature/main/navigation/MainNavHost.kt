@@ -23,7 +23,8 @@ fun MainNavHost(
     ) {
         loginNavGraph(
             navigateToMap = {
-                // todo: MainTabRoute.Map 으로 이동
+                // todo: navOptions 추가
+                navigator.navigateToMap()
             },
             navigateToNickname = {
                 navigator.navigateToNickname(
