@@ -6,7 +6,7 @@ import retrofit2.http.Body
 import retrofit2.http.PATCH
 
 interface NicknameService {
-    @PATCH("user")
+    @PATCH("/api/user")
     suspend fun patchNickname(
         @Body nicknameRequest: NicknameRequest,
     ): BaseResponse<Unit>
