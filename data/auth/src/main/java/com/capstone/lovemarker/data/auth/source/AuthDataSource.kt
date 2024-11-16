@@ -6,7 +6,6 @@ import com.capstone.lovemarker.core.network.model.BaseResponse
 
 interface AuthDataSource {
     suspend fun postLogin(
-        socialToken: String,
         requestBody: LoginRequest,
     ): BaseResponse<LoginResponse>
 }
