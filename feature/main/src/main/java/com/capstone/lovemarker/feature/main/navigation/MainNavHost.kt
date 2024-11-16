@@ -25,25 +25,25 @@ fun MainNavHost(
     ) {
         splashNavGraph(
             navigateToMap = {
-                navigator.navigateToMap()
+                navigator.navigateToMap(
+                    navOptions = navOptionsPopUpTo<Route.Splash>()
+                )
             },
             navigateToLogin = {
-                navigator.navigateToLogin()
+                navigator.navigateToLogin(
+                    navOptions = navOptionsPopUpTo<Route.Splash>()
+                )
             }
         )
         loginNavGraph(
             navigateToMap = {
-                navigator.navigateToMap()
+                navigator.navigateToMap(
+                    navOptions = navOptionsPopUpTo<Route.Login>()
+                )
             },
             navigateToNickname = {
                 navigator.navigateToNickname(
-                    navOptions = navOptions {
-                        // 로그인 화면을 스택에서 제거
-                        popUpTo<Route.Login> {
-                            inclusive = true
-                        }
-                        launchSingleTop = true
-                    }
+                    navOptions = navOptionsPopUpTo<Route.Login>()
                 )
             },
             showErrorSnackbar = showErrorSnackbar
@@ -54,6 +54,15 @@ fun MainNavHost(
             navigateToMatching = { /* TODO */ },
             showErrorSnackbar = showErrorSnackbar
         )
-        mapNavGraph()
+        mapNavGraph(
+
+        )
     }
+}
+
+private inline fun <reified T : Route> navOptionsPopUpTo() = navOptions {
+    popUpTo<T> {
+        inclusive = true
+    }
+    launchSingleTop = true
 }

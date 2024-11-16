@@ -22,16 +22,16 @@ class MainNavigator(
 
     val startDestination = Route.Splash
 
-    fun navigateToLogin() {
-        navController.navigateToLogin()
+    fun navigateToLogin(navOptions: NavOptions) {
+        navController.navigateToLogin(navOptions)
     }
 
     fun navigateToNickname(navOptions: NavOptions) {
         navController.navigateToNickname(navOptions)
     }
 
-    fun navigateToMap() {
-        navController.navigateToMap()
+    fun navigateToMap(navOptions: NavOptions) {
+        navController.navigateToMap(navOptions)
     }
 
     private fun navigateUp() {
