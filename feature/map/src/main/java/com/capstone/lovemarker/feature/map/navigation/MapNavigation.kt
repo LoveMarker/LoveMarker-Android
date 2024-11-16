@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.feature.map.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -11,8 +12,10 @@ fun NavController.navigateToMap(navOptions: NavOptions? = null) {
     navigate(MainTabRoute.Map, navOptions)
 }
 
-fun NavGraphBuilder.mapNavGraph() {
+fun NavGraphBuilder.mapNavGraph(
+    innerPadding: PaddingValues,
+) {
     composable<MainTabRoute.Map> {
-        MapRoute()
+        MapRoute(innerPadding)
     }
 }

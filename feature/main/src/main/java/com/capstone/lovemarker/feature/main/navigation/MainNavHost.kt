@@ -55,7 +55,7 @@ fun MainNavHost(
             showErrorSnackbar = showErrorSnackbar
         )
         mapNavGraph(
-
+            innerPadding = innerPadding
         )
     }
 }
