@@ -11,4 +11,5 @@ interface AuthRepository {
 
     suspend fun saveTokens(token: Token)
     suspend fun updateAutoLogin(configured: Boolean)
+    suspend fun isAutoLoginEnabled(): Boolean
 }

@@ -6,6 +6,7 @@ import com.capstone.lovemarker.domain.auth.entity.LoginEntity
 import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import com.capstone.lovemarker.data.auth.source.AuthDataSource
 import com.capstone.lovemarker.domain.auth.entity.Token
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -33,4 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun updateAutoLogin(configured: Boolean) {
         userPreferencesDataSource.updateAutoLogin(configured = configured)
     }
+
+    override suspend fun isAutoLoginEnabled() =
+        userPreferencesDataSource.userData.first().autoLoginConfigured
 }

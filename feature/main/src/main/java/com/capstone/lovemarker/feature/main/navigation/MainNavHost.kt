@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
+import com.capstone.lovemarker.feature.main.splash.splashNavGraph
+import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
 
 @Composable
@@ -21,9 +23,16 @@ fun MainNavHost(
         startDestination = navigator.startDestination,
         modifier = modifier
     ) {
+        splashNavGraph(
+            navigateToMap = {
+                navigator.navigateToMap()
+            },
+            navigateToLogin = {
+                navigator.navigateToLogin()
+            }
+        )
         loginNavGraph(
             navigateToMap = {
-                // todo: navOptions 추가
                 navigator.navigateToMap()
             },
             navigateToNickname = {
@@ -45,5 +54,6 @@ fun MainNavHost(
             navigateToMatching = { /* TODO */ },
             showErrorSnackbar = showErrorSnackbar
         )
+        mapNavGraph()
     }
 }

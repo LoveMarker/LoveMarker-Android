@@ -10,6 +10,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.feature.login.navigation.navigateToLogin
 import com.capstone.lovemarker.feature.map.navigation.navigateToMap
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 
@@ -19,7 +20,11 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Login
+    val startDestination = Route.Splash
+
+    fun navigateToLogin() {
+        navController.navigateToLogin()
+    }
 
     fun navigateToNickname(navOptions: NavOptions) {
         navController.navigateToNickname(navOptions)
