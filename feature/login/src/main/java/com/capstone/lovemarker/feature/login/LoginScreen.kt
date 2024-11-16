@@ -55,11 +55,12 @@ fun LoginRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is LoginSideEffect.LoginSuccess -> {
-                        if (sideEffect.isRegistered) {
-                            navigateToMap()
-                        } else {
-                            navigateToNickname()
-                        }
+                        navigateToNickname()
+//                        if (sideEffect.isRegistered) {
+//                            navigateToMap()
+//                        } else {
+//                            navigateToNickname()
+//                        }
                     }
 
                     is LoginSideEffect.ShowErrorSnackbar -> {

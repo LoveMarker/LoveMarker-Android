@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,10 +70,14 @@ class NicknameViewModel @Inject constructor(
                     updateInputUiState(
                         InputUiState.Success
                     )
-                }.onFailure {
-                    updateInputUiState(
-                        InputUiState.Error.DUPLICATED
-                    )
+                }.onFailure { throwable ->
+                    if (throwable is HttpException && throwable.code() == CODE_NICKNAME_DUPLICATED) {
+                        updateInputUiState(
+                            InputUiState.Error.DUPLICATED
+                        )
+                    } else {
+                        _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
+                    }
                 }
         }
     }
@@ -102,5 +106,6 @@ class NicknameViewModel @Inject constructor(
 
     companion object {
         private const val REGEX_PATTERN = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$"
+        private const val CODE_NICKNAME_DUPLICATED = 400
     }
 }
