@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -57,13 +58,15 @@ fun MatchingScreen(
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
                 onClick = onCreateButtonClick,
-                buttonText = "초대 코드 생성하기"
+                buttonText = "초대 코드 생성하기",
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             )
             LoveMarkerButton(
                 onClick = onInputButtonClick,
                 buttonText = "초대 코드 입력하기",
-                modifier = Modifier.padding(bottom = 55.dp)
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             )
+            Spacer(modifier = Modifier.height(55.dp))
         }
     }
 }

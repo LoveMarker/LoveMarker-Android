@@ -232,6 +232,7 @@ fun NicknameScreen(
             LoveMarkerButton(
                 onClick = onCompleteButtonClick,
                 buttonText = completeButtonText,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
                 enabled = completeButtonEnabled
             )
         }

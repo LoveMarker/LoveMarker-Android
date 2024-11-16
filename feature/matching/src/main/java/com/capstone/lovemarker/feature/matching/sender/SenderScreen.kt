@@ -90,7 +90,8 @@ fun SenderScreen(
                 onClick = {
                     // todo: 코드 공유 다이얼로그 표시
                 },
-                buttonText = stringResource(R.string.matching_sender_complete_btn_text)
+                buttonText = stringResource(R.string.matching_sender_complete_btn_text),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             )
         }
     }
@@ -175,9 +176,8 @@ fun DatePickerModal(
             }
         },
         colors = DatePickerDefaults.colors(
-            containerColor = Beige400,
-
-            )
+            containerColor = Beige400
+        )
     ) {
         DatePicker(
             state = datePickerState,
