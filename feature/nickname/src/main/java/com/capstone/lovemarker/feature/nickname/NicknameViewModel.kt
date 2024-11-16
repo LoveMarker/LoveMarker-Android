@@ -65,20 +65,16 @@ class NicknameViewModel @Inject constructor(
 
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
-            _nicknameSideEffect.emit(
-                NicknameSideEffect.ShowErrorSnackbar(throwable = IllegalStateException("스낵바 테스트"))
-            )
-
-//            nicknameRepository.patchNickname(nickname)
-//                .onSuccess {
-//                    updateInputUiState(
-//                        InputUiState.Success
-//                    )
-//                }.onFailure {
-//                    updateInputUiState(
-//                        InputUiState.Error.DUPLICATED
-//                    )
-//                }
+            nicknameRepository.patchNickname(nickname)
+                .onSuccess {
+                    updateInputUiState(
+                        InputUiState.Success
+                    )
+                }.onFailure {
+                    updateInputUiState(
+                        InputUiState.Error.DUPLICATED
+                    )
+                }
         }
     }
 

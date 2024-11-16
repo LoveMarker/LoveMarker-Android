@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _loginSideEffect = MutableSharedFlow<LoginSideEffect>()
     val loginSideEffect: SharedFlow<LoginSideEffect> = _loginSideEffect.asSharedFlow()
@@ -26,6 +26,7 @@ class LoginViewModel @Inject constructor(
                 socialToken = socialToken,
                 provider = OAUTH_PROVIDER
             ).onSuccess {
+                // todo: 토큰을 데이터스토어에 저장
                 _loginSideEffect.emit(LoginSideEffect.NavigateToNickname)
             }.onFailure {
                 _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
