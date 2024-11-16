@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LoveMarker"
-        tools:targetApi="31"
-        tools:ignore="RtlEnabled" />
+        android:usesCleartextTraffic="true"
+        tools:ignore="RtlEnabled"
+        tools:targetApi="31" />
 
 </manifest>
