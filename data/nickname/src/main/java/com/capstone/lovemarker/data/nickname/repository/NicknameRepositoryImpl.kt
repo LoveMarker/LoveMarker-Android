@@ -8,7 +8,7 @@ import javax.inject.Inject
 class NicknameRepositoryImpl @Inject constructor(
     private val nicknameDataSource: NicknameDataSource,
 ) : NicknameRepository {
-    override suspend fun patchNickname(nickname: String) = runCatching {
-        nicknameDataSource.patchNickname(NicknameRequest(nickname)).data
+    override suspend fun patchNickname(nickname: String): Result<Unit> = runCatching {
+        nicknameDataSource.patchNickname(NicknameRequest(nickname))
     }
 }
