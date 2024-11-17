@@ -32,8 +32,8 @@ import com.capstone.lovemarker.feature.matching.R
 
 @Composable
 fun MatchingScreen(
-    onCreateButtonClick: () -> Unit,
-    onInputButtonClick: () -> Unit,
+    navigateToSender: () -> Unit,
+    navigateToReceiver: () -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -57,13 +57,13 @@ fun MatchingScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
-                onClick = onCreateButtonClick,
+                onClick = navigateToSender,
                 buttonText = "초대 코드 생성하기",
                 enabled = true,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
             )
             LoveMarkerButton(
-                onClick = onInputButtonClick,
+                onClick = navigateToReceiver,
                 buttonText = "초대 코드 입력하기",
                 enabled = true,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
@@ -78,8 +78,8 @@ fun MatchingScreen(
 private fun MatchingPreview() {
     LoveMarkerTheme {
         MatchingScreen(
-            onCreateButtonClick = {},
-            onInputButtonClick = {}
+            navigateToSender = {},
+            navigateToReceiver = {},
         )
     }
 }

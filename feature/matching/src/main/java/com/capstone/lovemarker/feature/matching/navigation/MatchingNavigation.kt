@@ -28,8 +28,8 @@ fun NavGraphBuilder.matchingNavGraph(
 ) {
     composable<MatchingRoute.Home> {
         MatchingScreen(
-            onCreateButtonClick = navigateToSender,
-            onInputButtonClick = navigateToReceiver,
+            navigateToSender = navigateToSender,
+            navigateToReceiver = navigateToReceiver,
         )
     }
     composable<MatchingRoute.Sender> {

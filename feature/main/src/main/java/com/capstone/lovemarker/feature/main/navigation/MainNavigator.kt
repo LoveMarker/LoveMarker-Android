@@ -24,7 +24,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = MatchingRoute.Receiver
+    val startDestination = MatchingRoute.Home
 
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)
