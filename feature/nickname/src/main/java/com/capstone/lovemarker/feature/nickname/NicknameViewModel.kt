@@ -66,23 +66,17 @@ class NicknameViewModel @Inject constructor(
 
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
-            runCatching {
-                val response = nicknameRepository.patchNickname(nickname)
-                if (response.success) {
-                    updateInputUiState(
-                        InputUiState.Success
-                    )
-                } else {
-                    if (response.message.contains(NICKNAME_DUPLICATED_ERR_MSG)) {
-                        updateInputUiState(
-                            InputUiState.Error.DUPLICATED
-                        )
+            nicknameRepository.patchNickname(nickname)
+                .onSuccess {
+                    updateInputUiState(InputUiState.Success)
+                }.onFailure { throwable ->
+                    val errorBody = (throwable as? HttpException)?.response()?.errorBody()?.string()
+                    if (errorBody?.contains(NICKNAME_DUPLICATED_ERR_MSG) == true) {
+                        updateInputUiState(InputUiState.Error.DUPLICATED)
+                    } else {
+                        _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
                     }
                 }
-            }.onFailure { throwable ->
-                Timber.e("${throwable.message}")
-                _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
-            }
         }
     }
 
