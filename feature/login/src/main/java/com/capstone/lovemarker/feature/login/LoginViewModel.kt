@@ -38,8 +38,9 @@ class LoginViewModel @Inject constructor(
                 }
 
                 _loginSideEffect.emit(LoginSideEffect.LoginSuccess(response.isRegistered))
-            }.onFailure {
-                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(it))
+            }.onFailure { throwable ->
+                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(throwable))
+                Timber.e(throwable.message)
             }
         }
     }

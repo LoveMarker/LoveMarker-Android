@@ -10,4 +10,5 @@ android {
 
 dependencies {
     implementation(projects.domain.nickname)
+    implementation(libs.retrofit)
 }

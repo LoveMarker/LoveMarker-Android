@@ -8,7 +8,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
-    @POST("api/auth")
+    @POST("/api/auth")
     suspend fun postLogin(
         @Body requestBody: LoginRequest,
     ): BaseResponse<LoginResponse>
