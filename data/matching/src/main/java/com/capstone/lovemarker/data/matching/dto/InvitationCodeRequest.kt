@@ -1,5 +1,5 @@
 package com.capstone.lovemarker.data.matching.dto
 
-data class SenderRequest(
+data class InvitationCodeRequest(
     val anniversary: String
 )
