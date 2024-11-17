@@ -53,7 +53,11 @@ fun MainNavHost(
         nicknameNavGraph(
             prevRoute = Route.Login,
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToMatching = { navigator.navigateToMatching() },
+            navigateToMatching = {
+                navigator.navigateToMatching(
+                    navOptions = navOptionsPopUpTo<Route.Nickname>()
+                )
+            },
             showErrorSnackbar = showErrorSnackbar
         )
         matchingNavGraph(

@@ -24,7 +24,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = MatchingRoute.Home
+    val startDestination = Route.Splash
 
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)
@@ -34,8 +34,8 @@ class MainNavigator(
         navController.navigateToNickname(navOptions)
     }
 
-    fun navigateToMatching() {
-        navController.navigateToMatching()
+    fun navigateToMatching(navOptions: NavOptions) {
+        navController.navigateToMatching(navOptions)
     }
 
     fun navigateToSender() {
