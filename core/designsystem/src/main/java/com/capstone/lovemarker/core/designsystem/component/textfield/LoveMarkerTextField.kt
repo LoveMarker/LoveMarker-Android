@@ -69,7 +69,7 @@ fun LoveMarkerTextField(
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
 
-    val borderColor = if (isError) Error else if (isFocused) Brown700 else Gray500
+    val borderColor = if (isError) Error else if (isFocused) Brown700 else Gray400
     val textSelectionColors = TextSelectionColors(
         handleColor = if (isError) Error else Brown700,
         backgroundColor = if (isError) Error.copy(alpha = 0.4f) else Brown700.copy(alpha = 0.4f)
@@ -152,7 +152,7 @@ fun LoveMarkerTextFieldPreview() {
             LoveMarkerTextField(
                 value = "",
                 onValueChanged = {},
-                isError = true,
+                isError = false,
                 placeholder = "닉네임을 입력해주세요",
                 supportingText = "supporting text",
                 trailingIcon = { isFocused, iconTint ->
