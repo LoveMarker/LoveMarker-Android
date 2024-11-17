@@ -83,7 +83,12 @@ fun SenderScreen(
             }
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
-                onClick = { showDialog = true },
+                onClick = {
+                    showDialog = true
+
+                    // todo: 서버 api 호출해서 초대 코드 생성하기
+                    
+                },
                 buttonText = stringResource(R.string.matching_complete_btn_text),
                 enabled = buttonEnabled,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
@@ -92,7 +97,7 @@ fun SenderScreen(
             if (showDialog) {
                 DoubleButtonDialog(
                     title = "상대방에게 코드를 공유해주세요",
-                    description = "", // TODO: 기념일 바탕으로, 서버로부터 초대 코드 받기
+                    description = "", // todo: 서버로부터 받은 초대 코드 표시
                     confirmButtonText = "공유",
                     dismissButtonText = "취소",
                     onConfirmButtonClick = { /* TODO: 초대 코드 공유하는 바텀시트 띄우기 */ },
