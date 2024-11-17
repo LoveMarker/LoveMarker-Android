@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,20 +66,23 @@ class NicknameViewModel @Inject constructor(
 
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
-            nicknameRepository.patchNickname(nickname)
-                .onSuccess {
+            runCatching {
+                val response = nicknameRepository.patchNickname(nickname)
+                if (response.success) {
                     updateInputUiState(
                         InputUiState.Success
                     )
-                }.onFailure { throwable ->
-                    if (throwable is HttpException && throwable.code() == CODE_NICKNAME_DUPLICATED) {
+                } else {
+                    if (response.message.contains(NICKNAME_DUPLICATED_ERR_MSG)) {
                         updateInputUiState(
                             InputUiState.Error.DUPLICATED
                         )
-                    } else {
-                        _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
                     }
                 }
+            }.onFailure { throwable ->
+                Timber.e("${throwable.message}")
+                _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
+            }
         }
     }
 
@@ -106,6 +110,6 @@ class NicknameViewModel @Inject constructor(
 
     companion object {
         private const val REGEX_PATTERN = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$"
-        private const val CODE_NICKNAME_DUPLICATED = 400
+        private const val NICKNAME_DUPLICATED_ERR_MSG = "중복"
     }
 }
