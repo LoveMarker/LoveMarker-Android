@@ -7,6 +7,9 @@
     <string name="matching_sender_trailing_icon_desc">Select date</string>
     <string name="matching_sender_dismiss_btn_text">취소</string>
     <string name="matching_sender_confirm_btn_text">완료</string>
-    <string name="matching_sender_complete_btn_text">완료</string>
-    <string name="matching_sender_up_btn_desc">navigate up</string>
+    <string name="matching_receiver_title">상대방에게 받은\n초대 코드를 입력해주세요 :)</string>
+    <string name="matching_receiver_text_field_placeholder">초대 코드</string>
+    <string name="matching_receiver_clear_btn_desc">clear text</string>
+    <string name="matching_complete_btn_text">완료</string>
+    <string name="matching_navigate_up_btn_desc">navigate up</string>
 </resources>

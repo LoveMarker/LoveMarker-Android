@@ -60,7 +60,7 @@ fun SenderScreen(
             IconButton(onClick = navigateUp) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = stringResource(R.string.matching_sender_up_btn_desc)
+                    contentDescription = stringResource(R.string.matching_navigate_up_btn_desc)
                 )
             }
             Column(
@@ -84,7 +84,7 @@ fun SenderScreen(
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
                 onClick = { showDialog = true },
-                buttonText = stringResource(R.string.matching_sender_complete_btn_text),
+                buttonText = stringResource(R.string.matching_complete_btn_text),
                 enabled = buttonEnabled,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
             )

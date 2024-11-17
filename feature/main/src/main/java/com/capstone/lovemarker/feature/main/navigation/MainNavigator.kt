@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.capstone.lovemarker.core.navigation.MainTabRoute
+import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.matching.navigation.navigateToMatching
 import com.capstone.lovemarker.feature.matching.navigation.navigateToReceiver
@@ -23,7 +24,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Login
+    val startDestination = MatchingRoute.Receiver
 
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)
