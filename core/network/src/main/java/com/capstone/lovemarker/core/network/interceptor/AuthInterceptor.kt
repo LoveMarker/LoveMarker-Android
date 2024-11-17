@@ -22,8 +22,6 @@ class AuthInterceptor @Inject constructor(
             .addHeader("refreshToken", userData.refreshToken)
             .build()
 
-        Timber.d("Headers: ${headerRequest.headers}")
-
         return chain.proceed(headerRequest)
     }
 }
