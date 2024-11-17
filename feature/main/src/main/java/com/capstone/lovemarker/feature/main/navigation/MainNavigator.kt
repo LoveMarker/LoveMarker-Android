@@ -20,7 +20,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Splash
+    val startDestination = Route.Login
 
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)

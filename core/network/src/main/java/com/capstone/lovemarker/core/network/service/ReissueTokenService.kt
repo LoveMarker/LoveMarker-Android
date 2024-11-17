@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 
 interface ReissueTokenService {
-    @GET("/auth/reissue-token")
+    @GET("/api/auth/reissue-token")
     suspend fun getNewAccessToken(
         @Header("refreshToken") refreshToken: String,
     ): BaseResponse<ReissueTokenResponse>
