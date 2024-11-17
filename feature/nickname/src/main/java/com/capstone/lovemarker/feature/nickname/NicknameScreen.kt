@@ -165,7 +165,6 @@ fun NicknameScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scrollState = rememberScrollState()
 
     Surface(
         modifier = Modifier
@@ -182,9 +181,7 @@ fun NicknameScreen(
         color = LoveMarkerTheme.colorScheme.surfaceContainer
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
+            modifier = Modifier.fillMaxSize()
         ) {
             if (closeButtonVisible) {
                 IconButton(onClick = onCloseButtonClick) {
