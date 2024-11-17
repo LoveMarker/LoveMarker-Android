@@ -18,8 +18,8 @@ class AuthInterceptor @Inject constructor(
 
         val originalRequest = chain.request()
         val headerRequest = originalRequest.newBuilder()
-            .addHeader("accessToken", userData.accessToken)
-            .addHeader("refreshToken", userData.refreshToken)
+            .header("accessToken", userData.accessToken)
+            .header("refreshToken", userData.refreshToken)
             .build()
 
         return chain.proceed(headerRequest)
