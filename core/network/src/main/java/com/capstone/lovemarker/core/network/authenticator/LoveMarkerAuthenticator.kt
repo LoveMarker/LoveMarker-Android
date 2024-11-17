@@ -32,7 +32,7 @@ class LoveMarkerAuthenticator @Inject constructor(
                     userPreferencesDataSource.updateAccessToken(token)
                 }
             }.onFailure { throwable ->
-                Timber.e(throwable.message)
+                Timber.e("FAIL REISSUE TOKEN: ${throwable.message}")
                 runBlocking {
                     userPreferencesDataSource.clear()
                 }
@@ -40,7 +40,7 @@ class LoveMarkerAuthenticator @Inject constructor(
             }.getOrThrow()
 
             return response.request.newBuilder()
-                .header("Authorization", "Bearer $newAccessToken")
+                .header("accessToken", newAccessToken)
                 .build()
         }
 
