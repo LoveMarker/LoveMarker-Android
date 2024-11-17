@@ -9,7 +9,11 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.capstone.lovemarker.core.navigation.MainTabRoute
+import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.feature.matching.navigation.navigateToMatching
+import com.capstone.lovemarker.feature.matching.navigation.navigateToReceiver
+import com.capstone.lovemarker.feature.matching.navigation.navigateToSender
 import com.capstone.lovemarker.feature.login.navigation.navigateToLogin
 import com.capstone.lovemarker.feature.map.navigation.navigateToMap
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
@@ -20,7 +24,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Login
+    val startDestination = MatchingRoute.Receiver
 
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)
@@ -28,6 +32,18 @@ class MainNavigator(
 
     fun navigateToNickname(navOptions: NavOptions) {
         navController.navigateToNickname(navOptions)
+    }
+
+    fun navigateToMatching() {
+        navController.navigateToMatching()
+    }
+
+    fun navigateToSender() {
+        navController.navigateToSender()
+    }
+
+    fun navigateToReceiver() {
+        navController.navigateToReceiver()
     }
 
     fun navigateToMap(navOptions: NavOptions) {

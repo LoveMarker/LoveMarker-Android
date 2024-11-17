@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.capstone.lovemarker.core.common.extension.noRippleClickable
 import com.capstone.lovemarker.core.designsystem.theme.Brown100
@@ -26,8 +27,8 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 fun LoveMarkerButton(
     onClick: () -> Unit,
     buttonText: String,
+    enabled: Boolean,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -36,8 +37,7 @@ fun LoveMarkerButton(
                 if (enabled) noRippleClickable(onClick = onClick) else this
             }
             .fillMaxWidth()
-            .height(74.dp)
-            .padding(horizontal = 16.dp, vertical = 14.dp)
+            .height(46.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(color = if (enabled) Brown100 else Gray200),
     ) {
@@ -49,3 +49,14 @@ fun LoveMarkerButton(
     }
 }
 
+@Preview
+@Composable
+private fun LoveMarkerButtonPreview() {
+    LoveMarkerTheme {
+        LoveMarkerButton(
+            onClick = { /*TODO*/ },
+            buttonText = "완료",
+            enabled = false
+        )
+    }
+}

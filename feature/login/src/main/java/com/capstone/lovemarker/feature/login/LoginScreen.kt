@@ -111,8 +111,8 @@ fun LoginScreen(
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = stringResource(id = R.string.app_name),
-                fontFamily = FontFamily(Font(R.font.ribeye_regular)),
+                text = stringResource(id = com.capstone.lovemarker.core.designsystem.R.string.app_name),
+                fontFamily = FontFamily(Font(resId = com.capstone.lovemarker.core.designsystem.R.font.ribeye_regular)),
                 fontSize = 40.sp,
                 modifier = Modifier.padding(bottom = 120.dp)
             )

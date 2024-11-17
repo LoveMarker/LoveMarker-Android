@@ -1,6 +1,7 @@
 package com.capstone.lovemarker.feature.nickname
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -160,19 +163,25 @@ fun NicknameScreen(
     closeButtonVisible: Boolean,
     onCloseButtonClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val scrollState = rememberScrollState()
 
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .hideKeyboard(keyboardController),
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    if (isError) {
+                        keyboardController?.hide()
+                    } else {
+                        focusManager.clearFocus()
+                    }
+                })
+            },
         color = LoveMarkerTheme.colorScheme.surfaceContainer
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
+            modifier = Modifier.fillMaxSize()
         ) {
             if (closeButtonVisible) {
                 IconButton(onClick = onCloseButtonClick) {
@@ -223,6 +232,7 @@ fun NicknameScreen(
             LoveMarkerButton(
                 onClick = onCompleteButtonClick,
                 buttonText = completeButtonText,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
                 enabled = completeButtonEnabled
             )
         }
