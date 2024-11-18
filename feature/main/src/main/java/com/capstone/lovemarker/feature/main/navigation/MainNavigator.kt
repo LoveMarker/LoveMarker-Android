@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
@@ -25,6 +26,28 @@ class MainNavigator(
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
     val startDestination = Route.Splash
+
+    val currentTab: MainTab?
+        @Composable get() = MainTab.find { tab ->
+            currentDestination?.hasRoute(tab::class) == true
+        }
+
+    fun navigate(tab: MainTab) {
+        val navOptions = navOptions {
+            popUpTo<MainTabRoute.Map> {
+                inclusive = false
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+
+//        when (tab) {
+//            MainTab.MAP -> navController.navigateToMap(navOptions)
+//            MainTab.ARCHIVE -> navController.navigateArchive(navOptions)
+//            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions)
+//        }
+    }
 
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)
@@ -62,6 +85,11 @@ class MainNavigator(
 
     private inline fun <reified T : Route> isSameCurrentDestination(): Boolean {
         return navController.currentDestination?.hasRoute<T>() == true
+    }
+
+    @Composable
+    fun shouldShowBottomBar() = MainTab.contains {
+        currentDestination?.hasRoute(it::class) == true
     }
 }
 
