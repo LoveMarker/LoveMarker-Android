@@ -30,6 +30,7 @@ dependencies {
     implementation(projects.data.oauth)
     implementation(projects.data.nickname)
     implementation(projects.data.matching)
+    implementation(projects.data.mypage)
 
     // android
     implementation(libs.core.ktx)
