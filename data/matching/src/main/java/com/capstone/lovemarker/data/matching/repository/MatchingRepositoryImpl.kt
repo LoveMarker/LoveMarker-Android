@@ -1,6 +1,7 @@
 package com.capstone.lovemarker.data.matching.repository
 
-import com.capstone.lovemarker.data.matching.dto.InvitationCodeRequest
+import com.capstone.lovemarker.data.matching.dto.request.CoupleJoinRequest
+import com.capstone.lovemarker.data.matching.dto.request.InvitationCodeRequest
 import com.capstone.lovemarker.data.matching.source.MatchingDataSource
 import com.capstone.lovemarker.domain.matching.repository.MatchingRepository
 import javax.inject.Inject
@@ -12,5 +13,11 @@ class MatchingRepositoryImpl @Inject constructor(
         matchingDataSource.postInvitationCode(
             invitationCodeRequest = InvitationCodeRequest(anniversary)
         ).data.toDomain()
+    }
+
+    override suspend fun postCouple(invitationCode: String): Result<Unit> = runCatching {
+        matchingDataSource.postCouple(
+            coupleJoinRequest = CoupleJoinRequest(invitationCode)
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.data.matching.dto
+package com.capstone.lovemarker.data.matching.dto.response
 
 import com.capstone.lovemarker.domain.matching.entity.InvitationCodeEntity
 import kotlinx.serialization.SerialName
