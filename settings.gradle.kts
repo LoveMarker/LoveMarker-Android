@@ -43,6 +43,7 @@ include(
     ":domain:oauth",
     ":domain:nickname",
     ":domain:matching",
+    ":domain:mypage",
 )
 
 include(
@@ -50,4 +51,5 @@ include(
     ":data:oauth",
     ":data:nickname",
     ":data:matching",
+    ":data:mypage",
 )
