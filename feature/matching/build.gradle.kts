@@ -9,5 +9,5 @@ android {
 }
 
 dependencies {
-    // todo: domain
+    implementation(projects.domain.matching)
 }
