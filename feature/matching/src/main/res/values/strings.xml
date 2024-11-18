@@ -3,7 +3,7 @@
     <string name="matching_img_desc">couple matching image</string>
     <string name="matching_sender_anniversary_title">두 분의 기념일이 언제인가요?</string>
     <string name="matching_sender_guide_detail">고유한 초대 코드를 만들어드릴게요!</string>
-    <string name="matching_sender_input_placeholder">MM/DD/YYYY</string>
+    <string name="matching_sender_input_placeholder">YYYY-MM-DD</string>
     <string name="matching_sender_trailing_icon_desc">Select date</string>
     <string name="matching_sender_dismiss_btn_text">취소</string>
     <string name="matching_sender_confirm_btn_text">완료</string>
@@ -12,4 +12,7 @@
     <string name="matching_receiver_clear_btn_desc">clear text</string>
     <string name="matching_complete_btn_text">완료</string>
     <string name="matching_navigate_up_btn_desc">navigate up</string>
+    <string name="matching_sender_share_dialog_title">💌 상대방에게 코드를 공유해주세요</string>
+    <string name="matching_sender_share_dialog_confirm_text">공유</string>
+    <string name="matching_sender_share_dialog_cancel_text">취소</string>
 </resources>

@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.feature.matching.home.MatchingScreen
 import com.capstone.lovemarker.feature.matching.receiver.ReceiverScreen
-import com.capstone.lovemarker.feature.matching.sender.SenderScreen
+import com.capstone.lovemarker.feature.matching.sender.SenderRoute
 
 fun NavController.navigateToMatching(navOptions: NavOptions) {
     navigate(MatchingRoute.Home, navOptions)
@@ -26,6 +26,7 @@ fun NavGraphBuilder.matchingNavGraph(
     navigateToReceiver: () -> Unit,
     navigateUp: () -> Unit,
     navigateToMap: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<MatchingRoute.Home> {
         MatchingScreen(
@@ -34,7 +35,10 @@ fun NavGraphBuilder.matchingNavGraph(
         )
     }
     composable<MatchingRoute.Sender> {
-        SenderScreen(navigateUp = navigateUp)
+        SenderRoute(
+            navigateUp = navigateUp,
+            showErrorSnackbar = showErrorSnackbar,
+        )
     }
     composable<MatchingRoute.Receiver> {
         ReceiverScreen(

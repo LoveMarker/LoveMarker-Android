@@ -69,6 +69,7 @@ fun MainNavHost(
                     navOptions = navOptionsPopUpTo<MatchingRoute.Home>()
                 )
             },
+            showErrorSnackbar = showErrorSnackbar
         )
         mapNavGraph(
             innerPadding = innerPadding

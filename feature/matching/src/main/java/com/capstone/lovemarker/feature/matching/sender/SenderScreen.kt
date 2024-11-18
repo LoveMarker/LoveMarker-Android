@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,6 +35,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
@@ -41,17 +46,73 @@ import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.matching.R
+import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
+fun SenderRoute(
+    navigateUp: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
+    viewModel: SenderViewModel = hiltViewModel(),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is SenderSideEffect.ShowShareDialog -> {
+                        viewModel.apply {
+                            updateInvitationCode(sideEffect.invitationCode)
+                            updateDialogState(showDialog = true)
+                        }
+                    }
+
+                    is SenderSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
+                }
+            }
+    }
+
+    SenderScreen(
+        navigateUp = navigateUp,
+        selectedDate = state.anniversary,
+        onDateSelected = {
+            viewModel.apply {
+                updateAnniversary(it)
+                updateButtonEnabled(it.isNotEmpty())
+            }
+        },
+        completeButtonEnabled = state.buttonEnabled,
+        onCompleteButtonClick = {
+            viewModel.postInvitationCode(state.anniversary)
+        },
+        invitationCode = state.invitationCode,
+        showDialog = state.showDialog,
+        onShareButtonClick = { /* TODO: share bottom sheet */ },
+        onDismissButtonClick = {
+            viewModel.updateDialogState(showDialog = false)
+        }
+    )
+}
+
+@Composable
 fun SenderScreen(
     navigateUp: () -> Unit,
+    selectedDate: String,
+    onDateSelected: (String) -> Unit,
+    completeButtonEnabled: Boolean,
+    onCompleteButtonClick: () -> Unit,
+    invitationCode: String,
+    showDialog: Boolean,
+    onShareButtonClick: () -> Unit,
+    onDismissButtonClick: () -> Unit,
 ) {
-    var buttonEnabled by remember { mutableStateOf(false) }
-    var showDialog by remember { mutableStateOf(false) }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = LoveMarkerTheme.colorScheme.surfaceContainer
@@ -78,30 +139,26 @@ fun SenderScreen(
                 )
                 Spacer(modifier = Modifier.padding(top = 24.dp))
                 DatePickerFieldToModal(
-                    onDateSelected = { buttonEnabled = it }
+                    selectedDate = selectedDate,
+                    onDateSelected = onDateSelected
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
             LoveMarkerButton(
-                onClick = {
-                    showDialog = true
-
-                    // todo: 서버 api 호출해서 초대 코드 생성하기
-                    
-                },
+                onClick = onCompleteButtonClick,
                 buttonText = stringResource(R.string.matching_complete_btn_text),
-                enabled = buttonEnabled,
+                enabled = completeButtonEnabled,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
             )
 
             if (showDialog) {
                 DoubleButtonDialog(
-                    title = "상대방에게 코드를 공유해주세요",
-                    description = "", // todo: 서버로부터 받은 초대 코드 표시
-                    confirmButtonText = "공유",
-                    dismissButtonText = "취소",
-                    onConfirmButtonClick = { /* TODO: 초대 코드 공유하는 바텀시트 띄우기 */ },
-                    onDismissButtonClick = { showDialog = false },
+                    title = stringResource(R.string.matching_sender_share_dialog_title),
+                    description = invitationCode,
+                    confirmButtonText = stringResource(R.string.matching_sender_share_dialog_confirm_text),
+                    dismissButtonText = stringResource(R.string.matching_sender_share_dialog_cancel_text),
+                    onConfirmButtonClick = onShareButtonClick,
+                    onDismissButtonClick = onDismissButtonClick,
                 )
             }
         }
@@ -110,17 +167,14 @@ fun SenderScreen(
 
 @Composable
 fun DatePickerFieldToModal(
-    onDateSelected: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    selectedDate: String,
+    onDateSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    var selectedDate by remember { mutableStateOf<Long?>(null) }
     var showModal by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        value = selectedDate?.let {
-            onDateSelected(true)
-            convertMillisToDate(it)
-        } ?: "",
+        value = selectedDate,
         onValueChange = {}, // 주의: 읽기 전용일 때는 호출되지 않는다.
         readOnly = true,
         placeholder = {
@@ -157,9 +211,9 @@ fun DatePickerFieldToModal(
 
     if (showModal) {
         DatePickerModal(
-            onDateSelected = {
-                selectedDate = it
-             },
+            onDateSelected = { date ->
+                onDateSelected(date?.let(::convertMillisToDate).orEmpty())
+            },
             onDismiss = { showModal = false }
         )
     }
@@ -219,7 +273,7 @@ fun DatePickerModal(
 }
 
 fun convertMillisToDate(millis: Long): String {
-    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     return formatter.format(Date(millis))
 }
 
@@ -227,8 +281,7 @@ fun convertMillisToDate(millis: Long): String {
 @Composable
 private fun SenderPreview() {
     LoveMarkerTheme {
-        SenderScreen(
-            navigateUp = {}
-        )
+
     }
 }
+
