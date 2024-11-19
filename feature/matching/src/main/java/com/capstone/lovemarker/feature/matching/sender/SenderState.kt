@@ -5,4 +5,5 @@ data class SenderState(
     val invitationCode: String = "",
     val showDialog: Boolean = false,
     val buttonEnabled: Boolean = false,
+    val codeCreated: Boolean = false,
 )

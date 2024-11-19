@@ -40,6 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -58,6 +60,7 @@ import java.util.Locale
 @Composable
 fun SenderRoute(
     navigateUp: () -> Unit,
+    navigateToMap: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: SenderViewModel = hiltViewModel(),
 ) {
@@ -73,6 +76,7 @@ fun SenderRoute(
                     is SenderSideEffect.ShowShareDialog -> {
                         viewModel.apply {
                             updateInvitationCode(sideEffect.invitationCode)
+                            updateCodeCreated(created = true)
                             updateDialogState(showDialog = true)
                         }
                     }
@@ -84,6 +88,12 @@ fun SenderRoute(
             }
     }
 
+    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP) {
+        if (state.codeCreated) {
+            navigateToMap()
+        }
+    }
+    
     SenderScreen(
         navigateUp = navigateUp,
         selectedDate = state.anniversary,

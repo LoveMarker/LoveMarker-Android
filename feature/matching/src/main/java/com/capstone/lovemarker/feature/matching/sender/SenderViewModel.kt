@@ -57,6 +57,12 @@ class SenderViewModel @Inject constructor(
         }
     }
 
+    fun updateCodeCreated(created: Boolean) {
+        _state.update {
+            it.copy(codeCreated = created)
+        }
+    }
+
     fun postInvitationCode(anniversary: String) {
         viewModelScope.launch {
             matchingRepository.postInvitationCode(anniversary)

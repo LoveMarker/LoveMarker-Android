@@ -38,6 +38,7 @@ fun NavGraphBuilder.matchingNavGraph(
     composable<MatchingRoute.Sender> {
         SenderRoute(
             navigateUp = navigateUp,
+            navigateToMap = navigateToMap,
             showErrorSnackbar = showErrorSnackbar,
         )
     }
