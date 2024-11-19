@@ -10,13 +10,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MainTabRoute
-import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
 import com.capstone.lovemarker.feature.matching.navigation.navigateToMatching
 import com.capstone.lovemarker.feature.matching.navigation.navigateToReceiver
 import com.capstone.lovemarker.feature.matching.navigation.navigateToSender
 import com.capstone.lovemarker.feature.login.navigation.navigateToLogin
 import com.capstone.lovemarker.feature.map.navigation.navigateToMap
+import com.capstone.lovemarker.feature.mypage.navigation.navigateToMyPage
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 
 class MainNavigator(
@@ -25,7 +26,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Splash
+    val startDestination = MainTabRoute.Map
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -42,11 +43,11 @@ class MainNavigator(
             restoreState = true
         }
 
-//        when (tab) {
-//            MainTab.MAP -> navController.navigateToMap(navOptions)
-//            MainTab.ARCHIVE -> navController.navigateArchive(navOptions)
-//            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions)
-//        }
+        when (tab) {
+            MainTab.MAP -> navController.navigateToMap(navOptions)
+            MainTab.ARCHIVE -> navController.navigateToArchive(navOptions)
+            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions)
+        }
     }
 
     fun navigateToLogin(navOptions: NavOptions) {

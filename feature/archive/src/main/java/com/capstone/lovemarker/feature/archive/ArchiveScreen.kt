@@ -12,7 +12,7 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 
 @Composable
 fun ArchiveRoute(modifier: Modifier = Modifier) {
-
+    ArchiveScreen()
 }
 
 @Composable

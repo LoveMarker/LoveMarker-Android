@@ -12,7 +12,7 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 
 @Composable
 fun MyPageRoute(modifier: Modifier = Modifier) {
-
+    MaPageScreen()
 }
 
 @Composable

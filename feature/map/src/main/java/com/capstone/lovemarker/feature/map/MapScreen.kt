@@ -16,7 +16,7 @@ fun MapRoute(
     innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
-    
+    MapScreen()
 }
 
 @Composable
