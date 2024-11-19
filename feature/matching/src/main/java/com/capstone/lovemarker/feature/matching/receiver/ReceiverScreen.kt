@@ -14,9 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -26,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.common.extension.clearFocus
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
@@ -41,7 +39,7 @@ fun ReceiverRoute(
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: ReceiverViewModel = hiltViewModel(),
 ) {
-    var invitationCode by remember { mutableStateOf("") }
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -51,12 +49,13 @@ fun ReceiverRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is ReceiverSideEffect.NavigateToMap -> {
+                        // todo: 코드 입력한 사람은,
+                        //  커플 매칭에 성공했을 때만 메인으로 진입하는 게 맞는 거 같다.
                         keyboardController?.hide()
                         navigateToMap()
                     }
 
                     is ReceiverSideEffect.ShowErrorSnackbar -> {
-                        // todo: 매칭 실패여도 메인에 진입하는 게 맞나...?
                         showErrorSnackbar(sideEffect.throwable)
                     }
                 }
@@ -65,11 +64,11 @@ fun ReceiverRoute(
 
     ReceiverScreen(
         navigateUp = navigateUp,
-        invitationCode = invitationCode,
-        onValueChanged = { invitationCode = it },
-        onClearIconClick = { invitationCode = "" },
+        invitationCode = state.invitationCode,
+        onValueChanged = { viewModel.updateInvitationCode(it) },
+        onClearIconClick = { viewModel.updateInvitationCode("") },
         onCompleteButtonClick = {
-            viewModel.postCouple(invitationCode)
+            viewModel.postCouple(state.invitationCode)
         }
     )
 }
