@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SenderViewModel @Inject constructor(
     private val matchingRepository: MatchingRepository,
-    private val myPageRepository: MyPageRepository
+//    private val myPageRepository: MyPageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(SenderState())
     val state: StateFlow<SenderState> = _state.asStateFlow()
@@ -27,11 +27,11 @@ class SenderViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<SenderSideEffect>()
     val sideEffect: SharedFlow<SenderSideEffect> = _sideEffect.asSharedFlow()
 
-    init {
-        viewModelScope.launch {
-            myPageRepository.deleteCouple()
-        }
-    }
+//    init {
+//        viewModelScope.launch {
+//            myPageRepository.deleteCouple()
+//        }
+//    }
 
     fun updateAnniversary(anniversary: String) {
         _state.update {
