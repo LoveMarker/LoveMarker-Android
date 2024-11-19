@@ -17,10 +17,13 @@ class AuthInterceptor @Inject constructor(
 
         val originalRequest = chain.request()
         val headerRequest = originalRequest.newBuilder()
-            .header("accessToken", userData.accessToken)
-            .header("refreshToken", userData.refreshToken)
+            .header(AUTH_HEADER_NAME, userData.accessToken)
             .build()
 
         return chain.proceed(headerRequest)
+    }
+
+    companion object {
+        private const val AUTH_HEADER_NAME = "accessToken"
     }
 }
