@@ -51,6 +51,9 @@ class MainNavigator(
         }
     }
 
+    /**
+     * On Boarding
+     * */
     fun navigateToLogin(navOptions: NavOptions) {
         navController.navigateToLogin(navOptions)
     }
@@ -59,6 +62,9 @@ class MainNavigator(
         navController.navigateToNickname(navOptions)
     }
 
+    /**
+     * Couple Matching
+     * */
     fun navigateToMatching(navOptions: NavOptions) {
         navController.navigateToMatching(navOptions)
     }
@@ -71,10 +77,16 @@ class MainNavigator(
         navController.navigateToReceiver()
     }
 
+    /**
+     * Main Tab
+     * */
     fun navigateToMap(navOptions: NavOptions) {
         navController.navigateToMap(navOptions)
     }
 
+    /**
+     * Navigate Up
+     * */
     private fun navigateUp() {
         navController.navigateUp()
     }
