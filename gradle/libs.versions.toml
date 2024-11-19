@@ -39,6 +39,7 @@ google-maps = "19.0.0"
 activity-compose = "1.9.3"
 compose-bom = "2024.11.00"
 compose-hilt-navigation = "1.2.0"
+compose-maps = "4.4.1"
 
 # test
 junit = "4.13.2"
@@ -104,6 +105,7 @@ compose-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-co
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-maps = { module = "com.google.maps.android:maps-compose", version.ref = "compose-maps" }
 
 # dagger-hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger-hilt" }
