@@ -49,8 +49,6 @@ fun ReceiverRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is ReceiverSideEffect.NavigateToMap -> {
-                        // todo: 코드 입력한 사람은,
-                        //  커플 매칭에 성공했을 때만 메인으로 진입하는 게 맞는 거 같다.
                         keyboardController?.hide()
                         navigateToMap()
                     }
