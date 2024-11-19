@@ -70,6 +70,7 @@ class SenderViewModel @Inject constructor(
                     Timber.d(response.invitationCode)
                     _sideEffect.emit(SenderSideEffect.ShowShareDialog(response.invitationCode))
                 }.onFailure {
+                    Timber.e(it.message)
                     _sideEffect.emit(SenderSideEffect.ShowErrorSnackbar(it))
                 }
         }

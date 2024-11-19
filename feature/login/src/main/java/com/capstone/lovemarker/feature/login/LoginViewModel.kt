@@ -39,8 +39,8 @@ class LoginViewModel @Inject constructor(
 
                 _loginSideEffect.emit(LoginSideEffect.LoginSuccess(response.isRegistered))
             }.onFailure { throwable ->
-                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(throwable))
                 Timber.e(throwable.message)
+                _loginSideEffect.emit(LoginSideEffect.ShowErrorSnackbar(throwable))
             }
         }
     }

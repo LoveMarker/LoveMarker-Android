@@ -74,6 +74,7 @@ class NicknameViewModel @Inject constructor(
                     if (errorBody?.contains(NICKNAME_DUPLICATED_ERR_MSG) == true) {
                         updateInputUiState(InputUiState.Error.DUPLICATED)
                     } else {
+                        Timber.e(throwable.message)
                         _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
                     }
                 }
