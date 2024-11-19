@@ -20,22 +20,21 @@ kotlinx-immutable = "0.3.7"
 # android
 core-ktx = "1.13.1"
 appcompat = "1.7.0"
-lifecycle = "2.8.6"
-navigation = "2.8.3"
-fragment-ktx = "1.8.4"
+lifecycle = "2.8.7"
+navigation = "2.8.4"
+fragment-ktx = "1.8.5"
 dagger-hilt = "2.51.1"
 material = "1.12.0"
 room = "2.6.1"
 datastore = "1.1.1"
 splash-screen = "1.0.1"
-desugar-jdk-libs = "2.1.2"
+desugar-jdk-libs = "2.1.3"
 credentials = "1.3.0"
 googleid = "1.1.1"
 
 # compose
 activity-compose = "1.9.3"
-compose-bom = "2024.10.00"
-compose-google-fonts = "1.7.4"
+compose-bom = "2024.11.00"
 compose-hilt-navigation = "1.2.0"
 
 # test
@@ -91,7 +90,6 @@ compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-compose-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "compose-google-fonts" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
@@ -148,7 +146,6 @@ compose = [
     "compose-ui-graphics",
     "compose-ui-tooling",
     "compose-ui-tooling-preview",
-    "compose-ui-text-google-fonts",
     "compose-material3",
     "compose-activity",
     "compose-navigation",
