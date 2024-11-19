@@ -18,9 +18,8 @@ class AuthRepositoryImpl @Inject constructor(
         provider: String,
     ): Result<LoginEntity> = runCatching {
         authDataSource.postLogin(
-            requestBody = LoginRequest(
-                socialToken, provider
-            )
+            socialToken = socialToken,
+            loginRequest = LoginRequest(provider)
         ).data.toDomain()
     }
 
