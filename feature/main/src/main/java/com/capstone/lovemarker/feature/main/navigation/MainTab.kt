@@ -8,22 +8,22 @@ import com.capstone.lovemarker.feature.main.R
 
 enum class MainTab(
     @DrawableRes val iconResId: Int,
-    val contentDescription: String,
+    val labelText: String,
     val route: MainTabRoute,
 ) {
     MAP(
         iconResId = R.drawable.ic_map,
-        contentDescription = "Map",
+        labelText = "Map",
         route = MainTabRoute.Map
     ),
     ARCHIVE(
         iconResId = R.drawable.ic_archive,
-        contentDescription = "Archive",
+        labelText = "Archive",
         route = MainTabRoute.Archive
     ),
     MY_PAGE(
         iconResId = R.drawable.ic_mypage,
-        contentDescription = "MyPage",
+        labelText = "MyPage",
         route = MainTabRoute.MyPage
     );
 
