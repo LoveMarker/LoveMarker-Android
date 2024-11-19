@@ -7,10 +7,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.main.splash.splashNavGraph
 import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
+import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
 
 @Composable
@@ -67,6 +69,12 @@ fun MainNavHost(
             },
         )
         mapNavGraph(
+            innerPadding = innerPadding
+        )
+        archiveNavGraph(
+            innerPadding = innerPadding
+        )
+        myPageNavGraph(
             innerPadding = innerPadding
         )
     }

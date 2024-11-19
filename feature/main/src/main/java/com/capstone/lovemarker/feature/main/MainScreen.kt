@@ -11,9 +11,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.capstone.lovemarker.core.designsystem.component.snackbar.LoveMarkerSnackbar
+import com.capstone.lovemarker.feature.main.component.MainBottomBar
 import com.capstone.lovemarker.feature.main.navigation.MainNavHost
 import com.capstone.lovemarker.feature.main.navigation.MainNavigator
+import com.capstone.lovemarker.feature.main.navigation.MainTab
 import com.capstone.lovemarker.feature.main.navigation.rememberMainNavigator
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
@@ -71,15 +74,15 @@ fun MainScreenContent(
                 )
             }
         },
-//        bottomBar = {
-//            MainBottomBar(
-//                visible = navigator.shouldShowBottomBar(),
-//                tabs = MainTab.entries.toPersistentList(),
-//                currentTab = navigator.currentTab
-//            ) { selectedTab ->
-//                navigator.navigate(selectedTab)
-//            }
-//        },
+        bottomBar = {
+            MainBottomBar(
+                visible = navigator.shouldShowBottomBar(),
+                tabs = MainTab.entries.toPersistentList(),
+                currentTab = navigator.currentTab
+            ) { selectedTab ->
+                navigator.navigate(selectedTab)
+            }
+        },
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,

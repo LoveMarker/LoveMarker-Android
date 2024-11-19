@@ -1,8 +1,7 @@
-package com.capstone.lovemarker.feature.map
+package com.capstone.lovemarker.feature.archive
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,15 +11,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 
 @Composable
-fun MapRoute(
-    innerPadding: PaddingValues,
-    modifier: Modifier = Modifier,
-) {
-    MapScreen()
+fun ArchiveRoute(modifier: Modifier = Modifier) {
+    ArchiveScreen()
 }
 
 @Composable
-fun MapScreen(
+fun ArchiveScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -28,14 +24,14 @@ fun MapScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(text = "map screen")
+        Text(text = "archive screen")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun MapPreview() {
+private fun ArchivePreview() {
     LoveMarkerTheme {
-        MapScreen()
+        ArchiveScreen()
     }
 }
