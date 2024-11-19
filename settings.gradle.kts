@@ -36,6 +36,8 @@ include(
     ":feature:nickname",
     ":feature:matching",
     ":feature:map",
+    ":feature:archive",
+    ":feature:mypage",
 )
 
 include(
