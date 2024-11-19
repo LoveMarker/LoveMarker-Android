@@ -49,6 +49,7 @@ fun NicknameRoute(
 ) {
     val state by viewModel.nicknameState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     UpdateStateByPreviousRoute(prevRoute, viewModel)
 
@@ -92,9 +93,10 @@ fun NicknameRoute(
         is InputUiState.Success -> {
             when (prevRoute) {
                 is Route.Login -> {
-                    Timber.d("SUCCESS PATCH NICKNAME")
-                    //navigateToMatching()
+                    keyboardController?.hide()
+                    navigateToMatching()
                 }
+
                 is MainTabRoute.MyPage -> navigateUp()
                 else -> {
                     Timber.e("invalid navigation path on the nickname screen.")

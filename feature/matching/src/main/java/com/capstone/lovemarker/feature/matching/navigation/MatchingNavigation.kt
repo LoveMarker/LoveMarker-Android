@@ -2,14 +2,16 @@ package com.capstone.lovemarker.feature.matching.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.feature.matching.home.MatchingScreen
+import com.capstone.lovemarker.feature.matching.receiver.ReceiverRoute
 import com.capstone.lovemarker.feature.matching.receiver.ReceiverScreen
-import com.capstone.lovemarker.feature.matching.sender.SenderScreen
+import com.capstone.lovemarker.feature.matching.sender.SenderRoute
 
-fun NavController.navigateToMatching() {
-    navigate(MatchingRoute.Home)
+fun NavController.navigateToMatching(navOptions: NavOptions) {
+    navigate(MatchingRoute.Home, navOptions)
 }
 
 fun NavController.navigateToSender() {
@@ -25,20 +27,26 @@ fun NavGraphBuilder.matchingNavGraph(
     navigateToReceiver: () -> Unit,
     navigateUp: () -> Unit,
     navigateToMap: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<MatchingRoute.Home> {
         MatchingScreen(
-            onCreateButtonClick = navigateToSender,
-            onInputButtonClick = navigateToReceiver,
+            navigateToSender = navigateToSender,
+            navigateToReceiver = navigateToReceiver,
         )
     }
     composable<MatchingRoute.Sender> {
-        SenderScreen(navigateUp = navigateUp)
-    }
-    composable<MatchingRoute.Receiver> {
-        ReceiverScreen(
+        SenderRoute(
             navigateUp = navigateUp,
             navigateToMap = navigateToMap,
+            showErrorSnackbar = showErrorSnackbar,
+        )
+    }
+    composable<MatchingRoute.Receiver> {
+        ReceiverRoute(
+            navigateUp = navigateUp,
+            navigateToMap = navigateToMap,
+            showErrorSnackbar = showErrorSnackbar
         )
     }
 }

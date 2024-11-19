@@ -43,11 +43,15 @@ include(
 include(
     ":domain:auth",
     ":domain:oauth",
-    ":domain:nickname"
+    ":domain:nickname",
+    ":domain:matching",
+    ":domain:mypage",
 )
 
 include(
     ":data:auth",
     ":data:oauth",
-    ":data:nickname"
+    ":data:nickname",
+    ":data:matching",
+    ":data:mypage",
 )

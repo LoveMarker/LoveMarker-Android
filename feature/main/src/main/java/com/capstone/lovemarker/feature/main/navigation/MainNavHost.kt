@@ -55,7 +55,11 @@ fun MainNavHost(
         nicknameNavGraph(
             prevRoute = Route.Login,
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToMatching = { navigator.navigateToMatching() },
+            navigateToMatching = {
+                navigator.navigateToMatching(
+                    navOptions = navOptionsPopUpTo<Route.Nickname>()
+                )
+            },
             showErrorSnackbar = showErrorSnackbar
         )
         matchingNavGraph(
@@ -67,6 +71,7 @@ fun MainNavHost(
                     navOptions = navOptionsPopUpTo<MatchingRoute.Home>()
                 )
             },
+            showErrorSnackbar = showErrorSnackbar
         )
         mapNavGraph(
             innerPadding = innerPadding

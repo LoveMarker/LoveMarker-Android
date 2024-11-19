@@ -29,7 +29,8 @@ dependencies {
     implementation(projects.data.auth)
     implementation(projects.data.oauth)
     implementation(projects.data.nickname)
-    // todo: data.matching
+    implementation(projects.data.matching)
+    implementation(projects.data.mypage)
 
     // android
     implementation(libs.core.ktx)
