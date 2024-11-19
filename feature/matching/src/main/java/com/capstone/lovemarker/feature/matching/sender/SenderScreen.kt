@@ -100,6 +100,7 @@ fun SenderRoute(
         invitationCode = state.invitationCode,
         showDialog = state.showDialog,
         onShareButtonClick = {
+            viewModel.updateDialogState(showDialog = false)
             showShareSheet(context = context, text = state.invitationCode)
         },
         onDismissButtonClick = {
@@ -108,7 +109,7 @@ fun SenderRoute(
     )
 }
 
-fun showShareSheet(context: Context, text: String) {
+private fun showShareSheet(context: Context, text: String) {
     val sendIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(Intent.EXTRA_TEXT, text)
