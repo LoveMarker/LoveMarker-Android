@@ -1,5 +1,11 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.lovemarker.android.application)
+}
+
+val properties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -8,6 +14,8 @@ android {
     defaultConfig {
         applicationId = "com.capstone.lovemarker"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["MAPS_API_KEY"] = properties.getProperty("maps.api.key")
     }
 
     packaging {
