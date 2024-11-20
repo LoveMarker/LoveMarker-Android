@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_logo_icon_desc">lovemarker app logo</string>
+    <string name="map_location_btn_desc">current location button</string>
+    <string name="map_location_marker_desc">current location marker</string>
+    <string name="map_upload_btn_text">추억 등록하기</string>
+    <string name="map_guide_title">연인 간의 추억을 지도에 기록해 보세요!</string>
+</resources>

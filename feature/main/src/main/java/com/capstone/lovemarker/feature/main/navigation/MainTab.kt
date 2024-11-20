@@ -13,17 +13,17 @@ enum class MainTab(
 ) {
     MAP(
         iconResId = R.drawable.ic_map,
-        labelText = "Map",
+        labelText = "지도",
         route = MainTabRoute.Map
     ),
     ARCHIVE(
         iconResId = R.drawable.ic_archive,
-        labelText = "Archive",
+        labelText = "아카이브",
         route = MainTabRoute.Archive
     ),
     MY_PAGE(
         iconResId = R.drawable.ic_mypage,
-        labelText = "MyPage",
+        labelText = "마이페이지",
         route = MainTabRoute.MyPage
     );
 
