@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="map_logo_icon_desc">lovemarker app logo</string>
+    <string name="map_upload_btn_text">추억 등록하기</string>
 </resources>

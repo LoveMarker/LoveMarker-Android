@@ -6,15 +6,19 @@ import android.graphics.BlurMaskFilter
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,7 +43,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.capstone.lovemarker.core.designsystem.theme.Black
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
+import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -70,7 +76,8 @@ fun MapRoute(
     MapScreen(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
-        userLocation = userLocation
+        userLocation = userLocation,
+        onUploadButtonClick = { /* TODO */ }
     )
 }
 
@@ -110,10 +117,10 @@ fun MapScreen(
     innerPadding: PaddingValues,
     cameraPositionState: CameraPositionState,
     userLocation: LatLng?,
-    modifier: Modifier = Modifier
+    onUploadButtonClick: () -> Unit,
 ) {
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
     ) {
@@ -159,12 +166,33 @@ fun MapScreen(
                 )
             }
         }
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.align(Alignment.BottomCenter)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "추억 등록하기")
+            Box(
+                modifier = Modifier
+                    .dropShadow(
+                        shape = RoundedCornerShape(12.dp),
+                        offsetY = 3.dp
+                    )
+                    .clip(shape = RoundedCornerShape(12.dp))
+                    .background(color = Red200)
+                    .clickable {
+                        onUploadButtonClick()
+                    }
+            ) {
+                Text(
+                    text = stringResource(R.string.map_upload_btn_text),
+                    style = LoveMarkerTheme.typography.label13M,
+                    modifier = Modifier.padding(horizontal = 96.dp, vertical = 14.dp)
+                )
+            }
+            Spacer(modifier = Modifier.padding(28.dp))
         }
+
     }
 }
 
