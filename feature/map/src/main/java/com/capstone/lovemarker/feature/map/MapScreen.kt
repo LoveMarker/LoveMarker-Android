@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.feature.map
 
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,9 +33,16 @@ fun MapRoute(
     viewModel: MapViewModel = viewModel()
 ) {
     val cameraPositionState = rememberCameraPositionState()
+    val context = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
     val userLocation by viewModel.userLocation
 
-    RequestLocationPermission(viewModel)
+    RequestLocationPermission(
+        context = context,
+        onPermissionGranted = {
+            viewModel.getUserLocation(context, fusedLocationClient)
+        }
+    )
 
     MapScreen(
         innerPadding = innerPadding,
@@ -45,16 +53,14 @@ fun MapRoute(
 
 @Composable
 fun RequestLocationPermission(
-    viewModel: MapViewModel
+    context: Context,
+    onPermissionGranted: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            viewModel.getUserLocation(context, fusedLocationClient)
+            onPermissionGranted()
         } else {
             Timber.e("Location permission was denied by the user.")
         }
@@ -63,7 +69,7 @@ fun RequestLocationPermission(
     LaunchedEffect(Unit) {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
-                viewModel.getUserLocation(context, fusedLocationClient)
+                onPermissionGranted()
             }
             else -> {
                 permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
