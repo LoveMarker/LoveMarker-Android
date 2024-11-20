@@ -40,7 +40,7 @@ fun MapRoute(
     RequestLocationPermission(
         context = context,
         onPermissionGranted = {
-            viewModel.getUserLocation(context, fusedLocationClient)
+            viewModel.getUserLocation(fusedLocationClient)
         }
     )
 
