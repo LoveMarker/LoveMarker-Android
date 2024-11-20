@@ -154,7 +154,6 @@ fun MapScreen(
                 modifier = Modifier
                     .dropShadow(
                         shape = RoundedCornerShape(30.dp),
-                        blur = 10.dp,
                         offsetY = 2.dp,
                     )
                     .clip(RoundedCornerShape(30.dp))
