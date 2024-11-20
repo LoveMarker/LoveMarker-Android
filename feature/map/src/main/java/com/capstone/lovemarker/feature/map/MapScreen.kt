@@ -2,7 +2,6 @@ package com.capstone.lovemarker.feature.map
 
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.BlurMaskFilter
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -26,18 +25,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.drawOutline
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -49,9 +41,9 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import timber.log.Timber
 
 @Composable
@@ -126,12 +118,32 @@ fun MapScreen(
             cameraPositionState = cameraPositionState
         ) {
             userLocation?.let { position ->
-                Marker(
-                    state = MarkerState(position = position),
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(position, 18f)
+
+                MarkerComposable(
+                    state = rememberMarkerState(position = position),
                     title = "Your Location",
                     snippet = "This is where you are currently located."
-                )
-                cameraPositionState.position = CameraPosition.fromLatLngZoom(position, 18f)
+                ) {
+                    Box {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_marker_area),
+                            contentDescription = stringResource(R.string.map_location_marker_desc),
+                            tint = Color.Unspecified,
+                        )
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_marker_pin),
+                            contentDescription = stringResource(R.string.map_location_marker_desc),
+                            tint = Color.Unspecified,
+                            modifier = Modifier
+                                .dropShadow(
+                                    shape = CircleShape,
+                                )
+                                .clip(CircleShape)
+                                .align(Alignment.Center)
+                        )
+                    }
+                }
             }
         }
         Column(
