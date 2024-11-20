@@ -10,15 +10,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +41,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.capstone.lovemarker.core.designsystem.theme.Black
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.LocationServices
@@ -158,7 +155,7 @@ fun MapScreen(
                     modifier = Modifier.align(Alignment.TopStart)
                 )
                 Text(
-                    text = "연인 간의 추억을 지도에 기록해 보세요!",
+                    text = stringResource(R.string.map_guide_title),
                     style = LoveMarkerTheme.typography.label13M,
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -167,11 +164,26 @@ fun MapScreen(
             }
         }
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.BottomCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 24.dp)
         ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_btn_location),
+                contentDescription = stringResource(R.string.map_location_btn_desc),
+                tint = Color.Unspecified,
+                modifier = Modifier
+                    .dropShadow(
+                        shape = CircleShape,
+                        blur = 10.dp,
+                        offsetY = 3.dp
+                    )
+                    .clip(CircleShape)
+                    .align(Alignment.Start)
+            )
+            Spacer(modifier = Modifier.padding(14.dp))
             Box(
                 modifier = Modifier
                     .dropShadow(
@@ -192,7 +204,6 @@ fun MapScreen(
             }
             Spacer(modifier = Modifier.padding(28.dp))
         }
-
     }
 }
 
@@ -229,6 +240,8 @@ fun Modifier.dropShadow(
 @Composable
 private fun MapPreview() {
     LoveMarkerTheme {
-
+//        MapScreen(
+//            onUploadButtonClick = {}
+//        )
     }
 }
