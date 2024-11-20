@@ -82,9 +82,9 @@ private fun RowScope.MainBottomBarItem(
             Text(
                 text = tab.labelText,
                 style = if (selected) {
-                    LoveMarkerTheme.typography.label12B
+                    LoveMarkerTheme.typography.label11B
                 } else {
-                    LoveMarkerTheme.typography.label12M
+                    LoveMarkerTheme.typography.label11M
                 }
             )
         },
