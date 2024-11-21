@@ -1,6 +1,8 @@
 package com.capstone.lovemarker.feature.upload.photo
 
-import androidx.compose.foundation.Image
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,7 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,38 +27,62 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.upload.R
+import com.capstone.lovemarker.feature.upload.UploadViewModel
+import kotlinx.collections.immutable.PersistentList
+import timber.log.Timber
+
+private const val MAX_IMAGES_LIMIT = 5
 
 @Composable
 fun PhotoRoute(
     navigateUp: () -> Unit,
     navigateToContent: () -> Unit,
+    viewModel: UploadViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val pickMultipleMedia =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGES_LIMIT)
+        ) { uris ->
+            if (uris.isNotEmpty()) {
+                viewModel.updateImages(uris)
+            } else {
+                Timber.d("No media selected")
+            }
+        }
+
     PhotoScreen(
         navigateUp = navigateUp,
-        photoSelected = true,
+        images = state.images,
+        photoSelected = state.images.isNotEmpty(),
         onAddButtonClick = {
-            // todo: Photo Picker
+            pickMultipleMedia.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
         },
         onNextButtonClick = {
-            // todo: 선택된 이미지 url 목록 -> 뷰모델에 저장
+            Timber.d("images: ${state.images}")
             navigateToContent()
         }
     )
@@ -64,6 +92,7 @@ fun PhotoRoute(
 @Composable
 fun PhotoScreen(
     navigateUp: () -> Unit,
+    images: PersistentList<String>,
     photoSelected: Boolean,
     onAddButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
@@ -104,7 +133,7 @@ fun PhotoScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "\n0/5",
+                text = "${images.size}/${MAX_IMAGES_LIMIT}",
                 style = LoveMarkerTheme.typography.label13M,
                 color = Gray800,
             )
@@ -133,9 +162,11 @@ fun PhotoScreen(
         }
 
         if (photoSelected) {
-            SelectedImageGrid()
+            SelectedImageGrid(
+                images = images
+            )
         }
-        
+
         Spacer(modifier = Modifier.weight(1f))
         LoveMarkerButton(
             onClick = onNextButtonClick,
@@ -147,35 +178,32 @@ fun PhotoScreen(
 }
 
 @Composable
-fun SelectedImageGrid() {
-    val selectedImages = listOf(
-        R.drawable.img_test,
-        R.drawable.img_test,
-        R.drawable.img_test,
-        R.drawable.img_test,
-        R.drawable.img_test
-    )
-
+fun SelectedImageGrid(
+    images: PersistentList<String>
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(24.dp),
         horizontalArrangement = Arrangement.spacedBy(18.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
-        items(selectedImages) { imageRes ->
-            SelectedImageItem(painter = painterResource(id = imageRes))
+        items(images) { imageUrl ->
+            SelectedImageItem(
+                imageUrl = imageUrl
+            )
         }
     }
 }
 
 @Composable
-fun SelectedImageItem(painter: Painter) {
-    Image(
-        painter = painter,
-        contentDescription = null,
+fun SelectedImageItem(imageUrl: String) {
+    AsyncImage(
+        model = imageUrl,
+        contentDescription = stringResource(R.string.upload_photo_selected_image_desc),
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .size(100.dp)
+            .aspectRatio(1f)
             .clip(RoundedCornerShape(12.dp))
     )
 }
@@ -184,11 +212,6 @@ fun SelectedImageItem(painter: Painter) {
 @Composable
 private fun PhotoPreview() {
     LoveMarkerTheme {
-        PhotoScreen(
-            navigateUp = {},
-            photoSelected = true,
-            onAddButtonClick = {},
-            onNextButtonClick = {}
-        )
+
     }
 }

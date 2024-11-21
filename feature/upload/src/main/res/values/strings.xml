@@ -5,4 +5,5 @@
     <string name="upload_photo_guide_text">최대 5장까지 추가 가능하며,\n첫번째 이미지가 대표 이미지로 보입니다 :)</string>
     <string name="upload_photo_btn_desc">add photos from gallery</string>
     <string name="upload_photo_next_btn_text">다음</string>
+    <string name="upload_photo_selected_image_desc">selected image from gallery</string>
 </resources>
