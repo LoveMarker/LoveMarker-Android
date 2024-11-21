@@ -20,4 +20,5 @@
     <string name="upload_content_date_placeholder">날짜를 선택해주세요</string>
     <string name="upload_content_title_placeholder">제목을 입력해주세요</string>
     <string name="upload_content_detail_placeholder">내용을 입력해주세요</string>
+    <string name="upload_content_complete_btn_text">완료</string>
 </resources>

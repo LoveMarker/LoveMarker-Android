@@ -26,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
+import com.capstone.lovemarker.core.designsystem.component.textfield.CounterTextField
 import com.capstone.lovemarker.core.designsystem.component.textfield.LoveMarkerTextField
 import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
@@ -38,24 +40,22 @@ import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.feature.upload.R
 import com.capstone.lovemarker.feature.upload.UploadViewModel
 
-private const val INPUT_CATEGORY = 4
-
 @Composable
 fun ContentRoute(
     navigateUp: () -> Unit,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
     navigateUp: () -> Unit,
+    completeButtonEnabled: Boolean,
     onSearchButtonClick: () -> Unit,
     onDateButtonClick: () -> Unit,
+    onCompleteButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -102,7 +102,20 @@ fun ContentScreen(
             ) {
                 TitleTextField()
             }
+            Spacer(modifier = Modifier.padding(top = 24.dp))
+            InputSection(
+                category = R.string.upload_content_detail
+            ) {
+                ContentTextField()
+            }
         }
+        Spacer(modifier = Modifier.weight(1f))
+        LoveMarkerButton(
+            onClick = onCompleteButtonClick,
+            buttonText = stringResource(R.string.upload_content_complete_btn_text),
+            enabled = completeButtonEnabled,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
+        )
     }
 }
 
@@ -165,12 +178,28 @@ fun DateTextField(
 
 @Composable
 fun TitleTextField() {
-
+    CounterTextField(
+        value = "",
+        onValueChanged = {},
+        singleLine = true,
+        minHeight = 54.dp,
+        currentLength = 0, // todo: 현재 글자 수 반영
+        maxLength = 20,
+        placeholder = stringResource(id = R.string.upload_content_title_placeholder),
+    )
 }
 
 @Composable
-fun ContentTextField() {
-    TODO("Not yet implemented")
+fun ContentTextField() { // todo: 내용 길어지면 스크롤바 생기도록!
+    CounterTextField(
+        value = "",
+        onValueChanged = {},
+        singleLine = false,
+        currentLength = 0, // todo: 현재 글자 수 반영
+        maxLength = 200,
+        placeholder = stringResource(id = R.string.upload_content_detail_placeholder),
+        minHeight = 150.dp,
+    )
 }
 
 @Preview
@@ -179,8 +208,10 @@ private fun ContentPreview() {
     LoveMarkerTheme {
         ContentScreen(
             navigateUp = {},
+            completeButtonEnabled = false,
             onSearchButtonClick = {},
-            onDateButtonClick = {}
+            onDateButtonClick = {},
+            onCompleteButtonClick = {}
         )
     }
 }
