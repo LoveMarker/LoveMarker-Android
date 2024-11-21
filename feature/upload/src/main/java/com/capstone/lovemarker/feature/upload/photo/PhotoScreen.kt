@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -58,7 +60,6 @@ fun PhotoRoute(
     viewModel: UploadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    Timber.d("viewModel: ${viewModel.hashCode()}")
 
     val pickMultipleMedia =
         rememberLauncherForActivityResult(
@@ -184,7 +185,8 @@ fun SelectedImageGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(24.dp),
         horizontalArrangement = Arrangement.spacedBy(18.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+        modifier = Modifier.fillMaxWidth()
     ) {
         items(images) { imageUrl ->
             SelectedImageItem(
@@ -201,7 +203,7 @@ fun SelectedImageItem(imageUrl: String) {
         contentDescription = stringResource(R.string.upload_photo_selected_image_desc),
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .size(100.dp)
+            .aspectRatio(1f)
             .clip(RoundedCornerShape(12.dp))
     )
 }
