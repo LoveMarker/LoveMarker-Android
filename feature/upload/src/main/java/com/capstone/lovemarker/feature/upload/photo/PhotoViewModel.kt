@@ -13,8 +13,10 @@ class PhotoViewModel : ViewModel() {
     val state: StateFlow<PhotoState> = _state.asStateFlow()
 
     fun updateImages(uris: List<Uri>) {
-        _state.update {
-            it.copy(imageUris = uris.toPersistentList())
+        _state.update { state ->
+            state.copy(
+                images = uris.map { it.toString() }.toPersistentList()
+            )
         }
     }
 }

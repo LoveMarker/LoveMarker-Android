@@ -13,8 +13,12 @@ fun NavController.navigateToPhoto() {
     navigate(UploadRoute.Photo)
 }
 
-fun NavController.navigateToContent(navOptions: NavOptions) {
-    navigate(UploadRoute.Content, navOptions)
+fun NavController.navigateToContent(images: PersistentList<String>) {
+    navigate(
+        route = UploadRoute.Content(
+            images = images
+        ),
+    )
 }
 
 fun NavController.navigateToPlaceSearch() {
@@ -23,7 +27,7 @@ fun NavController.navigateToPlaceSearch() {
 
 fun NavGraphBuilder.uploadNavGraph(
     navigateUp: () -> Unit,
-    navigateToContent: (PersistentList<Uri>) -> Unit,
+    navigateToContent: (PersistentList<String>) -> Unit,
 ) {
     composable<UploadRoute.Photo> {
         PhotoRoute(

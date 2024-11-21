@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.core.navigation
 
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
@@ -32,10 +33,12 @@ sealed interface MatchingRoute: Route {
 
 sealed interface UploadRoute: Route {
     @Serializable
-    data object Photo : UploadRoute
+    data object Photo: UploadRoute
 
     @Serializable
-    data object Content : UploadRoute
+    data class Content(
+        val images: PersistentList<String>
+    ) : UploadRoute
 
     @Serializable
     data object PlaceSearch : UploadRoute

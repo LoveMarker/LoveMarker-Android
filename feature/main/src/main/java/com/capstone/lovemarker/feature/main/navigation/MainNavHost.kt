@@ -90,9 +90,9 @@ fun MainNavHost(
         )
         uploadNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToContent = {
+            navigateToContent = { images ->
                 navigator.navigateToContent(
-                    navOptions = navOptionsSaveState<UploadRoute.Photo>()
+                    images = images
                 )
             }
         )

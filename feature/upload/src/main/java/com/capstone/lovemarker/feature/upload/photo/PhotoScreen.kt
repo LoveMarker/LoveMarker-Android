@@ -1,10 +1,8 @@
 package com.capstone.lovemarker.feature.upload.photo
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,9 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
@@ -58,7 +53,7 @@ private const val MAX_IMAGES_LIMIT = 5
 @Composable
 fun PhotoRoute(
     navigateUp: () -> Unit,
-    navigateToContent: (PersistentList<Uri>) -> Unit,
+    navigateToContent: (PersistentList<String>) -> Unit,
     viewModel: PhotoViewModel = viewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -76,15 +71,15 @@ fun PhotoRoute(
 
     PhotoScreen(
         navigateUp = navigateUp,
-        imageUris = state.imageUris,
-        photoSelected = state.imageUris.isNotEmpty(),
+        images = state.images,
+        photoSelected = state.images.isNotEmpty(),
         onAddButtonClick = {
             pickMultipleMedia.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
         },
         onNextButtonClick = {
-            navigateToContent(state.imageUris)
+            navigateToContent(state.images)
         }
     )
 }
@@ -93,7 +88,7 @@ fun PhotoRoute(
 @Composable
 fun PhotoScreen(
     navigateUp: () -> Unit,
-    imageUris: PersistentList<Uri>,
+    images: PersistentList<String>,
     photoSelected: Boolean,
     onAddButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
@@ -164,7 +159,7 @@ fun PhotoScreen(
 
         if (photoSelected) {
             SelectedImageGrid(
-                imageUris = imageUris
+                images = images
             )
         }
 
@@ -180,7 +175,7 @@ fun PhotoScreen(
 
 @Composable
 fun SelectedImageGrid(
-    imageUris: PersistentList<Uri>
+    images: PersistentList<String>
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
@@ -188,18 +183,18 @@ fun SelectedImageGrid(
         horizontalArrangement = Arrangement.spacedBy(18.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        items(imageUris) { imageUri ->
+        items(images) { imageUrl ->
             SelectedImageItem(
-                imageUri = imageUri
+                imageUrl = imageUrl
             )
         }
     }
 }
 
 @Composable
-fun SelectedImageItem(imageUri: Uri) {
+fun SelectedImageItem(imageUrl: String) {
     AsyncImage(
-        model = imageUri,
+        model = imageUrl,
         contentDescription = stringResource(R.string.upload_photo_selected_image_desc),
         contentScale = ContentScale.Crop,
         modifier = Modifier

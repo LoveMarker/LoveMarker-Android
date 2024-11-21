@@ -21,6 +21,7 @@ import com.capstone.lovemarker.feature.mypage.navigation.navigateToMyPage
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 import com.capstone.lovemarker.feature.upload.navigation.navigateToContent
 import com.capstone.lovemarker.feature.upload.navigation.navigateToPhoto
+import kotlinx.collections.immutable.PersistentList
 
 class MainNavigator(
     val navController: NavHostController,
@@ -92,8 +93,8 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    fun navigateToContent(navOptions: NavOptions) {
-        navController.navigateToContent(navOptions)
+    fun navigateToContent(images: PersistentList<String>) {
+        navController.navigateToContent(images)
     }
 
     /**
