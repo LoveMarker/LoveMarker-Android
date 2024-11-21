@@ -2,8 +2,23 @@
 <resources>
     <string name="upload_navigate_up_btn_desc">navigate up button</string>
     <string name="upload_title">추억 등록</string>
+
+    <!-- photo -->
     <string name="upload_photo_guide_text">최대 5장까지 추가 가능하며,\n첫번째 이미지가 대표 이미지로 보입니다 :)</string>
     <string name="upload_photo_btn_desc">add photos from gallery</string>
     <string name="upload_photo_next_btn_text">다음</string>
     <string name="upload_photo_selected_image_desc">selected image from gallery</string>
+
+    <!-- content -->
+    <string name="upload_content_place">장소</string>
+    <string name="upload_content_date">날짜</string>
+    <string name="upload_content_title">제목</string>
+    <string name="upload_content_detail">내용</string>
+    <string name="upload_content_search_icon_desc">place search button</string>
+    <string name="upload_content_date_icon_desc">select date button</string>
+    <string name="upload_content_place_placeholder">장소를 검색해주세요</string>
+    <string name="upload_content_date_placeholder">날짜를 선택해주세요</string>
+    <string name="upload_content_title_placeholder">제목을 입력해주세요</string>
+    <string name="upload_content_detail_placeholder">내용을 입력해주세요</string>
+    <string name="upload_content_complete_btn_text">완료</string>
 </resources>

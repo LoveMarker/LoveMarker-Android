@@ -10,6 +10,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MainTabRoute
+import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
@@ -30,7 +31,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Splash
+    val startDestination = MatchingRoute.Sender
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->

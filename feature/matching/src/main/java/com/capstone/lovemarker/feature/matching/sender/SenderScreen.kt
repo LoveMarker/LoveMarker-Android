@@ -2,13 +2,9 @@ package com.capstone.lovemarker.feature.matching.sender
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,7 +15,6 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,8 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
+import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
@@ -198,44 +192,25 @@ fun SenderScreen(
 fun DatePickerFieldToModal(
     selectedDate: String,
     onDateSelected: (String) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     var showModal by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
+    ReadOnlyTextField(
         value = selectedDate,
-        onValueChange = {}, // 주의: 읽기 전용일 때는 호출되지 않는다.
-        readOnly = true,
-        placeholder = {
-            Text(
-                text = stringResource(R.string.matching_sender_input_placeholder),
-                color = Gray500
-            )
+        onTextFieldClick = {
+            showModal = true
         },
+        placeholder = stringResource(R.string.matching_sender_input_placeholder),
+        placeholderColor = Gray500,
+        indicatorColor = Brown700,
+        containerColor = Beige400,
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = stringResource(R.string.matching_sender_trailing_icon_desc),
                 tint = Brown700
             )
-        },
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Brown700,
-            unfocusedIndicatorColor = Brown700,
-            focusedContainerColor = Beige400,
-            unfocusedContainerColor = Beige400,
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
-                        showModal = true
-                    }
-                }
-            }
+        }
     )
 
     if (showModal) {
@@ -310,7 +285,10 @@ fun convertMillisToDate(millis: Long): String {
 @Composable
 private fun SenderPreview() {
     LoveMarkerTheme {
-
+        DatePickerFieldToModal(
+            selectedDate = "",
+            onDateSelected = {}
+        )
     }
 }
 

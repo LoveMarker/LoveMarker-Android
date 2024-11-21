@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
@@ -29,8 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.capstone.lovemarker.core.common.extension.hideKeyboard
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.textfield.LoveMarkerTextField
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
