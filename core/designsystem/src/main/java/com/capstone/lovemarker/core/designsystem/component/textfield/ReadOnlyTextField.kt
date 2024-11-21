@@ -18,6 +18,7 @@ import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
+import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.capstone.lovemarker.core.designsystem.theme.White
@@ -43,7 +44,9 @@ fun ReadOnlyTextField(
                 style = LoveMarkerTheme.typography.body14M
             )
         },
+        textStyle = LoveMarkerTheme.typography.body14M,
         colors = TextFieldDefaults.colors(
+            focusedTextColor = Gray800,
             focusedIndicatorColor = indicatorColor,
             unfocusedIndicatorColor = indicatorColor,
             focusedContainerColor = containerColor,

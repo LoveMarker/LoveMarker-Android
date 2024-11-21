@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
+import com.capstone.lovemarker.core.designsystem.component.datepicker.DatePickerModal
 import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
 import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
@@ -219,59 +220,6 @@ fun DatePickerFieldToModal(
                 onDateSelected(date?.let(::convertMillisToDate).orEmpty())
             },
             onDismiss = { showModal = false }
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DatePickerModal(
-    onDateSelected: (Long?) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val datePickerState = rememberDatePickerState()
-
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = {
-                onDateSelected(datePickerState.selectedDateMillis)
-                onDismiss()
-            }) {
-                Text(
-                    text = stringResource(R.string.matching_sender_confirm_btn_text),
-                    color = Brown700
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = stringResource(R.string.matching_sender_dismiss_btn_text),
-                    color = Brown700
-                )
-            }
-        },
-        colors = DatePickerDefaults.colors(
-            containerColor = Beige400
-        )
-    ) {
-        DatePicker(
-            state = datePickerState,
-            colors = DatePickerDefaults.colors(
-                containerColor = Beige400,
-                dateTextFieldColors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Brown700,
-                    unfocusedIndicatorColor = Brown700,
-                    focusedContainerColor = Beige400,
-                    unfocusedContainerColor = Beige400,
-                    cursorColor = Brown700,
-                    focusedLabelColor = Brown700
-                ),
-                todayContentColor = Brown700,
-                todayDateBorderColor = Brown700,
-                selectedDayContainerColor = Brown700
-            )
         )
     }
 }
