@@ -133,7 +133,7 @@ fun PhotoScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "\n0/5",
+                text = "${images.size}/${MAX_IMAGES_LIMIT}",
                 style = LoveMarkerTheme.typography.label13M,
                 color = Gray800,
             )
