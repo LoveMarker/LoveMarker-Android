@@ -19,5 +19,9 @@ dependencies {
     implementation(projects.feature.archive)
     implementation(projects.feature.mypage)
 
+    // upload
+    implementation(projects.feature.upload)
+
+    // domain
     implementation(projects.domain.auth)
 }

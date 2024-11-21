@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.upload.photo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,8 +42,19 @@ import com.capstone.lovemarker.feature.upload.R
 @Composable
 fun PhotoRoute(
     navigateUp: () -> Unit,
+    navigateToContent: () -> Unit,
 ) {
-
+    PhotoScreen(
+        navigateUp = navigateUp,
+        photoSelected = true,
+        onAddButtonClick = {
+            // todo: Photo Picker
+        },
+        onNextButtonClick = {
+            // todo: 선택된 이미지 url 목록 -> 뷰모델에 저장
+            navigateToContent()
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,6 +62,8 @@ fun PhotoRoute(
 fun PhotoScreen(
     navigateUp: () -> Unit,
     photoSelected: Boolean,
+    onAddButtonClick: () -> Unit,
+    onNextButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -95,6 +109,9 @@ fun PhotoScreen(
                     .clip(RoundedCornerShape(12.dp))
                     .background(Beige400)
                     .weight(1f)
+                    .clickable {
+                        onAddButtonClick()
+                    }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add_photo),
@@ -113,7 +130,7 @@ fun PhotoScreen(
         
         Spacer(modifier = Modifier.weight(1f))
         LoveMarkerButton(
-            onClick = { /*TODO*/ },
+            onClick = onNextButtonClick,
             buttonText = stringResource(R.string.upload_photo_next_btn_text),
             enabled = photoSelected,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
@@ -162,6 +179,8 @@ private fun PhotoPreview() {
         PhotoScreen(
             navigateUp = {},
             photoSelected = true,
+            onAddButtonClick = {},
+            onNextButtonClick = {}
         )
     }
 }
