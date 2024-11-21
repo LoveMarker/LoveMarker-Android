@@ -34,13 +34,12 @@ fun NavGraphBuilder.uploadNavGraph(
         )
     }
     composable<UploadRoute.Content> { backStackEntry ->
-        val navBackStackEntry = remember(backStackEntry) {
+        val prevBackStackEntry = remember(backStackEntry) {
             navController.getBackStackEntry(UploadRoute.Photo)
         }
-
         ContentRoute(
             navigateUp = navigateUp,
-            viewModel = hiltViewModel(navBackStackEntry)
+            viewModel = hiltViewModel(prevBackStackEntry)
         )
     }
     composable<UploadRoute.PlaceSearch> {
