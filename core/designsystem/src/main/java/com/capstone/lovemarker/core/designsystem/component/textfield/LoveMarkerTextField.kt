@@ -39,7 +39,6 @@ import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Error
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
-import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 
@@ -115,7 +114,6 @@ fun LoveMarkerTextField(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        // todo: 아이콘 인자 변경
                         leadingIcon(isFocused, borderColor)
                         Box(modifier = Modifier.weight(1f)) {
                             innerTextField()
