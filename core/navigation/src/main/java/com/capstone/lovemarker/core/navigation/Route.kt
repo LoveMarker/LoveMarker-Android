@@ -36,9 +36,7 @@ sealed interface UploadRoute: Route {
     data object Photo: UploadRoute
 
     @Serializable
-    data class Content(
-        val images: PersistentList<String>
-    ) : UploadRoute
+    data object Content: UploadRoute
 
     @Serializable
     data object PlaceSearch : UploadRoute

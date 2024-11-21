@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
 import com.capstone.lovemarker.feature.matching.navigation.navigateToMatching
 import com.capstone.lovemarker.feature.matching.navigation.navigateToReceiver
@@ -93,8 +94,8 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    fun navigateToContent(images: PersistentList<String>) {
-        navController.navigateToContent(images)
+    fun navigateToContent() {
+        navController.navigateToContent()
     }
 
     /**

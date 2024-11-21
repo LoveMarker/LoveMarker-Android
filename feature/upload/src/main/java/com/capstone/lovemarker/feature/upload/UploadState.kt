@@ -1,8 +1,8 @@
-package com.capstone.lovemarker.feature.upload.photo
+package com.capstone.lovemarker.feature.upload
 
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
-data class PhotoState(
+data class UploadState(
     val images: PersistentList<String> = persistentListOf()
 )

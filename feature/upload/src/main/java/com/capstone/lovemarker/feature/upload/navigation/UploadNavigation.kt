@@ -1,25 +1,21 @@
 package com.capstone.lovemarker.feature.upload.navigation
 
-import androidx.navigation.NavBackStackEntry
+import androidx.compose.runtime.remember
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.upload.content.ContentRoute
 import com.capstone.lovemarker.feature.upload.photo.PhotoRoute
-import kotlinx.collections.immutable.PersistentList
 
 fun NavController.navigateToPhoto() {
     navigate(UploadRoute.Photo)
 }
 
-fun NavController.navigateToContent(images: PersistentList<String>) {
-    navigate(
-        route = UploadRoute.Content(
-            images = images
-        ),
-    )
+fun NavController.navigateToContent() {
+    navigate(UploadRoute.Content)
 }
 
 fun NavController.navigateToPlaceSearch() {
@@ -27,8 +23,9 @@ fun NavController.navigateToPlaceSearch() {
 }
 
 fun NavGraphBuilder.uploadNavGraph(
+    navController: NavHostController,
     navigateUp: () -> Unit,
-    navigateToContent: (PersistentList<String>) -> Unit,
+    navigateToContent: () -> Unit,
 ) {
     composable<UploadRoute.Photo> {
         PhotoRoute(
@@ -36,11 +33,14 @@ fun NavGraphBuilder.uploadNavGraph(
             navigateToContent = navigateToContent
         )
     }
-    composable<UploadRoute.Content> { navBackStackEntry: NavBackStackEntry ->
-        val route = navBackStackEntry.toRoute<UploadRoute.Content>()
+    composable<UploadRoute.Content> { backStackEntry ->
+        val navBackStackEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(UploadRoute.Photo)
+        }
+
         ContentRoute(
             navigateUp = navigateUp,
-            images = route.images
+            viewModel = hiltViewModel(navBackStackEntry)
         )
     }
     composable<UploadRoute.PlaceSearch> {

@@ -37,14 +37,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.upload.R
+import com.capstone.lovemarker.feature.upload.UploadViewModel
 import kotlinx.collections.immutable.PersistentList
 import timber.log.Timber
 
@@ -53,10 +54,11 @@ private const val MAX_IMAGES_LIMIT = 5
 @Composable
 fun PhotoRoute(
     navigateUp: () -> Unit,
-    navigateToContent: (PersistentList<String>) -> Unit,
-    viewModel: PhotoViewModel = viewModel()
+    navigateToContent: () -> Unit,
+    viewModel: UploadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    Timber.d("viewModel: ${viewModel.hashCode()}")
 
     val pickMultipleMedia =
         rememberLauncherForActivityResult(
@@ -79,7 +81,8 @@ fun PhotoRoute(
             )
         },
         onNextButtonClick = {
-            navigateToContent(state.images)
+            Timber.d("images: ${state.images}")
+            navigateToContent()
         }
     )
 }

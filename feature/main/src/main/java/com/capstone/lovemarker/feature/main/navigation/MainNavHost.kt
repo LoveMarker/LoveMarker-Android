@@ -89,11 +89,10 @@ fun MainNavHost(
             innerPadding = innerPadding
         )
         uploadNavGraph(
+            navController = navigator.navController,
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToContent = { images ->
-                navigator.navigateToContent(
-                    images = images
-                )
+            navigateToContent = {
+                navigator.navigateToContent()
             }
         )
     }
