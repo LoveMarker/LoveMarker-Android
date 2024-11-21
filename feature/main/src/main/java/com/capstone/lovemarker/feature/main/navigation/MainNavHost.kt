@@ -5,8 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
@@ -88,7 +90,11 @@ fun MainNavHost(
         )
         uploadNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToContent = { navigator.navigateToContent() }
+            navigateToContent = {
+                navigator.navigateToContent(
+                    navOptions = navOptionsSaveState<UploadRoute.Photo>()
+                )
+            }
         )
     }
 }
@@ -98,4 +104,13 @@ private inline fun <reified T : Route> navOptionsPopUpTo() = navOptions {
         inclusive = true
     }
     launchSingleTop = true
+}
+
+private inline fun <reified T: Route> navOptionsSaveState() = navOptions {
+    popUpTo<T> {
+        inclusive = false
+        saveState = true
+    }
+    launchSingleTop = true
+    restoreState = true
 }

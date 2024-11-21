@@ -1,5 +1,9 @@
 package com.capstone.lovemarker.feature.upload.photo
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,39 +27,64 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.upload.R
+import kotlinx.collections.immutable.PersistentList
+import timber.log.Timber
+
+private const val MAX_IMAGES_LIMIT = 5
 
 @Composable
 fun PhotoRoute(
     navigateUp: () -> Unit,
-    navigateToContent: () -> Unit,
+    navigateToContent: (PersistentList<Uri>) -> Unit,
+    viewModel: PhotoViewModel = viewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val pickMultipleMedia =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.PickMultipleVisualMedia(MAX_IMAGES_LIMIT)
+        ) { uris ->
+            if (uris.isNotEmpty()) {
+                viewModel.updateImages(uris)
+            } else {
+                Timber.d("No media selected")
+            }
+        }
+
     PhotoScreen(
         navigateUp = navigateUp,
-        photoSelected = true,
+        imageUris = state.imageUris,
+        photoSelected = state.imageUris.isNotEmpty(),
         onAddButtonClick = {
-            // todo: Photo Picker
+            pickMultipleMedia.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
         },
         onNextButtonClick = {
-            // todo: 선택된 이미지 url 목록 -> 뷰모델에 저장
-            navigateToContent()
+            navigateToContent(state.imageUris)
         }
     )
 }
@@ -64,6 +93,7 @@ fun PhotoRoute(
 @Composable
 fun PhotoScreen(
     navigateUp: () -> Unit,
+    imageUris: PersistentList<Uri>,
     photoSelected: Boolean,
     onAddButtonClick: () -> Unit,
     onNextButtonClick: () -> Unit,
@@ -133,9 +163,11 @@ fun PhotoScreen(
         }
 
         if (photoSelected) {
-            SelectedImageGrid()
+            SelectedImageGrid(
+                imageUris = imageUris
+            )
         }
-        
+
         Spacer(modifier = Modifier.weight(1f))
         LoveMarkerButton(
             onClick = onNextButtonClick,
@@ -147,32 +179,28 @@ fun PhotoScreen(
 }
 
 @Composable
-fun SelectedImageGrid() {
-    val selectedImages = listOf(
-        R.drawable.img_test,
-        R.drawable.img_test,
-        R.drawable.img_test,
-        R.drawable.img_test,
-        R.drawable.img_test
-    )
-
+fun SelectedImageGrid(
+    imageUris: PersistentList<Uri>
+) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         contentPadding = PaddingValues(24.dp),
         horizontalArrangement = Arrangement.spacedBy(18.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
-        items(selectedImages) { imageRes ->
-            SelectedImageItem(painter = painterResource(id = imageRes))
+        items(imageUris) { imageUri ->
+            SelectedImageItem(
+                imageUri = imageUri
+            )
         }
     }
 }
 
 @Composable
-fun SelectedImageItem(painter: Painter) {
-    Image(
-        painter = painter,
-        contentDescription = null,
+fun SelectedImageItem(imageUri: Uri) {
+    AsyncImage(
+        model = imageUri,
+        contentDescription = stringResource(R.string.upload_photo_selected_image_desc),
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .size(100.dp)
@@ -184,11 +212,6 @@ fun SelectedImageItem(painter: Painter) {
 @Composable
 private fun PhotoPreview() {
     LoveMarkerTheme {
-        PhotoScreen(
-            navigateUp = {},
-            photoSelected = true,
-            onAddButtonClick = {},
-            onNextButtonClick = {}
-        )
+
     }
 }
