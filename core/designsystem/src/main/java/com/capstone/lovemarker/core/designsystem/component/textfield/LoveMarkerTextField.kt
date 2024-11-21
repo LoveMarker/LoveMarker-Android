@@ -66,7 +66,6 @@ fun LoveMarkerTextField(
 ) {
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
 
     val borderColor = if (isError) Error else if (isFocused) Brown700 else Gray400
@@ -90,7 +89,6 @@ fun LoveMarkerTextField(
                         shape = RoundedCornerShape(8.dp)
                     )
                     .background(color = Beige400)
-                    .focusRequester(focusRequester)
                     .onFocusChanged { focusState ->
                         isFocused = focusState.isFocused
                     },
