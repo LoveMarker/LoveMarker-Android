@@ -1,14 +1,19 @@
 package com.capstone.lovemarker.feature.upload.photo
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,6 +26,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,7 +49,7 @@ fun PhotoRoute(
 @Composable
 fun PhotoScreen(
     navigateUp: () -> Unit,
-    photoSelected: Boolean
+    photoSelected: Boolean,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -99,13 +106,11 @@ fun PhotoScreen(
             }
             Spacer(modifier = Modifier.padding(end = 24.dp))
         }
-        Spacer(modifier = Modifier.padding(top = 24.dp))
 
         if (photoSelected) {
-            // todo: 그리드 목록
-
+            SelectedImageGrid()
         }
-
+        
         Spacer(modifier = Modifier.weight(1f))
         LoveMarkerButton(
             onClick = { /*TODO*/ },
@@ -116,13 +121,47 @@ fun PhotoScreen(
     }
 }
 
+@Composable
+fun SelectedImageGrid() {
+    val selectedImages = listOf(
+        R.drawable.img_test,
+        R.drawable.img_test,
+        R.drawable.img_test,
+        R.drawable.img_test,
+        R.drawable.img_test
+    )
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        contentPadding = PaddingValues(24.dp),
+        horizontalArrangement = Arrangement.spacedBy(18.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
+    ) {
+        items(selectedImages) { imageRes ->
+            SelectedImageItem(painter = painterResource(id = imageRes))
+        }
+    }
+}
+
+@Composable
+fun SelectedImageItem(painter: Painter) {
+    Image(
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .size(100.dp)
+            .clip(RoundedCornerShape(12.dp))
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun PhotoPreview() {
     LoveMarkerTheme {
         PhotoScreen(
             navigateUp = {},
-            photoSelected = false
+            photoSelected = true,
         )
     }
 }
