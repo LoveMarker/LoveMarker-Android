@@ -14,6 +14,7 @@ import com.capstone.lovemarker.feature.main.splash.splashNavGraph
 import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
 import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
+import com.capstone.lovemarker.feature.upload.navigation.uploadNavGraph
 
 @Composable
 fun MainNavHost(
@@ -74,13 +75,20 @@ fun MainNavHost(
             showErrorSnackbar = showErrorSnackbar
         )
         mapNavGraph(
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            navigateToPhoto = {
+                navigator.navigateToPhoto()
+            }
         )
         archiveNavGraph(
             innerPadding = innerPadding
         )
         myPageNavGraph(
             innerPadding = innerPadding
+        )
+        uploadNavGraph(
+            navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToContent = { navigator.navigateToContent() }
         )
     }
 }

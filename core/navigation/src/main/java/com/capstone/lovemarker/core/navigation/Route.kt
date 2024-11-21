@@ -14,6 +14,9 @@ sealed interface Route {
 
     @Serializable
     data object Detail : Route
+
+    @Serializable
+    data object MyFeed: Route
 }
 
 sealed interface MatchingRoute: Route {

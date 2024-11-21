@@ -38,6 +38,7 @@ include(
     ":feature:map",
     ":feature:archive",
     ":feature:mypage",
+    ":feature:upload",
 )
 
 include(
