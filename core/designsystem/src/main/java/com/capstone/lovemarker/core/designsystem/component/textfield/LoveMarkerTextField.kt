@@ -43,8 +43,9 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 
 /**
- * unfocused Gray600
- * focused Brown700
+ * unfocused border: Gray600
+ * focused border: Brown700
+ * placeholder: Gray400
  *
  * 바깥 화면 터치했을 때의 동작
  * - 평상시: clearFocus (테두리 Gray600)

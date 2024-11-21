@@ -47,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
+import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray500
@@ -198,44 +199,25 @@ fun SenderScreen(
 fun DatePickerFieldToModal(
     selectedDate: String,
     onDateSelected: (String) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     var showModal by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
+    ReadOnlyTextField(
         value = selectedDate,
-        onValueChange = {}, // 주의: 읽기 전용일 때는 호출되지 않는다.
-        readOnly = true,
-        placeholder = {
-            Text(
-                text = stringResource(R.string.matching_sender_input_placeholder),
-                color = Gray500
-            )
+        onTextFieldClick = {
+            showModal = true
         },
+        placeholder = stringResource(R.string.matching_sender_input_placeholder),
+        placeholderColor = Gray500,
+        indicatorColor = Brown700,
+        containerColor = Beige400,
         trailingIcon = {
             Icon(
                 imageVector = Icons.Default.DateRange,
                 contentDescription = stringResource(R.string.matching_sender_trailing_icon_desc),
                 tint = Brown700
             )
-        },
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Brown700,
-            unfocusedIndicatorColor = Brown700,
-            focusedContainerColor = Beige400,
-            unfocusedContainerColor = Beige400,
-        ),
-        modifier = modifier
-            .fillMaxWidth()
-            .pointerInput(selectedDate) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val upEvent = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (upEvent != null) {
-                        showModal = true
-                    }
-                }
-            }
+        }
     )
 
     if (showModal) {
@@ -310,7 +292,10 @@ fun convertMillisToDate(millis: Long): String {
 @Composable
 private fun SenderPreview() {
     LoveMarkerTheme {
-
+        DatePickerFieldToModal(
+            selectedDate = "",
+            onDateSelected = {}
+        )
     }
 }
 
