@@ -49,6 +49,7 @@ import timber.log.Timber
 @Composable
 fun MapRoute(
     innerPadding: PaddingValues,
+    navigateToPhoto: () -> Unit,
     viewModel: MapViewModel = viewModel()
 ) {
     val cameraPositionState = rememberCameraPositionState()
@@ -67,7 +68,7 @@ fun MapRoute(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
         userLocation = userLocation,
-        onUploadButtonClick = { /* TODO */ }
+        onUploadButtonClick = navigateToPhoto
     )
 }
 
