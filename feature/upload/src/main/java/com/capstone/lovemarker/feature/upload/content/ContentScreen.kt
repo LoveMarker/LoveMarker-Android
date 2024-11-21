@@ -1,12 +1,14 @@
 package com.capstone.lovemarker.feature.upload.content
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
@@ -28,13 +30,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.textfield.CounterTextField
-import com.capstone.lovemarker.core.designsystem.component.textfield.LoveMarkerTextField
 import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
-import com.capstone.lovemarker.core.designsystem.theme.Beige400
-import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
-import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.feature.upload.R
@@ -46,11 +44,22 @@ fun ContentRoute(
     viewModel: UploadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
+
+    ContentScreen(
+        scrollState = scrollState,
+        navigateUp = navigateUp,
+        completeButtonEnabled = false,
+        onSearchButtonClick = {},
+        onDateButtonClick = {},
+        onCompleteButtonClick = {}
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
+    scrollState: ScrollState,
     navigateUp: () -> Unit,
     completeButtonEnabled: Boolean,
     onSearchButtonClick: () -> Unit,
@@ -81,9 +90,10 @@ fun ContentScreen(
                 containerColor = Color.White
             )
         )
-        Spacer(modifier = Modifier.padding(top = 14.dp))
         Column(
-            modifier = Modifier.padding(horizontal = 24.dp)
+            modifier = Modifier
+                .padding(start = 24.dp, end = 24.dp, top = 14.dp)
+                .verticalScroll(scrollState)
         ) {
             InputSection(
                 category = R.string.upload_content_place
@@ -190,7 +200,7 @@ fun TitleTextField() {
 }
 
 @Composable
-fun ContentTextField() { // todo: 내용 길어지면 스크롤바 생기도록!
+fun ContentTextField() {
     CounterTextField(
         value = "",
         onValueChanged = {},
@@ -206,7 +216,9 @@ fun ContentTextField() { // todo: 내용 길어지면 스크롤바 생기도록!
 @Composable
 private fun ContentPreview() {
     LoveMarkerTheme {
+        val scrollState = rememberScrollState()
         ContentScreen(
+            scrollState = scrollState,
             navigateUp = {},
             completeButtonEnabled = false,
             onSearchButtonClick = {},
