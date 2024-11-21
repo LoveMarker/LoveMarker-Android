@@ -39,6 +39,9 @@ fun NavGraphBuilder.uploadNavGraph(
         }
         ContentRoute(
             navigateUp = navigateUp,
+            navigateToPlaceSearch = {
+                // todo: navigator.navigateToPlaceSearch
+            },
             viewModel = hiltViewModel(prevBackStackEntry)
         )
     }

@@ -21,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -29,29 +32,41 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
+import com.capstone.lovemarker.core.designsystem.component.datepicker.DatePickerModal
 import com.capstone.lovemarker.core.designsystem.component.textfield.CounterTextField
 import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
+import com.capstone.lovemarker.core.designsystem.theme.Beige400
+import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
+import com.capstone.lovemarker.core.designsystem.theme.Gray500
+import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.feature.upload.R
 import com.capstone.lovemarker.feature.upload.UploadViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun ContentRoute(
     navigateUp: () -> Unit,
+    navigateToPlaceSearch: () -> Unit,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
     ContentScreen(
-        scrollState = scrollState,
         navigateUp = navigateUp,
+        scrollState = scrollState,
+        selectedDate = state.date,
+        onDateSelected = {
+            viewModel.updateDate(it)
+        },
         completeButtonEnabled = false,
-        onSearchButtonClick = {},
-        onDateButtonClick = {},
+        onSearchButtonClick = navigateToPlaceSearch,
         onCompleteButtonClick = {}
     )
 }
@@ -59,11 +74,12 @@ fun ContentRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
-    scrollState: ScrollState,
     navigateUp: () -> Unit,
+    scrollState: ScrollState,
+    selectedDate: String,
+    onDateSelected: (String) -> Unit,
     completeButtonEnabled: Boolean,
     onSearchButtonClick: () -> Unit,
-    onDateButtonClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
 ) {
     Column(
@@ -104,7 +120,10 @@ fun ContentScreen(
             InputSection(
                 category = R.string.upload_content_date
             ) {
-                DateTextField(onDateButtonClick = onDateButtonClick)
+                DatePickerFieldToModal(
+                    selectedDate = selectedDate,
+                    onDateSelected = onDateSelected
+                )
             }
             Spacer(modifier = Modifier.padding(top = 24.dp))
             InputSection(
@@ -138,6 +157,7 @@ fun InputSection(
         Text(
             text = stringResource(id = category),
             style = LoveMarkerTheme.typography.body14B,
+            color = Gray800
         )
         Spacer(modifier = Modifier.padding(top = 14.dp))
         content()
@@ -166,12 +186,17 @@ fun PlaceTextField(
 }
 
 @Composable
-fun DateTextField(
-    onDateButtonClick: () -> Unit
+fun DatePickerFieldToModal(
+    selectedDate: String,
+    onDateSelected: (String) -> Unit,
 ) {
+    var showModal by remember { mutableStateOf(false) }
+
     ReadOnlyTextField(
-        value = "",
-        onTextFieldClick = onDateButtonClick,
+        value = selectedDate,
+        onTextFieldClick = {
+            showModal = true
+        },
         placeholder = stringResource(R.string.upload_content_date_placeholder),
         placeholderColor = Gray300,
         indicatorColor = Gray400,
@@ -184,6 +209,20 @@ fun DateTextField(
             )
         }
     )
+
+    if (showModal) {
+        DatePickerModal(
+            onDateSelected = { date ->
+                onDateSelected(date?.let(::convertMillisToDate).orEmpty())
+            },
+            onDismiss = { showModal = false }
+        )
+    }
+}
+
+fun convertMillisToDate(millis: Long): String {
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return formatter.format(Date(millis))
 }
 
 @Composable
@@ -219,10 +258,11 @@ private fun ContentPreview() {
         val scrollState = rememberScrollState()
         ContentScreen(
             scrollState = scrollState,
+            selectedDate = "2023-10-14",
+            onDateSelected = {},
             navigateUp = {},
             completeButtonEnabled = false,
             onSearchButtonClick = {},
-            onDateButtonClick = {},
             onCompleteButtonClick = {}
         )
     }

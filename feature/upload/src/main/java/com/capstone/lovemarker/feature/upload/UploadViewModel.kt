@@ -20,4 +20,10 @@ class UploadViewModel : ViewModel() {
             )
         }
     }
+
+    fun updateDate(date: String) {
+        _state.update {
+            it.copy(date = date)
+        }
+    }
 }

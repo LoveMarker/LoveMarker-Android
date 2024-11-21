@@ -5,4 +5,5 @@ import kotlinx.collections.immutable.persistentListOf
 
 data class UploadState(
     val images: PersistentList<String> = persistentListOf(),
+    val date: String = "",
 )
