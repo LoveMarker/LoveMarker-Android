@@ -260,7 +260,7 @@ fun ContentTextField(
         onValueChanged = onContentChanged,
         currentLength = content.length,
         maxLength = 200,
-        height = 150.dp,
+        height = 180.dp,
         placeholder = stringResource(id = R.string.upload_content_detail_placeholder),
     )
 }
