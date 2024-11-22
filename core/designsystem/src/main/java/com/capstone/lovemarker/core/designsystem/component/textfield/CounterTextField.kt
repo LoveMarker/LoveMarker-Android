@@ -46,8 +46,8 @@ fun CounterTextField(
     currentLength: Int,
     maxLength: Int,
     minHeight: Dp,
-    singleLine: Boolean,
     modifier: Modifier = Modifier,
+    singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {

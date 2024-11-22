@@ -26,4 +26,16 @@ class UploadViewModel : ViewModel() {
             it.copy(date = date)
         }
     }
+
+    fun updateTitle(title: String) {
+        _state.update {
+            it.copy(title = title)
+        }
+    }
+
+    fun updateContent(content: String) {
+        _state.update {
+            it.copy(content = content)
+        }
+    }
 }

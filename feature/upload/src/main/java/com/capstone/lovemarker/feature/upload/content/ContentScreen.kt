@@ -57,12 +57,14 @@ fun ContentRoute(
     val scrollState = rememberScrollState()
 
     ContentScreen(
-        navigateUp = navigateUp,
-        scrollState = scrollState,
         selectedDate = state.date,
-        onDateSelected = {
-            viewModel.updateDate(it)
-        },
+        title = state.title,
+        content = state.content,
+        scrollState = scrollState,
+        navigateUp = navigateUp,
+        onDateSelected = viewModel::updateDate,
+        onTitleChanged = viewModel::updateTitle,
+        onContentChanged = viewModel::updateContent,
         completeButtonEnabled = false,
         onSearchButtonClick = navigateToPlaceSearch,
         onCompleteButtonClick = {}
@@ -72,10 +74,14 @@ fun ContentRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
-    navigateUp: () -> Unit,
-    scrollState: ScrollState,
     selectedDate: String,
+    title: String,
+    content: String,
+    scrollState: ScrollState,
+    navigateUp: () -> Unit,
     onDateSelected: (String) -> Unit,
+    onTitleChanged: (String) -> Unit,
+    onContentChanged: (String) -> Unit,
     completeButtonEnabled: Boolean,
     onSearchButtonClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
@@ -127,13 +133,19 @@ fun ContentScreen(
             InputSection(
                 category = R.string.upload_content_title
             ) {
-                TitleTextField()
+                TitleTextField(
+                    title = title,
+                    onTitleChanged = onTitleChanged
+                )
             }
             Spacer(modifier = Modifier.padding(top = 24.dp))
             InputSection(
                 category = R.string.upload_content_detail
             ) {
-                ContentTextField()
+                ContentTextField(
+                    content = content,
+                    onContentChanged = onContentChanged
+                )
             }
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -224,28 +236,33 @@ fun convertMillisToDate(millis: Long): String {
 }
 
 @Composable
-fun TitleTextField() {
+fun TitleTextField(
+    title: String,
+    onTitleChanged: (String) -> Unit,
+) {
     CounterTextField(
-        value = "",
-        onValueChanged = {},
+        value = title,
+        onValueChanged = onTitleChanged,
+        currentLength = title.length,
         singleLine = true,
         minHeight = 54.dp,
-        currentLength = 0, // todo: 현재 글자 수 반영
         maxLength = 20,
         placeholder = stringResource(id = R.string.upload_content_title_placeholder),
     )
 }
 
 @Composable
-fun ContentTextField() {
+fun ContentTextField(
+    content: String,
+    onContentChanged: (String) -> Unit,
+) {
     CounterTextField(
-        value = "",
-        onValueChanged = {},
-        singleLine = false,
-        currentLength = 0, // todo: 현재 글자 수 반영
+        value = content,
+        onValueChanged = onContentChanged,
+        currentLength = content.length,
         maxLength = 200,
-        placeholder = stringResource(id = R.string.upload_content_detail_placeholder),
         minHeight = 150.dp,
+        placeholder = stringResource(id = R.string.upload_content_detail_placeholder),
     )
 }
 
@@ -255,10 +272,14 @@ private fun ContentPreview() {
     LoveMarkerTheme {
         val scrollState = rememberScrollState()
         ContentScreen(
-            scrollState = scrollState,
             selectedDate = "2023-10-14",
-            onDateSelected = {},
+            title = "제목",
+            content = "내용",
+            scrollState = scrollState,
             navigateUp = {},
+            onDateSelected = {},
+            onTitleChanged = {},
+            onContentChanged = {},
             completeButtonEnabled = false,
             onSearchButtonClick = {},
             onCompleteButtonClick = {}
