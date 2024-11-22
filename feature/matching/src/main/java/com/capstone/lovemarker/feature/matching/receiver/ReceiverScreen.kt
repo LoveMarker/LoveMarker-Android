@@ -63,7 +63,7 @@ fun ReceiverRoute(
     ReceiverScreen(
         navigateUp = navigateUp,
         invitationCode = state.invitationCode,
-        onValueChanged = { viewModel.updateInvitationCode(it) },
+        onInvitationCodeChanged = viewModel::updateInvitationCode,
         onClearIconClick = { viewModel.updateInvitationCode("") },
         onCompleteButtonClick = {
             viewModel.postCouple(state.invitationCode)
@@ -75,7 +75,7 @@ fun ReceiverRoute(
 fun ReceiverScreen(
     navigateUp: () -> Unit,
     invitationCode: String,
-    onValueChanged: (String) -> Unit,
+    onInvitationCodeChanged: (String) -> Unit,
     onClearIconClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
 ) {
@@ -104,7 +104,7 @@ fun ReceiverScreen(
                 Spacer(modifier = Modifier.padding(top = 24.dp))
                 LoveMarkerTextField(
                     value = invitationCode,
-                    onValueChanged = onValueChanged,
+                    onValueChanged = onInvitationCodeChanged,
                     placeholder = stringResource(R.string.matching_receiver_text_field_placeholder),
                     trailingIcon = { isFocused, iconTint ->
                         if (invitationCode.isNotBlank()) {

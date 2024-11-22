@@ -103,9 +103,7 @@ fun NicknameRoute(
 
     NicknameScreen(
         nickname = state.nickname,
-        onNicknameChanged = {
-            viewModel.updateNickname(nickname = it)
-        },
+        onNicknameChanged = viewModel::updateNickname,
         guideTitle = state.guideTitle,
         isError = state.uiState is InputUiState.Error,
         supportingText = state.supportingText,
