@@ -2,9 +2,9 @@ package com.capstone.lovemarker.feature.upload.navigation
 
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.upload.content.ContentRoute
@@ -24,9 +24,10 @@ fun NavController.navigateToPlaceSearch() {
 }
 
 fun NavGraphBuilder.uploadNavGraph(
-    navController: NavHostController,
     navigateUp: () -> Unit,
     navigateToContent: () -> Unit,
+    navigateToPlaceSearch: () -> Unit,
+    getBackStackEntryFromPhoto: () -> NavBackStackEntry,
 ) {
     composable<UploadRoute.Photo> {
         PhotoRoute(
@@ -35,16 +36,14 @@ fun NavGraphBuilder.uploadNavGraph(
         )
     }
     composable<UploadRoute.Content> { backStackEntry ->
-        val prevBackStackEntry = remember(backStackEntry) {
-            navController.getBackStackEntry(UploadRoute.Photo)
+        val backStackEntryFromPhoto = remember(backStackEntry) {
+            getBackStackEntryFromPhoto()
         }
+
         ContentRoute(
             navigateUp = navigateUp,
-            navigateToPlaceSearch = {
-                // todo: 여기서 nav controller 참조하게 만드는 게 맞나..??
-                navController.navigateToPlaceSearch()
-            },
-            viewModel = hiltViewModel(prevBackStackEntry)
+            navigateToPlaceSearch = navigateToPlaceSearch,
+            viewModel = hiltViewModel(backStackEntryFromPhoto)
         )
     }
     composable<UploadRoute.PlaceSearch> {

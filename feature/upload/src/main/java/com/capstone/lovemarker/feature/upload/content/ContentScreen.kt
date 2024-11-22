@@ -35,16 +35,14 @@ import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButt
 import com.capstone.lovemarker.core.designsystem.component.datepicker.DatePickerModal
 import com.capstone.lovemarker.core.designsystem.component.textfield.CounterTextField
 import com.capstone.lovemarker.core.designsystem.component.textfield.ReadOnlyTextField
-import com.capstone.lovemarker.core.designsystem.theme.Beige400
-import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
-import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.feature.upload.R
 import com.capstone.lovemarker.feature.upload.UploadViewModel
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
