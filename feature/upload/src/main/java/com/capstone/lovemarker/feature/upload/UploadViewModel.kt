@@ -25,17 +25,31 @@ class UploadViewModel : ViewModel() {
         _state.update {
             it.copy(date = date)
         }
+        updateButtonEnabled()
     }
 
     fun updateTitle(title: String) {
         _state.update {
             it.copy(title = title)
         }
+        updateButtonEnabled()
     }
 
     fun updateContent(content: String) {
         _state.update {
             it.copy(content = content)
+        }
+        updateButtonEnabled()
+    }
+
+    private fun updateButtonEnabled() {
+        _state.update {
+            it.copy(
+                completeButtonEnabled = it.address.isNotBlank() &&
+                        it.date.isNotBlank() &&
+                        it.title.isNotBlank() &&
+                        it.content.isNotBlank()
+            )
         }
     }
 }

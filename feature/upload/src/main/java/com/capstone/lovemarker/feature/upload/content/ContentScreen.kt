@@ -60,12 +60,12 @@ fun ContentRoute(
         selectedDate = state.date,
         title = state.title,
         content = state.content,
+        completeButtonEnabled = state.completeButtonEnabled,
         scrollState = scrollState,
         navigateUp = navigateUp,
         onDateSelected = viewModel::updateDate,
         onTitleChanged = viewModel::updateTitle,
         onContentChanged = viewModel::updateContent,
-        completeButtonEnabled = false,
         onSearchButtonClick = navigateToPlaceSearch,
         onCompleteButtonClick = {}
     )
@@ -77,12 +77,12 @@ fun ContentScreen(
     selectedDate: String,
     title: String,
     content: String,
+    completeButtonEnabled: Boolean,
     scrollState: ScrollState,
     navigateUp: () -> Unit,
     onDateSelected: (String) -> Unit,
     onTitleChanged: (String) -> Unit,
     onContentChanged: (String) -> Unit,
-    completeButtonEnabled: Boolean,
     onSearchButtonClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
 ) {

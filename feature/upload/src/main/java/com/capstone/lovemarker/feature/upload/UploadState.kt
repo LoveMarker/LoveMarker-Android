@@ -10,4 +10,5 @@ data class UploadState(
     val date: String = "",
     val title: String = "",
     val content: String = "",
+    val completeButtonEnabled: Boolean = false,
 )
