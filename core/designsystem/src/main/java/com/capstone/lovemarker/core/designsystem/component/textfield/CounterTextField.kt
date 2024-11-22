@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -32,6 +31,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.capstone.lovemarker.core.designsystem.theme.Brown600
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
@@ -59,7 +59,7 @@ fun CounterTextField(
     val borderColor = if (isFocused) Brown700 else Gray400
     val textSelectionColors = TextSelectionColors(
         handleColor = Brown700,
-        backgroundColor = Brown700.copy(alpha = 0.4f)
+        backgroundColor = Brown600.copy(alpha = 0.4f)
     )
 
     Column(
