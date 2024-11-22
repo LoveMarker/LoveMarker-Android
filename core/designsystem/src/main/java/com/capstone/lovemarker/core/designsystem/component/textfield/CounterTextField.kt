@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,7 +46,7 @@ fun CounterTextField(
     placeholder: String,
     currentLength: Int,
     maxLength: Int,
-    minHeight: Dp,
+    height: Dp,
     modifier: Modifier = Modifier,
     singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -73,7 +74,7 @@ fun CounterTextField(
                     }
                 },
                 modifier = Modifier
-                    .heightIn(minHeight)
+                    .height(height)
                     .border(
                         width = 1.dp,
                         color = borderColor,
@@ -135,7 +136,7 @@ private fun CounterTextFieldPreview() {
             onValueChanged = {},
             currentLength = 120,
             maxLength = 200,
-            minHeight = 150.dp,
+            height = 150.dp,
             singleLine = false,
             placeholder = "내용을 입력해주세요",
         )

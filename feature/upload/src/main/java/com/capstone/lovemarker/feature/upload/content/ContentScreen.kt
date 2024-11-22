@@ -42,7 +42,6 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.feature.upload.R
 import com.capstone.lovemarker.feature.upload.UploadViewModel
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -245,7 +244,7 @@ fun TitleTextField(
         onValueChanged = onTitleChanged,
         currentLength = title.length,
         singleLine = true,
-        minHeight = 54.dp,
+        height = 54.dp,
         maxLength = 20,
         placeholder = stringResource(id = R.string.upload_content_title_placeholder),
     )
@@ -261,7 +260,7 @@ fun ContentTextField(
         onValueChanged = onContentChanged,
         currentLength = content.length,
         maxLength = 200,
-        minHeight = 150.dp,
+        height = 150.dp,
         placeholder = stringResource(id = R.string.upload_content_detail_placeholder),
     )
 }
