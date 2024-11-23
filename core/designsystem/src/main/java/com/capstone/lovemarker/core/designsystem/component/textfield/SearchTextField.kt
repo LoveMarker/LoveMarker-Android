@@ -57,6 +57,7 @@ fun SearchTextField(
                 unfocusedTextColor = Black,
                 focusedContainerColor = White,
                 unfocusedContainerColor = White,
+                cursorColor = Brown700,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
@@ -98,7 +99,7 @@ fun SearchTextField(
 fun SearchTextFieldPreview() {
     LoveMarkerTheme {
         SearchTextField(
-            value = "서울시 중구 만리재로",
+            value = "",
             onValueChanged = {},
             onBackButtonClick = {},
             onClearButtonClick = {},
