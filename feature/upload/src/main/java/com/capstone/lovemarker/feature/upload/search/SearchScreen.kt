@@ -38,14 +38,27 @@ fun SearchRoute(
     navigateUp: () -> Unit,
     viewModel: SearchViewModel = viewModel()
 ) {
-
+    SearchScreen(
+        navigateUp = navigateUp,
+        onClearButtonClick = {
+            viewModel.updateSearchKeyword("")
+        },
+        onSearchActionDone = {
+            // todo: 뷰모델에서 장소 검색
+        },
+        onSearchItemClick = { place ->
+            // todo: 이전 화면의 텍스트 필드에 주소 반영
+            //  place.address
+        }
+    )
 }
 
 @Composable
 fun SearchScreen(
     navigateUp: () -> Unit,
-    onSearchButtonClick: () -> Unit,
-    onSearchItemClick: () -> Unit,
+    onClearButtonClick: () -> Unit,
+    onSearchActionDone: () -> Unit,
+    onSearchItemClick: (Place) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -56,7 +69,8 @@ fun SearchScreen(
             value = "",
             onValueChanged = {},
             onBackButtonClick = navigateUp,
-            onSearchButtonClick = onSearchButtonClick,
+            onClearButtonClick = onClearButtonClick,
+            onSearchActionDone = onSearchActionDone
         )
         HorizontalDivider(
             thickness = 6.dp,
@@ -82,14 +96,17 @@ fun SearchScreen(
 @Composable
 fun SearchItem(
     place: Place,
-    onItemClick: () -> Unit,
+    onItemClick: (Place) -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onItemClick(place)
+            }
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onItemClick() }
         ) {
             Icon(
                 imageVector = Icons.Default.LocationOn,
@@ -167,8 +184,9 @@ private fun SearchPreview() {
     LoveMarkerTheme {
         SearchScreen(
             navigateUp = {},
-            onSearchButtonClick = {},
-            onSearchItemClick = {}
+            onClearButtonClick = {},
+            onSearchItemClick = {},
+            onSearchActionDone = {}
         )
     }
 }

@@ -213,7 +213,9 @@ fun NicknameScreen(
                     trailingIcon = { isFocused, iconTint ->
                         if (nickname.isNotBlank()) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_input_clear),
+                                painter = painterResource(
+                                    id = com.capstone.lovemarker.core.designsystem.R.drawable.ic_clear_outlined_24
+                                ),
                                 contentDescription = stringResource(R.string.nickname_clear_icon_desc),
                                 tint = iconTint,
                                 modifier = Modifier.clickable(enabled = isFocused) {
