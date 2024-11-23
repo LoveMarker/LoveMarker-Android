@@ -17,6 +17,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.designsystem.component.textfield.SearchTextField
 import com.capstone.lovemarker.core.designsystem.theme.Gray100
@@ -38,7 +40,11 @@ fun SearchRoute(
     navigateUp: () -> Unit,
     viewModel: SearchViewModel = viewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     SearchScreen(
+        keyword = state.keyword,
+        onKeywordChanged = viewModel::updateSearchKeyword,
         navigateUp = navigateUp,
         onClearButtonClick = {
             viewModel.updateSearchKeyword("")
@@ -55,6 +61,8 @@ fun SearchRoute(
 
 @Composable
 fun SearchScreen(
+    keyword: String,
+    onKeywordChanged: (String) -> Unit,
     navigateUp: () -> Unit,
     onClearButtonClick: () -> Unit,
     onSearchActionDone: () -> Unit,
@@ -66,8 +74,8 @@ fun SearchScreen(
             .background(color = Color.White)
     ) {
         SearchTextField(
-            value = "",
-            onValueChanged = {},
+            value = keyword,
+            onValueChanged = onKeywordChanged,
             onBackButtonClick = navigateUp,
             onClearButtonClick = onClearButtonClick,
             onSearchActionDone = onSearchActionDone
@@ -183,6 +191,8 @@ data class Place(
 private fun SearchPreview() {
     LoveMarkerTheme {
         SearchScreen(
+            keyword = "암사역",
+            onKeywordChanged = {},
             navigateUp = {},
             onClearButtonClick = {},
             onSearchItemClick = {},

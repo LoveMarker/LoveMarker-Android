@@ -3,6 +3,7 @@ package com.capstone.lovemarker.core.designsystem.component.textfield
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.icons.Icons
@@ -15,7 +16,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import com.capstone.lovemarker.core.designsystem.R
 import com.capstone.lovemarker.core.designsystem.theme.Black
@@ -34,6 +37,7 @@ fun SearchTextField(
     onSearchActionDone: () -> Unit,
     placeholder: String = "장소 검색",
 ) {
+    val focusManager = LocalFocusManager.current
     val textSelectionColors = TextSelectionColors(
         handleColor = Brown700,
         backgroundColor = Brown600.copy(alpha = 0.4f)
@@ -61,8 +65,12 @@ fun SearchTextField(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent
             ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
             keyboardActions = KeyboardActions(
                 onSearch = {
+                    focusManager.clearFocus()
                     onSearchActionDone()
                 }
             ),
@@ -99,7 +107,7 @@ fun SearchTextField(
 fun SearchTextFieldPreview() {
     LoveMarkerTheme {
         SearchTextField(
-            value = "",
+            value = "카페",
             onValueChanged = {},
             onBackButtonClick = {},
             onClearButtonClick = {},
