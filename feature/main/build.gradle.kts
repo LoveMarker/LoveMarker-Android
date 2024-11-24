@@ -9,18 +9,19 @@ android {
 }
 
 dependencies {
-    // onboarding
+    // feature onboarding
     implementation(projects.feature.login)
     implementation(projects.feature.nickname)
     implementation(projects.feature.matching)
 
-    // main tab
+    // feature main
     implementation(projects.feature.map)
     implementation(projects.feature.archive)
     implementation(projects.feature.mypage)
 
-    // upload
+    // feature upload
     implementation(projects.feature.upload)
+    implementation(projects.feature.search)
 
     // domain
     implementation(projects.domain.auth)

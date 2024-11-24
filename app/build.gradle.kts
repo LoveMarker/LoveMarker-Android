@@ -43,6 +43,8 @@ dependencies {
     implementation(projects.data.nickname)
     implementation(projects.data.matching)
     implementation(projects.data.mypage)
+    implementation(projects.data.upload)
+    implementation(projects.data.search)
 
     // android
     implementation(libs.core.ktx)

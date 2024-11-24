@@ -15,6 +15,7 @@ import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
+import com.capstone.lovemarker.feature.search.navigation.searchNavGraph
 import com.capstone.lovemarker.feature.upload.navigation.uploadNavGraph
 
 @Composable
@@ -94,6 +95,11 @@ fun MainNavHost(
             },
             getBackStackEntryFromPhoto = {
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
+            }
+        )
+        searchNavGraph(
+            navigateUp = {
+                navigator.navigateToPlaceSearch()
             }
         )
     }
