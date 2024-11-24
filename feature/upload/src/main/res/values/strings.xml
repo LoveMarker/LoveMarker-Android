@@ -21,9 +21,4 @@
     <string name="upload_content_title_placeholder">제목을 입력해주세요</string>
     <string name="upload_content_detail_placeholder">내용을 입력해주세요</string>
     <string name="upload_content_complete_btn_text">완료</string>
-
-    <!-- place search -->
-    <string name="upload_place_search_location_icon_desc">search item location icon</string>
-    <string name="upload_place_search_warning_icon_desc">search result is empty</string>
-    <string name="upload_place_search_nothing_text">검색 결과가 없습니다\n검색어를 다시 확인해주세요</string>
 </resources>

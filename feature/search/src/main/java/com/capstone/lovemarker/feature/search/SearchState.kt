@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.feature.upload.search
+package com.capstone.lovemarker.feature.search
 
 data class SearchState(
     val keyword: String = "",

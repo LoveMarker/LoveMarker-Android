@@ -22,7 +22,6 @@ import com.capstone.lovemarker.feature.mypage.navigation.navigateToMyPage
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 import com.capstone.lovemarker.feature.upload.navigation.navigateToContent
 import com.capstone.lovemarker.feature.upload.navigation.navigateToPhoto
-import com.capstone.lovemarker.feature.upload.navigation.navigateToPlaceSearch
 
 class MainNavigator(
     val navController: NavHostController,
@@ -96,10 +95,6 @@ class MainNavigator(
 
     fun navigateToContent() {
         navController.navigateToContent()
-    }
-
-    fun navigateToPlaceSearch() {
-        navController.navigateToPlaceSearch()
     }
 
     /**

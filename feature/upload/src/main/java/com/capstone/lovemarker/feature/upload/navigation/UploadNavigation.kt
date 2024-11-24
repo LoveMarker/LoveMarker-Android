@@ -9,7 +9,6 @@ import androidx.navigation.compose.composable
 import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.upload.content.ContentRoute
 import com.capstone.lovemarker.feature.upload.photo.PhotoRoute
-import com.capstone.lovemarker.feature.upload.search.SearchRoute
 
 fun NavController.navigateToPhoto() {
     navigate(UploadRoute.Photo)
@@ -19,14 +18,9 @@ fun NavController.navigateToContent() {
     navigate(UploadRoute.Content)
 }
 
-fun NavController.navigateToPlaceSearch() {
-    navigate(UploadRoute.PlaceSearch)
-}
-
 fun NavGraphBuilder.uploadNavGraph(
     navigateUp: () -> Unit,
     navigateToContent: () -> Unit,
-    navigateToPlaceSearch: () -> Unit,
     getBackStackEntryFromPhoto: () -> NavBackStackEntry,
 ) {
     composable<UploadRoute.Photo> {
@@ -39,16 +33,9 @@ fun NavGraphBuilder.uploadNavGraph(
         val backStackEntryFromPhoto = remember(backStackEntry) {
             getBackStackEntryFromPhoto()
         }
-
         ContentRoute(
             navigateUp = navigateUp,
-            navigateToPlaceSearch = navigateToPlaceSearch,
             viewModel = hiltViewModel(backStackEntryFromPhoto)
-        )
-    }
-    composable<UploadRoute.PlaceSearch> {
-        SearchRoute(
-            navigateUp = navigateUp
         )
     }
 }

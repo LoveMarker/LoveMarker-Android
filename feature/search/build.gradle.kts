@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    setNamespace("feature.upload")
+    setNamespace("feature.search")
 }
 
 dependencies {
     implementation(libs.bundles.google.map)
     implementation(libs.coil.compose)
 
-    implementation(projects.domain.upload)
+    implementation(projects.domain.search)
 }

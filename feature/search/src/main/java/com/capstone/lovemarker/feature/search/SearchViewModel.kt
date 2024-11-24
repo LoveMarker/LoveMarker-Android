@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.feature.upload.search
+package com.capstone.lovemarker.feature.search
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

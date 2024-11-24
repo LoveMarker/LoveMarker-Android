@@ -92,9 +92,6 @@ fun MainNavHost(
             navigateToContent = {
                 navigator.navigateToContent()
             },
-            navigateToPlaceSearch = {
-                navigator.navigateToPlaceSearch()
-            },
             getBackStackEntryFromPhoto = {
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
             }

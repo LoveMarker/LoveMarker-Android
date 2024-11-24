@@ -39,6 +39,7 @@ include(
     ":feature:archive",
     ":feature:mypage",
     ":feature:upload",
+    ":feature:search",
 )
 
 include(

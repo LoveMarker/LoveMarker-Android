@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.feature.upload.search
+package com.capstone.lovemarker.feature.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +33,6 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray100
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
-import com.capstone.lovemarker.feature.upload.R
 
 @Composable
 fun SearchRoute(

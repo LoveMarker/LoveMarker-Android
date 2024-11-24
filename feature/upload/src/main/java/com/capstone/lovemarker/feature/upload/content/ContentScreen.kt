@@ -49,7 +49,6 @@ import java.util.Locale
 @Composable
 fun ContentRoute(
     navigateUp: () -> Unit,
-    navigateToPlaceSearch: () -> Unit,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -65,7 +64,7 @@ fun ContentRoute(
         onDateSelected = viewModel::updateDate,
         onTitleChanged = viewModel::updateTitle,
         onContentChanged = viewModel::updateContent,
-        onSearchButtonClick = navigateToPlaceSearch,
+        onSearchButtonClick = { /*TODO*/ },
         onCompleteButtonClick = {}
     )
 }
