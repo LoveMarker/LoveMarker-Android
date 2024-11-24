@@ -56,11 +56,10 @@ fun ContentRoute(
     searchPlace: SearchPlace? = null,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
-    LaunchedEffect(lifecycleOwner) {
+    LaunchedEffect(searchPlace) {
         if (searchPlace != null) {
             viewModel.updatePlace(
                 address = searchPlace.address,
@@ -70,6 +69,7 @@ fun ContentRoute(
     }
 
     ContentScreen(
+        address = state.address,
         selectedDate = state.date,
         title = state.title,
         content = state.content,
@@ -87,6 +87,7 @@ fun ContentRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContentScreen(
+    address: String,
     selectedDate: String,
     title: String,
     content: String,
@@ -131,7 +132,10 @@ fun ContentScreen(
             InputSection(
                 category = R.string.upload_content_place
             ) {
-                PlaceTextField(onSearchButtonClick = onSearchButtonClick)
+                PlaceTextField(
+                    address = address,
+                    onSearchButtonClick = onSearchButtonClick
+                )
             }
             Spacer(modifier = Modifier.padding(top = 24.dp))
             InputSection(
@@ -189,10 +193,11 @@ fun InputSection(
 
 @Composable
 fun PlaceTextField(
+    address: String,
     onSearchButtonClick: () -> Unit
 ) {
     ReadOnlyTextField(
-        value = "",
+        value = address,
         onTextFieldClick = onSearchButtonClick,
         placeholder = stringResource(R.string.upload_content_place_placeholder),
         placeholderColor = Gray300,
@@ -285,6 +290,7 @@ private fun ContentPreview() {
     LoveMarkerTheme {
         val scrollState = rememberScrollState()
         ContentScreen(
+            address = "",
             selectedDate = "2023-10-14",
             title = "제목",
             content = "내용",

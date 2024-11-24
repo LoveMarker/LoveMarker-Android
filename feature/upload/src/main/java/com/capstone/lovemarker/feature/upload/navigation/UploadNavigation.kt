@@ -8,8 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.model.SearchPlace
-import com.capstone.lovemarker.core.navigation.SearchPlaceNavType
 import com.capstone.lovemarker.core.navigation.UploadRoute
+import com.capstone.lovemarker.core.navigation.serializableType
 import com.capstone.lovemarker.feature.upload.content.ContentRoute
 import com.capstone.lovemarker.feature.upload.photo.PhotoRoute
 import timber.log.Timber
@@ -41,7 +41,7 @@ fun NavGraphBuilder.uploadNavGraph(
     }
     composable<UploadRoute.Content>(
         typeMap = mapOf(
-            typeOf<SearchPlace?>() to SearchPlaceNavType
+            typeOf<SearchPlace?>() to serializableType<SearchPlace?>(isNullableAllowed = true)
         )
     ) { backStackEntry ->
         val backStackEntryFromPhoto = remember(backStackEntry) {
@@ -49,6 +49,8 @@ fun NavGraphBuilder.uploadNavGraph(
         }
 
         val content = backStackEntry.toRoute<UploadRoute.Content>()
+        Timber.d("place from route: ${content.searchPlace}")
+
         ContentRoute(
             navigateUp = navigateUp,
             navigateToPlaceSearch = navigateToPlaceSearch,
