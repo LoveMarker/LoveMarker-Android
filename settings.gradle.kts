@@ -47,6 +47,7 @@ include(
     ":domain:nickname",
     ":domain:matching",
     ":domain:mypage",
+    ":domain:upload",
 )
 
 include(
@@ -55,4 +56,5 @@ include(
     ":data:nickname",
     ":data:matching",
     ":data:mypage",
+    ":data:upload",
 )
