@@ -94,7 +94,7 @@ fun MainNavHost(
                 navigator.navigateToPlaceSearch()
             },
             navigateToContent = {
-                navigator.navigateToContentFromPhoto()
+                navigator.navigateToContent()
             },
             getBackStackEntryFromPhoto = {
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
@@ -103,7 +103,7 @@ fun MainNavHost(
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToContent = { place ->
-                navigator.navigateToContentFromSearch(place)
+                navigator.navigateToContent(place)
             },
             showErrorSnackbar = showErrorSnackbar
         )

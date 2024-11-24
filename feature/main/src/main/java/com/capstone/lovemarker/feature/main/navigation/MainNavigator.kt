@@ -22,8 +22,7 @@ import com.capstone.lovemarker.feature.matching.navigation.navigateToSender
 import com.capstone.lovemarker.feature.mypage.navigation.navigateToMyPage
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 import com.capstone.lovemarker.feature.search.navigation.navigateToPlaceSearch
-import com.capstone.lovemarker.feature.upload.navigation.navigateToContentFromPhoto
-import com.capstone.lovemarker.feature.upload.navigation.navigateToContentFromSearch
+import com.capstone.lovemarker.feature.upload.navigation.navigateToContent
 import com.capstone.lovemarker.feature.upload.navigation.navigateToPhoto
 
 class MainNavigator(
@@ -96,12 +95,8 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    fun navigateToContentFromPhoto() {
-        navController.navigateToContentFromPhoto()
-    }
-
-    fun navigateToContentFromSearch(place: SearchPlace) {
-        navController.navigateToContentFromSearch(place)
+    fun navigateToContent(place: SearchPlace? = null) {
+        navController.navigateToContent(place)
     }
 
     fun navigateToPlaceSearch() {

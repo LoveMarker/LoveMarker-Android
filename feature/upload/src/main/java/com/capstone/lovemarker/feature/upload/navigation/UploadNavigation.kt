@@ -19,11 +19,7 @@ fun NavController.navigateToPhoto() {
     navigate(UploadRoute.Photo)
 }
 
-fun NavController.navigateToContentFromPhoto() {
-    navigate(route = UploadRoute.Content())
-}
-
-fun NavController.navigateToContentFromSearch(searchPlace: SearchPlace) {
+fun NavController.navigateToContent(searchPlace: SearchPlace? = null) {
     navigate(route = UploadRoute.Content(searchPlace))
 }
 
