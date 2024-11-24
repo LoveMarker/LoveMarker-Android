@@ -5,7 +5,6 @@ import com.capstone.lovemarker.convention.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import java.util.Properties
 
 class AndroidApplicationPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -15,18 +14,12 @@ class AndroidApplicationPlugin : Plugin<Project> {
             configureKotlinAndroid()
             configureHiltAndroid()
 
-            val properties = Properties().apply {
-                load(rootProject.file("local.properties").inputStream())
-            }
-
             extensions.configure<ApplicationExtension> {
                 with(defaultConfig) {
                     targetSdk = libs.findVersion("targetSdk").get().requiredVersion.toInt()
                     versionCode = libs.findVersion("versionCode").get().requiredVersion.toInt()
                     versionName = libs.findVersion("versionName").get().requiredVersion
 
-                    val baseUrl = properties["lovemarker.base.url"] as? String ?: ""
-                    buildConfigField("String", "LOVE_MARKER_BASE_URL", baseUrl)
                 }
             }
         }

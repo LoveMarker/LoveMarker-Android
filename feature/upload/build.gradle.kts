@@ -9,6 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.bundles.google.map)
     implementation(libs.coil.compose)
 
 //    implementation(projects.domain.upload)
