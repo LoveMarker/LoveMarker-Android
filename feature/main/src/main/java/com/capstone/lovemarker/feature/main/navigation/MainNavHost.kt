@@ -100,7 +100,8 @@ fun MainNavHost(
         searchNavGraph(
             navigateUp = {
                 navigator.navigateToPlaceSearch()
-            }
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
     }
 }

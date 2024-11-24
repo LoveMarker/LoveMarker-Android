@@ -1,21 +1,19 @@
 package com.capstone.lovemarker.data.search.di
 
-import android.content.Context
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.net.PlacesClient
+import com.capstone.lovemarker.data.search.service.PlaceSearchServiceImpl
+import com.capstone.lovemarker.domain.search.service.PlaceSearchService
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 
 @Module
 @InstallIn(ActivityComponent::class)
-object PlaceSearchModule {
+abstract class PlaceSearchModule {
+    @Binds
     @ActivityScoped
-    @Provides
-    fun providePlacesClient(
-        @ActivityContext context: Context
-    ): PlacesClient = Places.createClient(context)
+    abstract fun bindPlaceSearchService(
+        placeSearchServiceImpl: PlaceSearchServiceImpl
+    ) : PlaceSearchService
 }

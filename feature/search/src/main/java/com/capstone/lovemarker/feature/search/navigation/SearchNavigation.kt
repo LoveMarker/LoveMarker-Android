@@ -12,10 +12,12 @@ fun NavController.navigateToPlaceSearch() {
 
 fun NavGraphBuilder.searchNavGraph(
     navigateUp: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<UploadRoute.PlaceSearch> {
         SearchRoute(
-            navigateUp = navigateUp
+            navigateUp = navigateUp,
+            showErrorSnackbar = showErrorSnackbar
         )
     }
 }

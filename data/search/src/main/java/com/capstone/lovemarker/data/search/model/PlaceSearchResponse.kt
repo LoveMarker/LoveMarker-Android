@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.data.search.dto
+package com.capstone.lovemarker.data.search.model
 
 import com.capstone.lovemarker.domain.search.entity.PlaceEntity
 
