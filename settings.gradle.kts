@@ -48,6 +48,7 @@ include(
     ":domain:matching",
     ":domain:mypage",
     ":domain:upload",
+    ":domain:search",
 )
 
 include(
@@ -57,4 +58,5 @@ include(
     ":data:matching",
     ":data:mypage",
     ":data:upload",
+    ":data:search",
 )
