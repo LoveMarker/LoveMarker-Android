@@ -7,7 +7,7 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialRequest.Builder
 import com.capstone.lovemarker.data.oauth.BuildConfig
 import com.capstone.lovemarker.domain.oauth.entity.OAuthToken
-import com.capstone.lovemarker.data.oauth.model.toDomainEntity
+import com.capstone.lovemarker.data.oauth.model.toDomain
 import com.capstone.lovemarker.domain.oauth.service.OAuthService
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -40,7 +40,7 @@ class GoogleAuthService @Inject constructor(
             is CustomCredential -> {
                 if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     try {
-                        GoogleIdTokenCredential.createFrom(credential.data).toDomainEntity()
+                        GoogleIdTokenCredential.createFrom(credential.data).toDomain()
                     } catch (e: GoogleIdTokenParsingException) {
                         throw Exception("Received an invalid google id token response", e)
                     }
