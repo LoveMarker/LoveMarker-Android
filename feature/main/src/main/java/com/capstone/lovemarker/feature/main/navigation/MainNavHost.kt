@@ -103,7 +103,10 @@ fun MainNavHost(
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToContent = { place ->
-                navigator.navigateToContent(place)
+                navigator.navigateToContent(
+                    place = place,
+                    navOptions = navOptionsPopUpTo<UploadRoute.PlaceSearch>()
+                )
             },
             showErrorSnackbar = showErrorSnackbar
         )

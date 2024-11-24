@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.model.SearchPlace
@@ -19,8 +20,8 @@ fun NavController.navigateToPhoto() {
     navigate(UploadRoute.Photo)
 }
 
-fun NavController.navigateToContent(searchPlace: SearchPlace? = null) {
-    navigate(route = UploadRoute.Content(searchPlace))
+fun NavController.navigateToContent(searchPlace: SearchPlace? = null, navOptions: NavOptions? = null) {
+    navigate(route = UploadRoute.Content(searchPlace), navOptions = navOptions)
 }
 
 fun NavGraphBuilder.uploadNavGraph(

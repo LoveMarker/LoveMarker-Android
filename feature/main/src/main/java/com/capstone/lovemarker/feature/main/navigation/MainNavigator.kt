@@ -95,8 +95,8 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    fun navigateToContent(place: SearchPlace? = null) {
-        navController.navigateToContent(place)
+    fun navigateToContent(place: SearchPlace? = null, navOptions: NavOptions? = null) {
+        navController.navigateToContent(place, navOptions)
     }
 
     fun navigateToPlaceSearch() {
