@@ -78,7 +78,16 @@ fun SearchRoute(
                     viewModel.updateUiState(UiState.Loading)
                     placeSearchService.getSearchPlaces(state.keyword)
                 }.onSuccess { places ->
-                    viewModel.updateUiState(UiState.Success(places.toPersistentList()))
+                    viewModel.updateUiState(UiState.Success(
+                        places.map {
+                            SearchPlace(
+                                name = it.name,
+                                address = it.address,
+                                latitude = it.latitude,
+                                longitude = it.longitude
+                            )
+                        }.toPersistentList()
+                    ))
                 }.onFailure {
                     showErrorSnackbar(it)
                 }
