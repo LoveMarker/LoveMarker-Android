@@ -15,6 +15,10 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
+/**
+ * Google 계정 선택을 위한 바텀시트를 띄우면서 사용자 상호작용을 트리거하기 때문에
+ * signIn 함수에서는 applicationContext 대신 activityContext 사용해야 한다.
+ * */
 class GoogleAuthService @Inject constructor(
     @ActivityContext private val context: Context,
 ): OAuthService {
