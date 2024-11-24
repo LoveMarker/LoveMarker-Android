@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.domain.search.service
 
-import com.capstone.lovemarker.domain.search.entity.PlaceEntity
+import com.capstone.lovemarker.core.model.SearchPlace
 
 interface PlaceSearchService {
-    suspend fun getSearchPlaces(keyword: String): List<PlaceEntity>
+    suspend fun getSearchPlaces(keyword: String): List<SearchPlace>
 }

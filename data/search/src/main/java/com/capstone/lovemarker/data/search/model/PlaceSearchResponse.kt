@@ -1,13 +1,12 @@
 package com.capstone.lovemarker.data.search.model
 
-import com.capstone.lovemarker.domain.search.entity.PlaceEntity
+import com.capstone.lovemarker.core.model.SearchPlace
 
-typealias Place = com.google.android.libraries.places.api.model.Place
+typealias GoogleMapPlace = com.google.android.libraries.places.api.model.Place
 
-fun Place.toDomain() = PlaceEntity(
+fun GoogleMapPlace.toDomain() = SearchPlace(
     name = this.displayName ?: "",
     address = this.formattedAddress ?: "",
-    location = this.location?.let {
-        Pair(it.latitude, it.longitude)
-    } ?: Pair(0.0, 0.0)
+    latitude = this.location?.latitude ?: 0.0,
+    longitude = this.location?.latitude ?: 0.0,
 )

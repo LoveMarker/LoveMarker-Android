@@ -11,6 +11,7 @@ android {
 dependencies {
     implementation(libs.bundles.google.map)
     implementation(libs.coil.compose)
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(projects.domain.upload)
 }

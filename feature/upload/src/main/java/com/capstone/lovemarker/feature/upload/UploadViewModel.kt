@@ -1,13 +1,20 @@
 package com.capstone.lovemarker.feature.upload
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.navigation.toRoute
+import com.capstone.lovemarker.core.model.SearchPlace
+import com.capstone.lovemarker.core.navigation.SearchPlaceNavType
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import timber.log.Timber
+import javax.inject.Inject
+import kotlin.reflect.typeOf
 
 class UploadViewModel : ViewModel() {
     private val _state = MutableStateFlow(UploadState())
@@ -17,6 +24,15 @@ class UploadViewModel : ViewModel() {
         _state.update { state ->
             state.copy(
                 images = uris.map { it.toString() }.toPersistentList()
+            )
+        }
+    }
+
+    fun updatePlace(address: String, latLng: Pair<Double, Double>) {
+        _state.update {
+            it.copy(
+                address = address,
+                latLng = latLng
             )
         }
     }

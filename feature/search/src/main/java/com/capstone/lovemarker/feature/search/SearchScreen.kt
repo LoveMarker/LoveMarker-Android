@@ -3,7 +3,6 @@ package com.capstone.lovemarker.feature.search
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
-import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,10 +13,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.overscroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,9 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.designsystem.component.textfield.SearchTextField
 import com.capstone.lovemarker.core.designsystem.theme.Gray100
@@ -50,42 +44,25 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
-import com.capstone.lovemarker.domain.search.entity.PlaceEntity
+import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.domain.search.service.PlaceSearchService
 import com.capstone.lovemarker.feature.search.di.PlaceSearchEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.collections.immutable.PersistentList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
 fun SearchRoute(
     navigateUp: () -> Unit,
+    navigateToContent: (SearchPlace) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val placeSearchService = rememberPlaceSearchService() ?: return
-
-    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
-        viewModel.sideEffect
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { sideEffect ->
-                when (sideEffect) {
-                    is SearchSideEffect.NavigateToContent -> {
-
-                    }
-
-                    is SearchSideEffect.ShowErrorSnackbar -> {
-                        showErrorSnackbar(sideEffect.throwable)
-                    }
-                }
-            }
-    }
 
     SearchScreen(
         keyword = state.keyword,
@@ -101,7 +78,6 @@ fun SearchRoute(
                     viewModel.updateUiState(UiState.Loading)
                     placeSearchService.getSearchPlaces(state.keyword)
                 }.onSuccess { places ->
-                    Timber.d(places.toString())
                     viewModel.updateUiState(UiState.Success(places.toPersistentList()))
                 }.onFailure {
                     showErrorSnackbar(it)
@@ -109,8 +85,7 @@ fun SearchRoute(
             }
         },
         onSearchItemClick = { place ->
-            // todo: 이전 화면의 텍스트 필드에 주소 반영
-            //  place.address
+            navigateToContent(place)
         }
     )
 }
@@ -133,12 +108,12 @@ private fun rememberPlaceSearchService(): PlaceSearchService? {
 @Composable
 fun SearchScreen(
     keyword: String,
-    uiState: UiState<PersistentList<PlaceEntity>>,
+    uiState: UiState<PersistentList<SearchPlace>>,
     onKeywordChanged: (String) -> Unit,
     navigateUp: () -> Unit,
     onClearButtonClick: () -> Unit,
     onSearchActionDone: () -> Unit,
-    onSearchItemClick: (PlaceEntity) -> Unit,
+    onSearchItemClick: (SearchPlace) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -201,8 +176,8 @@ fun SearchScreen(
 
 @Composable
 fun SearchItem(
-    place: PlaceEntity,
-    onItemClick: (PlaceEntity) -> Unit,
+    place: SearchPlace,
+    onItemClick: (SearchPlace) -> Unit,
 ) {
     Column(
         modifier = Modifier

@@ -1,8 +1,8 @@
 package com.capstone.lovemarker.data.search.service
 
 import android.content.Context
+import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.data.search.model.toDomain
-import com.capstone.lovemarker.domain.search.entity.PlaceEntity
 import com.capstone.lovemarker.domain.search.service.PlaceSearchService
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -19,7 +19,7 @@ class PlaceSearchServiceImpl @Inject constructor(
 ) : PlaceSearchService {
     private val placesClient = Places.createClient(context)
 
-    override suspend fun getSearchPlaces(keyword: String): List<PlaceEntity> {
+    override suspend fun getSearchPlaces(keyword: String): List<SearchPlace> {
         val placeFields = listOf(
             Place.Field.DISPLAY_NAME,
             Place.Field.LOCATION,

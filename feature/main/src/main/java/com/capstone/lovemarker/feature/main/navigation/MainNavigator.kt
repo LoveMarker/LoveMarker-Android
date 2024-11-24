@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.core.navigation.UploadRoute
@@ -21,7 +22,8 @@ import com.capstone.lovemarker.feature.matching.navigation.navigateToSender
 import com.capstone.lovemarker.feature.mypage.navigation.navigateToMyPage
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 import com.capstone.lovemarker.feature.search.navigation.navigateToPlaceSearch
-import com.capstone.lovemarker.feature.upload.navigation.navigateToContent
+import com.capstone.lovemarker.feature.upload.navigation.navigateToContentFromPhoto
+import com.capstone.lovemarker.feature.upload.navigation.navigateToContentFromSearch
 import com.capstone.lovemarker.feature.upload.navigation.navigateToPhoto
 
 class MainNavigator(
@@ -30,7 +32,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = UploadRoute.PlaceSearch
+    val startDestination = UploadRoute.Photo
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -94,8 +96,12 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    fun navigateToContent() {
-        navController.navigateToContent()
+    fun navigateToContentFromPhoto() {
+        navController.navigateToContentFromPhoto()
+    }
+
+    fun navigateToContentFromSearch(place: SearchPlace) {
+        navController.navigateToContentFromSearch(place)
     }
 
     fun navigateToPlaceSearch() {

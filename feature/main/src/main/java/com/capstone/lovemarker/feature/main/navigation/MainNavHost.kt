@@ -90,16 +90,20 @@ fun MainNavHost(
         )
         uploadNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToPlaceSearch = {
+                navigator.navigateToPlaceSearch()
+            },
             navigateToContent = {
-                navigator.navigateToContent()
+                navigator.navigateToContentFromPhoto()
             },
             getBackStackEntryFromPhoto = {
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
             }
         )
         searchNavGraph(
-            navigateUp = {
-                navigator.navigateToPlaceSearch()
+            navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToContent = { place ->
+                navigator.navigateToContentFromSearch(place)
             },
             showErrorSnackbar = showErrorSnackbar
         )
@@ -113,7 +117,7 @@ private inline fun <reified T : Route> navOptionsPopUpTo() = navOptions {
     launchSingleTop = true
 }
 
-private inline fun <reified T: Route> navOptionsSaveState() = navOptions {
+private inline fun <reified T : Route> navOptionsSaveState() = navOptions {
     popUpTo<T> {
         inclusive = false
         saveState = true

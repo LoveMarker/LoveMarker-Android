@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.datepicker.DatePickerModal
@@ -40,6 +42,7 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray400
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
+import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.feature.upload.R
 import com.capstone.lovemarker.feature.upload.UploadViewModel
 import java.text.SimpleDateFormat
@@ -49,10 +52,22 @@ import java.util.Locale
 @Composable
 fun ContentRoute(
     navigateUp: () -> Unit,
+    navigateToPlaceSearch: () -> Unit,
+    searchPlace: SearchPlace? = null,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(lifecycleOwner) {
+        if (searchPlace != null) {
+            viewModel.updatePlace(
+                address = searchPlace.address,
+                latLng = Pair(searchPlace.latitude, searchPlace.longitude)
+            )
+        }
+    }
 
     ContentScreen(
         selectedDate = state.date,
@@ -64,7 +79,7 @@ fun ContentRoute(
         onDateSelected = viewModel::updateDate,
         onTitleChanged = viewModel::updateTitle,
         onContentChanged = viewModel::updateContent,
-        onSearchButtonClick = { /*TODO*/ },
+        onSearchButtonClick = navigateToPlaceSearch,
         onCompleteButtonClick = {}
     )
 }
