@@ -9,5 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(kotlin("reflect"))
+    implementation(projects.core.common)
     implementation(projects.domain.upload)
 }
