@@ -1,4 +1,4 @@
-package com.capstone.lovemarker.data.upload.util
+package com.capstone.lovemarker.core.common.util
 
 import android.content.Context
 import android.database.Cursor

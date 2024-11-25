@@ -10,5 +10,8 @@ android {
 }
 
 dependencies {
-
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.bundles.okhttp)
+    implementation(libs.timber)
+    implementation(libs.exif)
 }
