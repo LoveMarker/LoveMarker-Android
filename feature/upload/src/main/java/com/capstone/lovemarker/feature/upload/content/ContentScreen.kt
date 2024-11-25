@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.datepicker.DatePickerModal
 import com.capstone.lovemarker.core.designsystem.component.textfield.CounterTextField
@@ -44,7 +45,9 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.feature.upload.R
+import com.capstone.lovemarker.feature.upload.UploadSideEffect
 import com.capstone.lovemarker.feature.upload.UploadViewModel
+import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -53,9 +56,12 @@ import java.util.Locale
 fun ContentRoute(
     navigateUp: () -> Unit,
     navigateToPlaceSearch: () -> Unit,
+    navigateToMap: (Int) -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
     searchPlace: SearchPlace? = null,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
@@ -66,6 +72,21 @@ fun ContentRoute(
                 latLng = Pair(searchPlace.latitude, searchPlace.longitude)
             )
         }
+    }
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is UploadSideEffect.NavigateToMap -> {
+                        navigateToMap(sideEffect.memoryId)
+                    }
+
+                    is UploadSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
+                }
+            }
     }
 
     ContentScreen(
@@ -80,7 +101,7 @@ fun ContentRoute(
         onTitleChanged = viewModel::updateTitle,
         onContentChanged = viewModel::updateContent,
         onSearchButtonClick = navigateToPlaceSearch,
-        onCompleteButtonClick = {}
+        onCompleteButtonClick = viewModel::postMemory
     )
 }
 

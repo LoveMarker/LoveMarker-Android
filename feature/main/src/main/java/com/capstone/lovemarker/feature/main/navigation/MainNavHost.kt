@@ -90,15 +90,17 @@ fun MainNavHost(
         )
         uploadNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToPlaceSearch = {
-                navigator.navigateToPlaceSearch()
-            },
-            navigateToContent = {
-                navigator.navigateToContent()
+            navigateToContent = { navigator.navigateToContent() },
+            navigateToPlaceSearch = { navigator.navigateToPlaceSearch() },
+            navigateToMap = {
+                navigator.navigateToMap(
+                    navOptions = navOptionsPopUpTo<UploadRoute.Photo>()
+                )
             },
             getBackStackEntryFromPhoto = {
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
-            }
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },

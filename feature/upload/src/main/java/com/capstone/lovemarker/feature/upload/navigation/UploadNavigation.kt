@@ -26,8 +26,10 @@ fun NavController.navigateToContent(searchPlace: SearchPlace? = null, navOptions
 
 fun NavGraphBuilder.uploadNavGraph(
     navigateUp: () -> Unit,
-    navigateToPlaceSearch: () -> Unit,
     navigateToContent: () -> Unit,
+    navigateToPlaceSearch: () -> Unit,
+    navigateToMap: (Int) -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
     getBackStackEntryFromPhoto: () -> NavBackStackEntry,
 ) {
     composable<UploadRoute.Photo> {
@@ -44,13 +46,13 @@ fun NavGraphBuilder.uploadNavGraph(
         val backStackEntryFromPhoto = remember(backStackEntry) {
             getBackStackEntryFromPhoto()
         }
-
         val content = backStackEntry.toRoute<UploadRoute.Content>()
-        Timber.d("place from route: ${content.searchPlace}")
 
         ContentRoute(
             navigateUp = navigateUp,
             navigateToPlaceSearch = navigateToPlaceSearch,
+            navigateToMap = navigateToMap,
+            showErrorSnackbar = showErrorSnackbar,
             searchPlace = content.searchPlace,
             viewModel = hiltViewModel(backStackEntryFromPhoto)
         )
