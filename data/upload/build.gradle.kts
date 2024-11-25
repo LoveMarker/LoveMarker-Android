@@ -10,4 +10,5 @@ android {
 
 dependencies {
     implementation(projects.domain.upload)
+    implementation(libs.exif)
 }
