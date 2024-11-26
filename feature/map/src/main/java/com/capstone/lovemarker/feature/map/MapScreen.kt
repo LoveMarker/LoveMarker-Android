@@ -62,11 +62,11 @@ fun MapRoute(
     val mapState by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraPositionState = rememberCameraPositionState()
-    val context = LocalContext.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val activityContext = LocalContext.current
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(activityContext) }
 
     RequestLocationPermission(
-        context = context,
+        context = activityContext,
         onPermissionGranted = {
             lifecycleOwner.lifecycleScope.launch {
                 runCatching {
