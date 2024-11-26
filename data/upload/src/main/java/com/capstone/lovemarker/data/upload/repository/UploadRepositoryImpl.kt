@@ -9,6 +9,8 @@ import com.capstone.lovemarker.domain.upload.entity.UploadRequestEntity
 import com.capstone.lovemarker.domain.upload.entity.UploadResponseEntity
 import com.capstone.lovemarker.domain.upload.repository.UploadRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okhttp3.MultipartBody
+import timber.log.Timber
 import javax.inject.Inject
 
 class UploadRepositoryImpl @Inject constructor(
@@ -25,10 +27,11 @@ class UploadRepositoryImpl @Inject constructor(
         ).data.toDomain()
     }
 
-    private fun createFormData(images: List<String>) = images.map { imageUrl ->
-        ContentUriToRequestBody(
-            context = context,
-            contentUri = imageUrl.toUri()
-        ).toFormData()
-    }
+    private fun createFormData(images: List<String>): List<MultipartBody.Part> =
+        images.map { imageUrl ->
+            ContentUriToRequestBody(
+                context = context,
+                contentUri = imageUrl.toUri()
+            ).toFormData()
+        }
 }
