@@ -11,5 +11,5 @@ android {
 dependencies {
     implementation(projects.core.model)
     implementation(projects.domain.search)
-    implementation(libs.google.places)
+    implementation(libs.bundles.google.map)
 }
