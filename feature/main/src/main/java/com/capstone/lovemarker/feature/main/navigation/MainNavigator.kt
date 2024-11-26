@@ -31,7 +31,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = MainTabRoute.Map
+    val startDestination = UploadRoute.Photo
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
