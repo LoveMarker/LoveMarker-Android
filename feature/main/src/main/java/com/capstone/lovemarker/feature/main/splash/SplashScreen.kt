@@ -14,19 +14,21 @@ fun SplashScreen(
     navigateToLogin: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
+    navigateToLogin()
 
-    LaunchedEffect(Unit) {
-        viewModel.splashSideEffect
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { sideEffect ->
-                when (sideEffect) {
-                    is SplashSideEffect.NavigateToMap -> {
-                        // todo: splash -> map 네비게이션 함수가 반복적으로 호출되는 이슈 해결하기
-                        navigateToMap()
-                    }
-                    is SplashSideEffect.NavigateToLogin -> navigateToLogin()
-                }
-            }
-    }
+//    val lifecycleOwner = LocalLifecycleOwner.current
+
+//    LaunchedEffect(Unit) {
+//        viewModel.splashSideEffect
+//            .flowWithLifecycle(lifecycleOwner.lifecycle)
+//            .collectLatest { sideEffect ->
+//                when (sideEffect) {
+//                    is SplashSideEffect.NavigateToMap -> {
+//                        // todo: splash -> map 네비게이션 함수가 반복적으로 호출되는 이슈 해결하기
+//                        navigateToMap()
+//                    }
+//                    is SplashSideEffect.NavigateToLogin -> navigateToLogin()
+//                }
+//            }
+//    }
 }
