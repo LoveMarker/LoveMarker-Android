@@ -11,7 +11,7 @@ import retrofit2.http.PartMap
 
 interface UploadService {
     @Multipart
-    @POST("memory")
+    @POST("/api/memory")
     suspend fun postMemory(
         @Part files: List<MultipartBody.Part>,
         @PartMap otherMap: HashMap<String, RequestBody>
