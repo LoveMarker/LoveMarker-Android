@@ -14,8 +14,12 @@ fun NavController.navigateToArchive(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.archiveNavGraph(
     innerPadding: PaddingValues,
+    navigateToDetail: (Int) -> Unit,
 ) {
     composable<MainTabRoute.Archive> {
-        ArchiveRoute()
+        ArchiveRoute(
+            innerPadding = innerPadding,
+            navigateToDetail = navigateToDetail
+        )
     }
 }
