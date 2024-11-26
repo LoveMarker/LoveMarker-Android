@@ -73,7 +73,6 @@ fun MapRoute(
     }
 
     LaunchedEffect(Unit) {
-        // todo: 퍼미션 체크
         if (ContextCompat.checkSelfPermission(
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
