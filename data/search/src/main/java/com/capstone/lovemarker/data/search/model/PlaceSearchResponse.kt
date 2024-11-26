@@ -8,5 +8,5 @@ fun GoogleMapPlace.toDomain() = PlaceSearchEntity(
     name = this.displayName ?: "",
     address = this.formattedAddress ?: "",
     latitude = this.location?.latitude ?: 0.0,
-    longitude = this.location?.latitude ?: 0.0,
+    longitude = this.location?.longitude ?: 0.0,
 )
