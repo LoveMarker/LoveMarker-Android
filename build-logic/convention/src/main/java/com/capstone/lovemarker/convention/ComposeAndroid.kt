@@ -15,6 +15,7 @@ internal fun Project.configureComposeAndroid() {
             add("androidTestImplementation", platform(bom))
 
             add("implementation", libs.findBundle("compose").get())
+            add("implementation", libs.findLibrary("coil-compose").get())
             add("androidTestImplementation", libs.findLibrary("compose-ui-test-junit4").get())
             add("debugImplementation", libs.findLibrary("compose-ui-test-manifest").get())
             add("debugImplementation", libs.findLibrary("compose-ui-tooling").get())
