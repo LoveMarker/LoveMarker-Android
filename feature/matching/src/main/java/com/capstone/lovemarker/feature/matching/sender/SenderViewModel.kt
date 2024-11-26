@@ -57,7 +57,7 @@ class SenderViewModel @Inject constructor(
         }
     }
 
-    fun updateCodeCreated(created: Boolean) {
+    fun updateCodeCreateState(created: Boolean) {
         _state.update {
             it.copy(codeCreated = created)
         }

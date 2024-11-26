@@ -9,17 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDefaults
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,8 +26,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -71,8 +62,8 @@ fun SenderRoute(
                     is SenderSideEffect.ShowShareDialog -> {
                         viewModel.apply {
                             updateInvitationCode(sideEffect.invitationCode)
-                            updateCodeCreated(created = true)
                             updateDialogState(showDialog = true)
+                            updateCodeCreateState(created = true)
                         }
                     }
 
@@ -81,12 +72,6 @@ fun SenderRoute(
                     }
                 }
             }
-    }
-
-    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP) {
-        if (state.codeCreated) {
-            navigateToMap()
-        }
     }
     
     SenderScreen(
@@ -100,7 +85,11 @@ fun SenderRoute(
         },
         completeButtonEnabled = state.buttonEnabled,
         onCompleteButtonClick = {
-            viewModel.postInvitationCode(state.anniversary)
+            if (state.codeCreated) {
+                navigateToMap()
+            } else {
+                viewModel.postInvitationCode(state.anniversary)
+            }
         },
         invitationCode = state.invitationCode,
         showDialog = state.showDialog,
