@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class MapViewModel : ViewModel() {
     private val _state = MutableStateFlow(MapState())
@@ -27,14 +30,17 @@ class MapViewModel : ViewModel() {
         }
     }
 
-    fun moveCurrentLocation(fusedLocationClient: FusedLocationProviderClient) {
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                updateUserLocation(latLng = LatLng(location.latitude, location.longitude))
-            }
-            .addOnFailureListener { throwable ->
-                Timber.e(throwable.message)
-            }
+    suspend fun getCurrentLocation(fusedLocationClient: FusedLocationProviderClient): LatLng {
+        return suspendCancellableCoroutine { continuation ->
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location ->
+                    continuation.resume(LatLng(location.latitude, location.longitude))
+                }
+                .addOnFailureListener { throwable ->
+                    Timber.e(throwable.message)
+                    continuation.resumeWithException(throwable)
+                }
+        }
     }
 
     // 퍼미션 거부되었을 때, 디폴트 위치로 과기대 표시

@@ -20,10 +20,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,19 +35,21 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerComposable
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
@@ -67,7 +68,15 @@ fun MapRoute(
     RequestLocationPermission(
         context = context,
         onPermissionGranted = {
-            viewModel.moveCurrentLocation(fusedLocationClient)
+            lifecycleOwner.lifecycleScope.launch {
+                runCatching {
+                    viewModel.getCurrentLocation(fusedLocationClient)
+                }.onSuccess { location ->
+                    viewModel.updateUserLocation(location)
+                }.onFailure {
+                    showErrorSnackbar(it)
+                }
+            }
         },
         onPermissionDenied = {
             viewModel.moveDefaultLocation()
@@ -79,7 +88,21 @@ fun MapRoute(
         cameraPositionState = cameraPositionState,
         currentLocation = mapState.currentLocation,
         onCurrentLocationButtonClick = {
-            viewModel.moveCurrentLocation(fusedLocationClient)
+            lifecycleOwner.lifecycleScope.launch {
+                runCatching {
+                    viewModel.getCurrentLocation(fusedLocationClient)
+                }.onSuccess { location ->
+                    // 현위치 갱신 (이전이랑 같으면 마커는 그대로)
+                    viewModel.updateUserLocation(location)
+
+                    // 마커가 화면의 정중앙에 놓이도록 카메라 위치 이동
+                    cameraPositionState.animate(
+                        update = CameraUpdateFactory.newLatLng(location)
+                    )
+                }.onFailure {
+                    showErrorSnackbar(it)
+                }
+            }
         },
         onUploadButtonClick = navigateToPhoto
     )
