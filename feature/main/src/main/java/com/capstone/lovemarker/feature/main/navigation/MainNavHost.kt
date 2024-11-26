@@ -83,7 +83,8 @@ fun MainNavHost(
             }
         )
         archiveNavGraph(
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            navigateToDetail = { /* TODO */ }
         )
         myPageNavGraph(
             innerPadding = innerPadding
