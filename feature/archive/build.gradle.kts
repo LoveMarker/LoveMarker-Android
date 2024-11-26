@@ -9,5 +9,7 @@ android {
 }
 
 dependencies {
-//    implementation(projects.domain.archive)
+    implementation(projects.domain.archive)
+    implementation(libs.paging)
+    implementation(libs.paging.compose)
 }
