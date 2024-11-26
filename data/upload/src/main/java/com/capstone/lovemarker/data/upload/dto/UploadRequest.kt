@@ -4,19 +4,15 @@ import com.capstone.lovemarker.domain.upload.entity.UploadRequestEntity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 
-// todo: Double 타입이 제대로 전달되는지 확인
-fun UploadRequestEntity.toData(): HashMap<String, RequestBody> = HashMap(
-    this::class.members.associate {
-        it.name to it.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-    }
+fun UploadRequestEntity.toData(): HashMap<String, RequestBody> = hashMapOf(
+    "latitude" to latitude.toPlainTextRequestBody(),
+    "longitude" to longitude.toPlainTextRequestBody(),
+    "address" to address.toPlainTextRequestBody(),
+    "date" to date.toPlainTextRequestBody(),
+    "title" to title.toPlainTextRequestBody(),
+    "content" to content.toPlainTextRequestBody()
 )
 
-//fun UploadRequestEntity.toData(): HashMap<String, RequestBody> = hashMapOf(
-//    "latitude" to latitude.toPlainTextRequestBody(),
-//    "longitude" to longitude.toPlainTextRequestBody(),
-//    "address" to address.toPlainTextRequestBody(),
-//    "date" to date.toPlainTextRequestBody(),
-//    "title" to title.toPlainTextRequestBody(),
-//    "content" to content.toPlainTextRequestBody()
-//)
+fun <T> T.toPlainTextRequestBody() = this.toString().toRequestBody("text/plain".toMediaTypeOrNull())
