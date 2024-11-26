@@ -3,6 +3,7 @@ package com.capstone.lovemarker.feature.matching.receiver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.lovemarker.domain.matching.repository.MatchingRepository
+import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +18,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReceiverViewModel @Inject constructor(
-    private val matchingRepository: MatchingRepository
+    private val matchingRepository: MatchingRepository,
+    private val myPageRepository: MyPageRepository
 ) : ViewModel() {
     private val _state = MutableStateFlow(ReceiverState())
     val state: StateFlow<ReceiverState> = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            myPageRepository.deleteCouple()
+        }
+    }
 
     private val _sideEffect = MutableSharedFlow<ReceiverSideEffect>()
     val sideEffect: SharedFlow<ReceiverSideEffect> = _sideEffect.asSharedFlow()
