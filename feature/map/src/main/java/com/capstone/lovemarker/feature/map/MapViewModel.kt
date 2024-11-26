@@ -1,6 +1,7 @@
 package com.capstone.lovemarker.feature.map
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,10 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class MapViewModel : ViewModel() {
     private val _state = MutableStateFlow(MapState())
@@ -22,7 +21,17 @@ class MapViewModel : ViewModel() {
     private val _sideEffect = MutableSharedFlow<MapSideEffect>()
     val sideEffect: SharedFlow<MapSideEffect> = _sideEffect.asSharedFlow()
 
-    fun updateUserLocation(latLng: LatLng) {
+    fun initCurrentLocation(fusedLocationClient: FusedLocationProviderClient) {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                updateCurrentLocation(LatLng(location.latitude, location.longitude))
+            }
+            .addOnFailureListener { throwable ->
+                Timber.e(throwable.message)
+            }
+    }
+
+    fun updateCurrentLocation(latLng: LatLng) {
         _state.update {
             it.copy(
                 currentLocation = latLng
@@ -30,21 +39,15 @@ class MapViewModel : ViewModel() {
         }
     }
 
-    suspend fun getCurrentLocation(fusedLocationClient: FusedLocationProviderClient): LatLng {
-        return suspendCancellableCoroutine { continuation ->
-            fusedLocationClient.lastLocation
-                .addOnSuccessListener { location ->
-                    continuation.resume(LatLng(location.latitude, location.longitude))
-                }
-                .addOnFailureListener { throwable ->
-                    Timber.e(throwable.message)
-                    continuation.resumeWithException(throwable)
-                }
+    fun moveCurrentLocation() {
+        viewModelScope.launch {
+            _sideEffect.emit(MapSideEffect.MoveCurrentLocation)
         }
     }
 
-    // 퍼미션 거부되었을 때, 디폴트 위치로 과기대 표시
-    fun moveDefaultLocation() {
-        updateUserLocation(latLng = LatLng(37.6173, 127.0777))
+    fun moveCameraPosition(latLng: LatLng) {
+        viewModelScope.launch {
+            _sideEffect.emit(MapSideEffect.MoveCameraPosition(latLng))
+        }
     }
 }

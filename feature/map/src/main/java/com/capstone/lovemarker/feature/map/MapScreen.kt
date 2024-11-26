@@ -1,9 +1,6 @@
 package com.capstone.lovemarker.feature.map
 
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,11 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
@@ -49,7 +44,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @Composable
@@ -57,98 +52,65 @@ fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-    viewModel: MapViewModel = viewModel()
+    viewModel: MapViewModel = hiltViewModel()
 ) {
+    Timber.d("MapRoute recomposition")
     val mapState by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
     val cameraPositionState = rememberCameraPositionState()
-    val activityContext = LocalContext.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(activityContext) }
 
-    RequestLocationPermission(
-        context = activityContext,
-        onPermissionGranted = {
-            lifecycleOwner.lifecycleScope.launch {
-                runCatching {
-                    viewModel.getCurrentLocation(fusedLocationClient)
-                }.onSuccess { location ->
-                    viewModel.updateUserLocation(location)
-                }.onFailure {
-                    showErrorSnackbar(it)
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    viewModel.initCurrentLocation(fusedLocationClient)
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is MapSideEffect.MoveCurrentLocation -> {
+                        fusedLocationClient.lastLocation
+                            .addOnSuccessListener { location ->
+                                val latLng = LatLng(location.latitude, location.longitude)
+                                viewModel.apply {
+                                    updateCurrentLocation(latLng)
+                                    moveCameraPosition(latLng)
+                                }
+                            }
+                            .addOnFailureListener { throwable ->
+                                Timber.e(throwable.message)
+                                viewModel.moveCameraPosition(
+                                    mapState.currentLocation // 디폴트 위치로 설정
+                                )
+                            }
+                    }
+
+                    is MapSideEffect.MoveCameraPosition -> {
+                        cameraPositionState.animate(
+                            update = CameraUpdateFactory.newLatLng(sideEffect.latLng)
+                        )
+                    }
+
+                    is MapSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
                 }
             }
-        },
-        onPermissionDenied = {
-            viewModel.moveDefaultLocation()
-        }
-    )
+    }
 
     MapScreen(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
         currentLocation = mapState.currentLocation,
-        onCurrentLocationButtonClick = {
-            lifecycleOwner.lifecycleScope.launch {
-                runCatching {
-                    viewModel.getCurrentLocation(fusedLocationClient)
-                }.onSuccess { location ->
-                    // 현위치 갱신 (이전이랑 같으면 마커는 그대로)
-                    viewModel.updateUserLocation(location)
-
-                    // 마커가 화면의 정중앙에 놓이도록 카메라 위치 이동
-                    cameraPositionState.animate(
-                        update = CameraUpdateFactory.newLatLng(location)
-                    )
-                }.onFailure {
-                    showErrorSnackbar(it)
-                }
-            }
-        },
+        onCurrentLocationButtonClick = viewModel::moveCurrentLocation,
         onUploadButtonClick = navigateToPhoto
     )
-}
-
-@Composable
-fun RequestLocationPermission(
-    context: Context,
-    onPermissionGranted: () -> Unit,
-    onPermissionDenied: () -> Unit,
-) {
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            Timber.d("step 3: $isGranted")
-            if (isGranted) {
-                onPermissionGranted()
-            } else {
-                onPermissionDenied()
-            }
-        }
-    )
-
-    LaunchedEffect(Unit) {
-        when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(
-                context,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) -> {
-                Timber.d("step 1")
-                onPermissionGranted()
-            }
-
-            else -> {
-                Timber.d("step 2")
-                permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-            }
-        }
-    }
 }
 
 @Composable
 fun MapScreen(
     innerPadding: PaddingValues,
     cameraPositionState: CameraPositionState,
-    currentLocation: LatLng?,
+    currentLocation: LatLng,
     onCurrentLocationButtonClick: () -> Unit,
     onUploadButtonClick: () -> Unit,
 ) {
@@ -157,15 +119,14 @@ fun MapScreen(
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        if (currentLocation != null) {
-            GoogleMap(
-                cameraPositionState = cameraPositionState
-            ) {
-                cameraPositionState.position = CameraPosition.fromLatLngZoom(currentLocation, 18f)
-                CurrentLocationMarker(
-                    currentLocation = currentLocation
-                )
-            }
+        GoogleMap(
+            cameraPositionState = cameraPositionState
+        ) {
+            Timber.d("init Camera Position")
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(currentLocation, 18f)
+            CurrentLocationMarker(
+                currentLocation = currentLocation
+            )
         }
         Column(
             modifier = Modifier.align(Alignment.TopCenter)
