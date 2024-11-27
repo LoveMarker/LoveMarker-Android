@@ -47,17 +47,20 @@ fun SingleButtonDialog(
                     modifier = Modifier.padding(top = 24.dp)
                 )
                 Spacer(modifier = Modifier.height(14.dp))
-                Text(
-                    text = description,
-                    style = LoveMarkerTheme.typography.body14M,
-                    textAlign = TextAlign.Center,
-                    color = Gray600,
-                )
-                Spacer(modifier = Modifier.height(6.dp))
+                if (description.isNotEmpty()) {
+                    Text(
+                        text = description,
+                        style = LoveMarkerTheme.typography.body14M,
+                        textAlign = TextAlign.Center,
+                        color = Gray600,
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
                 LoveMarkerButton(
                     onClick = onConfirmButtonClick,
                     buttonText = buttonText,
-                    enabled = true
+                    enabled = true,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
                 )
             }
         }
@@ -70,7 +73,7 @@ private fun SingleButtonDialogPreview() {
     LoveMarkerTheme {
         SingleButtonDialog(
             title = "커플 연결이 필요해요",
-            description = "LoveMarker 기능은\n커플 연결 후 사용할 수 있어요",
+            description = "",
             buttonText = "매칭하러 가기",
             onConfirmButtonClick = {}
         )

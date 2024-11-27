@@ -51,13 +51,15 @@ fun DoubleButtonDialog(
                     modifier = Modifier.padding(top = 24.dp)
                 )
                 Spacer(modifier = Modifier.height(14.dp))
-                Text(
-                    text = description,
-                    style = LoveMarkerTheme.typography.body16M,
-                    textAlign = TextAlign.Center,
-                    color = Gray600,
-                )
-                Spacer(modifier = Modifier.height(6.dp))
+                if (description.isNotEmpty()) {
+                    Text(
+                        text = description,
+                        style = LoveMarkerTheme.typography.body16M,
+                        textAlign = TextAlign.Center,
+                        color = Gray600,
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(16.dp)
