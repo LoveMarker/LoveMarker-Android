@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.nickname
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.core.datastore.source.UserDataStore
 import com.capstone.lovemarker.domain.nickname.repository.NicknameRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -19,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NicknameViewModel @Inject constructor(
     private val nicknameRepository: NicknameRepository,
+    private val userDataStore: UserDataStore
 ) : ViewModel() {
     private val _nicknameState = MutableStateFlow(NicknameState())
     val nicknameState: StateFlow<NicknameState> = _nicknameState.asStateFlow()
@@ -69,6 +72,7 @@ class NicknameViewModel @Inject constructor(
             nicknameRepository.patchNickname(nickname)
                 .onSuccess {
                     updateInputUiState(InputUiState.Success)
+                    userDataStore.updateNickname(nickname)
                 }.onFailure { throwable ->
                     val errorBody = (throwable as? HttpException)?.response()?.errorBody()?.string()
                     if (errorBody?.contains(NICKNAME_DUPLICATED_ERR_MSG) == true) {
