@@ -104,7 +104,7 @@ fun ArchiveScreen(
                 Text(
                     text = stringResource(id = com.capstone.lovemarker.core.designsystem.R.string.app_name),
                     fontFamily = FontFamily(Font(resId = com.capstone.lovemarker.core.designsystem.R.font.ribeye_regular)),
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -213,7 +213,7 @@ fun EmptyArchiveResult() {
         )
         Text(
             text = stringResource(R.string.archive_empty_guide_text),
-            style = LoveMarkerTheme.typography.body14M,
+            style = LoveMarkerTheme.typography.body15M,
             color = Gray700,
             textAlign = TextAlign.Center,
             modifier = Modifier
