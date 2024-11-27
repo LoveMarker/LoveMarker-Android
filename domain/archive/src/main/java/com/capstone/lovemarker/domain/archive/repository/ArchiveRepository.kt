@@ -1,7 +1,9 @@
 package com.capstone.lovemarker.domain.archive.repository
 
-import com.capstone.lovemarker.domain.archive.entity.ArchiveEntity
+import androidx.paging.PagingData
+import com.capstone.lovemarker.domain.archive.entity.Memory
+import kotlinx.coroutines.flow.Flow
 
 interface ArchiveRepository {
-    suspend fun getMemories(page: Int, size: Int): Result<ArchiveEntity>
+    fun getMemories(): Flow<PagingData<Memory>>
 }

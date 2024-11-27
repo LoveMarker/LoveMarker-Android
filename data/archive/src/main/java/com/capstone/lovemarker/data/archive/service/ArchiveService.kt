@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface ArchiveService {
     @GET("/api/memory/list-view")
     suspend fun getMemories(
-        @Query("page") page: Int,
-        @Query("size") size: Int,
+        @Query("page") pageIndex: Int,
+        @Query("size") itemsPerPage: Int,
     ): BaseResponse<ArchiveResponse>
 }
