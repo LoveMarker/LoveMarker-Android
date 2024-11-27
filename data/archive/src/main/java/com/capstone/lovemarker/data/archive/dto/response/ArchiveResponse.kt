@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.data.archive.dto.response
 
 import com.capstone.lovemarker.domain.archive.entity.ArchiveEntity
-import com.capstone.lovemarker.domain.archive.entity.Memory
+import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -38,7 +38,7 @@ data class ArchiveResponse(
 fun ArchiveResponse.toDomain() = ArchiveEntity(
     hasNextPage = pageInfo.hasNext,
     memories = memories.map { memory ->
-        Memory(
+        MemoryEntity(
             memoryId = memory.memoryId,
             title = memory.title,
             date = memory.date,
