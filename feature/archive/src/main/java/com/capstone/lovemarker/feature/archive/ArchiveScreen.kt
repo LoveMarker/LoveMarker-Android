@@ -53,7 +53,7 @@ import timber.log.Timber
 @Composable
 fun ArchiveRoute(
     innerPadding: PaddingValues,
-    navigateToDetail: (Int) -> Unit, // todo: 사이드 이펙트로 처리 안하고, 컴포저블 콜백에서 직접 호출하면... 이전 화면이 그대로 남아있는 건가?????
+    navigateToDetail: (Int) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: ArchiveViewModel = hiltViewModel()
 ) {
@@ -67,7 +67,7 @@ fun ArchiveRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is ArchiveSideEffect.NavigateToDetail -> {
-
+                        navigateToDetail(sideEffect.memoryId)
                     }
 
                     is ArchiveSideEffect.ShowErrorSnackbar -> {
@@ -81,7 +81,7 @@ fun ArchiveRoute(
         innerPadding = innerPadding,
         memories = memories.itemSnapshotList,
         onMemoryItemClick = { memoryId ->
-            Timber.d("item click: $memoryId")
+            viewModel.triggerNavigationEffect(memoryId)
         }
     )
 }

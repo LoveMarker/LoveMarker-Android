@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,4 +26,10 @@ class ArchiveViewModel @Inject constructor(
         .catch { throwable ->
             _sideEffect.emit(ArchiveSideEffect.ShowErrorSnackbar(throwable))
         }.cachedIn(viewModelScope)
+
+    fun triggerNavigationEffect(memoryId: Int) {
+        viewModelScope.launch {
+            _sideEffect.emit(ArchiveSideEffect.NavigateToDetail(memoryId))
+        }
+    }
 }
