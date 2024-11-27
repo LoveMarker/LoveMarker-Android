@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.archive
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,42 +36,75 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
+import androidx.paging.ItemSnapshotList
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.capstone.lovemarker.core.common.extension.dropShadow
-import com.capstone.lovemarker.core.designsystem.theme.Beige400
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
-import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
+import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
+import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
 fun ArchiveRoute(
     innerPadding: PaddingValues,
     navigateToDetail: (Int) -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
+    viewModel: ArchiveViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val memories = viewModel.memories.collectAsLazyPagingItems()
+    Timber.d("memories: ${memories.itemSnapshotList}")
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is ArchiveSideEffect.NavigateToDetail -> {
+                        navigateToDetail(sideEffect.memoryId)
+                    }
+
+                    is ArchiveSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
+                }
+            }
+    }
+
     ArchiveScreen(
-//        innerPadding = innerPadding,
-        onItemClick = navigateToDetail
+        innerPadding = innerPadding,
+        memories = memories.itemSnapshotList,
+        onMemoryItemClick = { memoryId ->
+            viewModel.triggerNavigationEffect(memoryId)
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArchiveScreen(
-//    innerPadding: PaddingValues,
-    onItemClick: (Int) -> Unit,
+    innerPadding: PaddingValues,
+    memories: ItemSnapshotList<MemoryEntity>,
+    onMemoryItemClick: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(White)
+            .padding(innerPadding)
     ) {
         TopAppBar(
             title = {
                 Text(
                     text = stringResource(id = com.capstone.lovemarker.core.designsystem.R.string.app_name),
                     fontFamily = FontFamily(Font(resId = com.capstone.lovemarker.core.designsystem.R.font.ribeye_regular)),
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -79,75 +114,41 @@ fun ArchiveScreen(
         HorizontalDivider(
             color = Gray200
         )
-        if (fakeItems.isEmpty()) {
-            EmptyArchive()
+        if (memories.isEmpty()) {
+            EmptyArchiveResult()
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(14.dp),
-                contentPadding = PaddingValues(16.dp),
-            ) {
-                items(fakeItems) { item ->
-                    ArchiveItem(item)
-                }
+            ArchiveItems(
+                memories = memories,
+                onMemoryItemClick = onMemoryItemClick
+            )
+        }
+    }
+}
+
+@Composable
+fun ArchiveItems(
+    memories: ItemSnapshotList<MemoryEntity>,
+    onMemoryItemClick: (Int) -> Unit,
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+        contentPadding = PaddingValues(16.dp),
+    ) {
+        items(memories) { memory ->
+            if (memory != null) {
+                MemoryItem(
+                    item = memory,
+                    onItemClick = onMemoryItemClick
+                )
             }
         }
     }
 }
 
 @Composable
-fun EmptyArchive() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.img_archive_empty),
-            contentDescription = stringResource(R.string.archive_empty_image_desc),
-            tint = Color.Unspecified
-        )
-        Text(
-            text = stringResource(R.string.archive_empty_guide_text),
-            style = LoveMarkerTheme.typography.body14M,
-            color = Gray700,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .padding(top = 72.dp)
-        )
-    }
-}
-
-data class Item(
-    val title: String,
-    val address: String,
-    val date: String,
-)
-
-val emptyList = listOf<Item>()
-
-val fakeItems = listOf(
-    Item(
-        title = "경주 여행",
-        address = "경주시 경주",
-        date = "2024-10-11"
-    ),
-    Item(
-        title = "경주 여행",
-        address = "경주시 경주",
-        date = "2024-10-11"
-    ),
-    Item(
-        title = "경주 여행",
-        address = "경주시 경주",
-        date = "2024-10-11"
-    ),
-)
-
-@Composable
-fun ArchiveItem(
-    item: Item
+fun MemoryItem(
+    item: MemoryEntity,
+    onItemClick: (Int) -> Unit
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -160,6 +161,9 @@ fun ArchiveItem(
             )
             .clip(RoundedCornerShape(6.dp))
             .background(White)
+            .clickable {
+                onItemClick(item.memoryId)
+            }
     ) {
         Spacer(modifier = Modifier.padding(start = 16.dp))
         Image(
@@ -193,12 +197,35 @@ fun ArchiveItem(
     }
 }
 
+@Composable
+fun EmptyArchiveResult() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.img_archive_empty),
+            contentDescription = stringResource(R.string.archive_empty_image_desc),
+            tint = Color.Unspecified
+        )
+        Text(
+            text = stringResource(R.string.archive_empty_guide_text),
+            style = LoveMarkerTheme.typography.body15M,
+            color = Gray700,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .padding(top = 72.dp)
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ArchivePreview() {
     LoveMarkerTheme {
-        ArchiveScreen(
-            onItemClick = {}
-        )
+
     }
 }

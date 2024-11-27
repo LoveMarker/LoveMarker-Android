@@ -1,15 +1,14 @@
 import com.capstone.lovemarker.convention.setNamespace
 
 plugins {
-    alias(libs.plugins.lovemarker.feature)
+    alias(libs.plugins.lovemarker.data)
 }
 
 android {
-    setNamespace("feature.archive")
+    setNamespace("data.archive")
 }
 
 dependencies {
     implementation(projects.domain.archive)
     implementation(libs.paging)
-    implementation(libs.paging.compose)
 }
