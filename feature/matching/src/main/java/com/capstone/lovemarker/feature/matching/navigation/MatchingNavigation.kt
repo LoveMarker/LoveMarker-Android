@@ -10,7 +10,7 @@ import com.capstone.lovemarker.feature.matching.receiver.ReceiverRoute
 import com.capstone.lovemarker.feature.matching.receiver.ReceiverScreen
 import com.capstone.lovemarker.feature.matching.sender.SenderRoute
 
-fun NavController.navigateToMatching(navOptions: NavOptions) {
+fun NavController.navigateToMatching(navOptions: NavOptions? = null) {
     navigate(MatchingRoute.Home, navOptions)
 }
 

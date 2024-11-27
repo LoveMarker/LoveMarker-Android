@@ -62,14 +62,14 @@ class MainNavigator(
         navController.navigateToLogin(navOptions)
     }
 
-    fun navigateToNickname(navOptions: NavOptions) {
+    fun navigateToNickname(navOptions: NavOptions? = null) {
         navController.navigateToNickname(navOptions)
     }
 
     /**
      * Couple Matching
      * */
-    fun navigateToMatching(navOptions: NavOptions) {
+    fun navigateToMatching(navOptions: NavOptions? = null) {
         navController.navigateToMatching(navOptions)
     }
 

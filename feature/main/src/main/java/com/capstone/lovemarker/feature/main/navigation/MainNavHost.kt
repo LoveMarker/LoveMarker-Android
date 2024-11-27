@@ -88,7 +88,10 @@ fun MainNavHost(
             showErrorSnackbar = showErrorSnackbar
         )
         myPageNavGraph(
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            navigateToMatching = { navigator.navigateToMatching() },
+            navigateToNickname = { navigator.navigateToNickname() },
+            showErrorSnackbar = showErrorSnackbar
         )
         uploadNavGraph(
             navController = navigator.navController,

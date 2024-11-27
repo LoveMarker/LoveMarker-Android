@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +14,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -22,8 +27,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.common.extension.noRippleClickable
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
+import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
@@ -32,37 +42,86 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MyPageRoute(
-    // todo: navigation
+    innerPadding: PaddingValues,
+    navigateToMatching: () -> Unit,
+    navigateToNickname: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
+    viewModel: MyPageViewModel = hiltViewModel()
 ) {
-    MaPageScreen(
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is MyPageSideEffect.NavigateToMatching -> {
+                        navigateToMatching() // todo: 다시 연결되면 UI 갱신
+                    }
+
+                    is MyPageSideEffect.NavigateToNickname -> {
+                        navigateToNickname() // todo: 변경된 닉네임으로 갱신
+                    }
+
+                    is MyPageSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
+                }
+            }
+    }
+
+    MaPageScreen(
+        innerPadding = innerPadding,
+        showDisconnectDialog = state.showDisconnectDialog,
+        onDisconnectButtonClick = {
+            viewModel.updateDisconnectDialogState(true)
+        },
+        onConfirmButtonClick = viewModel::deleteCouple,
+        onDismissButtonClick = {
+            viewModel.updateDisconnectDialogState(false)
+        },
+        onMatchingButtonClick = navigateToMatching,
+        onNicknameButtonClick = navigateToNickname
     )
 }
 
 @Composable
 fun MaPageScreen(
-    // todo: navigation
+    innerPadding: PaddingValues,
+    showDisconnectDialog: Boolean,
+    onDisconnectButtonClick: () -> Unit,
+    onConfirmButtonClick: () -> Unit,
+    onDismissButtonClick: () -> Unit,
+    onMatchingButtonClick: () -> Unit,
+    onNicknameButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Gray50)
+            .padding(innerPadding)
     ) {
         LoveMarkerTopAppBar()
         HorizontalDivider(
             color = Gray200
         )
-        CoupleSection()
+        CoupleSection(
+            onMatchingButtonClick = onMatchingButtonClick
+        )
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Gray50)
                 .padding(top = 8.dp)
         )
-        SettingSection()
+        SettingSection(
+            onNicknameButtonClick = onNicknameButtonClick,
+            onDisconnectButtonClick = onDisconnectButtonClick
+        )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = "탈퇴하기",
@@ -71,10 +130,28 @@ fun MaPageScreen(
             modifier = Modifier.padding(horizontal = 22.dp, vertical = 16.dp)
         )
     }
+
+    if (showDisconnectDialog) {
+        Surface(
+            color = Gray800.copy(alpha = 0.2f),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            DoubleButtonDialog(
+                title = "커플 연결을 해제하시겠어요?",
+                description = "",
+                confirmButtonText = "확인",
+                dismissButtonText = "취소",
+                onConfirmButtonClick = onConfirmButtonClick,
+                onDismissButtonClick = onDismissButtonClick,
+            )
+        }
+    }
 }
 
 @Composable
-fun CoupleSection() {
+fun CoupleSection(
+    onMatchingButtonClick: () -> Unit,
+) {
     Column(
         modifier = Modifier.background(White)
     ) {
@@ -121,7 +198,11 @@ fun CoupleSection() {
                     painter = painterResource(id = R.drawable.ic_mypage_setting_nav),
                     contentDescription = "icon for navigate to nickname",
                     tint = Gray300,
-                    modifier = Modifier.padding(end = 14.dp)
+                    modifier = Modifier
+                        .padding(end = 14.dp)
+                        .noRippleClickable {
+                            onMatchingButtonClick()
+                        }
                 )
             }
 
@@ -135,11 +216,14 @@ fun CoupleSection() {
 }
 
 @Composable
-fun SettingSection() {
+fun SettingSection(
+    onNicknameButtonClick: () -> Unit,
+    onDisconnectButtonClick: () -> Unit,
+) {
     Column {
         SettingItem(
             title = "닉네임 변경",
-            onItemClick = {}
+            onItemClick = onNicknameButtonClick
         )
         SettingItem(
             title = "내가 올린 추억",
@@ -147,7 +231,7 @@ fun SettingSection() {
         )
         SettingItem(
             title = "커플 연결 해제",
-            onItemClick = {}
+            onItemClick = onDisconnectButtonClick
         )
         SettingItem(
             title = "로그아웃",
@@ -196,6 +280,11 @@ fun SettingItem(
 @Composable
 private fun MyPagePreview() {
     LoveMarkerTheme {
-        MyPageRoute()
+        MyPageRoute(
+            innerPadding = PaddingValues(),
+            navigateToMatching = {},
+            navigateToNickname = {},
+            showErrorSnackbar = {}
+        )
     }
 }

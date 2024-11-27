@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.nickname.NicknameRoute
 
-fun NavController.navigateToNickname(navOptions: NavOptions) {
+fun NavController.navigateToNickname(navOptions: NavOptions? = null) {
     navigate(Route.Nickname, navOptions)
 }
 

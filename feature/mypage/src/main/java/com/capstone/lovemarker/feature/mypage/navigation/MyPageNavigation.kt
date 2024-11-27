@@ -14,8 +14,16 @@ fun NavController.navigateToMyPage(navOptions: NavOptions? = null) {
 
 fun NavGraphBuilder.myPageNavGraph(
     innerPadding: PaddingValues,
+    navigateToMatching: () -> Unit,
+    navigateToNickname: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<MainTabRoute.MyPage> {
-        MyPageRoute()
+        MyPageRoute(
+            innerPadding = innerPadding,
+            navigateToMatching = navigateToMatching,
+            navigateToNickname = navigateToNickname,
+            showErrorSnackbar = showErrorSnackbar
+        )
     }
 }
