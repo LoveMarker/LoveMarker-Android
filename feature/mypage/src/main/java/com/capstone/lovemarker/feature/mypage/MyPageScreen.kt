@@ -41,6 +41,8 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red500
 import com.capstone.lovemarker.core.designsystem.theme.White
+import com.capstone.lovemarker.core.navigation.MainTabRoute
+import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.mypage.model.CoupleModel
 import kotlinx.coroutines.flow.collectLatest
 

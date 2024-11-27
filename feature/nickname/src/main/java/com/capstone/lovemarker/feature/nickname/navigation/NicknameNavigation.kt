@@ -4,22 +4,23 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.nickname.NicknameRoute
 
-fun NavController.navigateToNickname(navOptions: NavOptions? = null) {
-    navigate(Route.Nickname, navOptions)
+fun NavController.navigateToNickname(prevRouteName: String, navOptions: NavOptions? = null) {
+    navigate(route = Route.Nickname(prevRouteName), navOptions = navOptions)
 }
 
 fun NavGraphBuilder.nicknameNavGraph(
-    prevRoute: Route,
     navigateUp: () -> Unit, // from MyPage
     navigateToMatching: () -> Unit, // from Login
     showErrorSnackbar: (Throwable?) -> Unit
 ) {
-    composable<Route.Nickname> {
+    composable<Route.Nickname> { backStackEntry ->
+        val route = backStackEntry.toRoute<Route.Nickname>()
         NicknameRoute(
-            prevRoute = prevRoute,
+            prevRouteName = route.prevRouteName,
             navigateUp = navigateUp,
             navigateToMatching = navigateToMatching,
             showErrorSnackbar = showErrorSnackbar

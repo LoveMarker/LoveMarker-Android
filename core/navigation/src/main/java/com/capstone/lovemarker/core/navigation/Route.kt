@@ -1,6 +1,5 @@
 package com.capstone.lovemarker.core.navigation
 
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
@@ -11,7 +10,9 @@ sealed interface Route {
     data object Login : Route
 
     @Serializable
-    data object Nickname : Route
+    data class Nickname(
+        val prevRouteName: String
+    ) : Route
 
     @Serializable
     data object Detail : Route

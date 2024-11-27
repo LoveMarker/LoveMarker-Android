@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.capstone.lovemarker.core.navigation.MainTabRoute
+import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.mypage.MyPageRoute
 
 fun NavController.navigateToMyPage(navOptions: NavOptions? = null) {

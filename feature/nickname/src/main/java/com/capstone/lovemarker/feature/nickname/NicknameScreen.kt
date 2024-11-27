@@ -37,7 +37,7 @@ import timber.log.Timber
 
 @Composable
 fun NicknameRoute(
-    prevRoute: Route,
+    prevRouteName: String,
     navigateUp: () -> Unit,
     navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
@@ -46,6 +46,7 @@ fun NicknameRoute(
     val state by viewModel.nicknameState.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val prevRoute = if (prevRouteName == "mypage") MainTabRoute.MyPage else Route.Login
 
     UpdateStateByPreviousRoute(prevRoute, viewModel)
 
@@ -123,7 +124,10 @@ fun NicknameRoute(
 }
 
 @Composable
-fun UpdateStateByPreviousRoute(prevRoute: Route, viewModel: NicknameViewModel) {
+fun UpdateStateByPreviousRoute(
+    prevRoute: Route,
+    viewModel: NicknameViewModel
+) {
     when (prevRoute) {
         is Route.Login -> {
             viewModel.apply {

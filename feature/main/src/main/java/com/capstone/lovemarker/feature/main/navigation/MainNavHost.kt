@@ -5,10 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
-import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
-import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
@@ -50,13 +48,13 @@ fun MainNavHost(
             },
             navigateToNickname = {
                 navigator.navigateToNickname(
+                    prevRouteName = "login",
                     navOptions = navOptionsPopUpTo<Route.Login>()
                 )
             },
             showErrorSnackbar = showErrorSnackbar
         )
         nicknameNavGraph(
-            prevRoute = Route.Login,
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToMatching = {
                 navigator.navigateToMatching(
@@ -90,7 +88,11 @@ fun MainNavHost(
         myPageNavGraph(
             innerPadding = innerPadding,
             navigateToMatching = { navigator.navigateToMatching() },
-            navigateToNickname = { navigator.navigateToNickname() },
+            navigateToNickname = {
+                navigator.navigateToNickname(
+                     prevRouteName = "mypage"
+                )
+            },
             showErrorSnackbar = showErrorSnackbar
         )
         uploadNavGraph(
@@ -110,7 +112,7 @@ private inline fun <reified T : Route> navOptionsPopUpTo() = navOptions {
     launchSingleTop = true
 }
 
-private inline fun <reified T: Route> navOptionsSaveState() = navOptions {
+private inline fun <reified T : Route> navOptionsSaveState() = navOptions {
     popUpTo<T> {
         inclusive = false
         saveState = true
