@@ -75,17 +75,15 @@ fun SenderRoute(
                         }
                     }
 
+                    is SenderSideEffect.NavigateToMap -> {
+                        navigateToMap()
+                    }
+
                     is SenderSideEffect.ShowErrorSnackbar -> {
                         showErrorSnackbar(sideEffect.throwable)
                     }
                 }
             }
-    }
-
-    LifecycleEventEffect(event = Lifecycle.Event.ON_STOP) {
-        if (state.codeCreated) {
-            navigateToMap()
-        }
     }
     
     SenderScreen(
@@ -99,7 +97,11 @@ fun SenderRoute(
         },
         completeButtonEnabled = state.buttonEnabled,
         onCompleteButtonClick = {
-            viewModel.postInvitationCode(state.anniversary)
+            if (state.codeCreated) {
+                viewModel.triggerNavigationEffect()
+            } else {
+                viewModel.postInvitationCode(state.anniversary)
+            }
         },
         invitationCode = state.invitationCode,
         showDialog = state.showDialog,
