@@ -1,11 +1,11 @@
-package com.capstone.lovemarker.core.datastore.source
+package com.capstone.lovemarker.core.datastore.source.user
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.capstone.lovemarker.core.datastore.model.UserData
+import com.capstone.lovemarker.core.datastore.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,8 +22,8 @@ class UserDataStoreImpl @Inject constructor(
         val NICKNAME = stringPreferencesKey("NICKNAME")
     }
 
-    override val userData: Flow<UserData> = dataStore.data.map { preferences ->
-        UserData(
+    override val user: Flow<User> = dataStore.data.map { preferences ->
+        User(
             accessToken = preferences[PreferencesKey.ACCESS_TOKEN] ?: "",
             refreshToken = preferences[PreferencesKey.REFRESH_TOKEN] ?: "",
             autoLoginConfigured = preferences[PreferencesKey.AUTO_LOGIN] ?: false,

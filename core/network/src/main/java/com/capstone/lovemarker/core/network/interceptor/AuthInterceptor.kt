@@ -1,6 +1,6 @@
 package com.capstone.lovemarker.core.network.interceptor
 
-import com.capstone.lovemarker.core.datastore.source.UserDataStore
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -12,7 +12,7 @@ class AuthInterceptor @Inject constructor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val userData = runBlocking {
-            userDataStore.userData.first()
+            userDataStore.user.first()
         }
 
         val originalRequest = chain.request()

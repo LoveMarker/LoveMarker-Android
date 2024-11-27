@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.capstone.lovemarker.core.datastore.source.UserDataStore
-import com.capstone.lovemarker.core.datastore.source.UserDataStoreImpl
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStoreImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

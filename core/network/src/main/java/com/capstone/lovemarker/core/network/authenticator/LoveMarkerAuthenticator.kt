@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.core.network.authenticator
 
 import android.content.Context
-import com.capstone.lovemarker.core.datastore.source.UserDataStore
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.core.network.service.ReissueTokenService
 import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,7 +24,7 @@ class LoveMarkerAuthenticator @Inject constructor(
             val newAccessToken = runCatching {
                 runBlocking {
                     reissueTokenService.getNewAccessToken(
-                        refreshToken = userDataStore.userData.first().refreshToken
+                        refreshToken = userDataStore.user.first().refreshToken
                     )
                 }.data.accessToken
             }.onSuccess { token ->

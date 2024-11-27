@@ -1,6 +1,6 @@
 package com.capstone.lovemarker.data.auth.repository
 
-import com.capstone.lovemarker.core.datastore.source.UserDataStore
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.data.auth.dto.request.LoginRequest
 import com.capstone.lovemarker.domain.auth.entity.LoginEntity
 import com.capstone.lovemarker.domain.auth.repository.AuthRepository
@@ -35,5 +35,5 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isAutoLoginEnabled() =
-        userDataStore.userData.first().autoLoginConfigured
+        userDataStore.user.first().autoLoginConfigured
 }
