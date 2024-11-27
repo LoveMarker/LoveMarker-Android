@@ -1,6 +1,6 @@
 package com.capstone.lovemarker.data.auth.repository
 
-import com.capstone.lovemarker.core.datastore.source.UserPreferencesDataSource
+import com.capstone.lovemarker.core.datastore.source.UserDataStore
 import com.capstone.lovemarker.data.auth.dto.request.LoginRequest
 import com.capstone.lovemarker.domain.auth.entity.LoginEntity
 import com.capstone.lovemarker.domain.auth.repository.AuthRepository
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
-    private val userPreferencesDataSource: UserPreferencesDataSource
+    private val userDataStore: UserDataStore
 ) : AuthRepository {
     override suspend fun postLogin(
         socialToken: String,
@@ -24,16 +24,16 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveTokens(token: Token) {
-        userPreferencesDataSource.apply {
+        userDataStore.apply {
             updateAccessToken(token.accessToken)
             updateRefreshToken(token.refreshToken)
         }
     }
 
     override suspend fun updateAutoLogin(configured: Boolean) {
-        userPreferencesDataSource.updateAutoLogin(configured = configured)
+        userDataStore.updateAutoLogin(configured = configured)
     }
 
     override suspend fun isAutoLoginEnabled() =
-        userPreferencesDataSource.userData.first().autoLoginConfigured
+        userDataStore.userData.first().autoLoginConfigured
 }

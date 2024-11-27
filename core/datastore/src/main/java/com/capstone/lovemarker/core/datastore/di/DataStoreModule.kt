@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.capstone.lovemarker.core.datastore.source.UserPreferencesDataSource
-import com.capstone.lovemarker.core.datastore.source.UserPreferencesDataSourceImpl
+import com.capstone.lovemarker.core.datastore.source.UserDataStore
+import com.capstone.lovemarker.core.datastore.source.UserDataStoreImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -32,8 +32,8 @@ object DataStoreModule {
     interface Binder {
         @Singleton
         @Binds
-        fun bindUserPreferencesDataSource(
-            userPreferencesDataSource: UserPreferencesDataSourceImpl
-        ): UserPreferencesDataSource
+        fun bindUserDataStore(
+            userDataStoreImpl: UserDataStoreImpl
+        ): UserDataStore
     }
 }

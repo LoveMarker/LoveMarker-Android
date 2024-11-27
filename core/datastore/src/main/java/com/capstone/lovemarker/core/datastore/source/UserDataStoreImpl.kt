@@ -12,9 +12,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class UserPreferencesDataSourceImpl @Inject constructor(
+class UserDataStoreImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-) : UserPreferencesDataSource {
+) : UserDataStore {
     object PreferencesKey {
         val ACCESS_TOKEN = stringPreferencesKey("ACCESS_TOKEN")
         val REFRESH_TOKEN = stringPreferencesKey("REFRESH_TOKEN")

@@ -1,7 +1,7 @@
 package com.capstone.lovemarker.core.network.authenticator
 
 import android.content.Context
-import com.capstone.lovemarker.core.datastore.source.UserPreferencesDataSource
+import com.capstone.lovemarker.core.datastore.source.UserDataStore
 import com.capstone.lovemarker.core.network.service.ReissueTokenService
 import com.jakewharton.processphoenix.ProcessPhoenix
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,7 +15,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class LoveMarkerAuthenticator @Inject constructor(
-    private val userPreferencesDataSource: UserPreferencesDataSource,
+    private val userDataStore: UserDataStore,
     private val reissueTokenService: ReissueTokenService,
     @ApplicationContext private val context: Context,
 ) : Authenticator {
@@ -24,17 +24,17 @@ class LoveMarkerAuthenticator @Inject constructor(
             val newAccessToken = runCatching {
                 runBlocking {
                     reissueTokenService.getNewAccessToken(
-                        refreshToken = userPreferencesDataSource.userData.first().refreshToken
+                        refreshToken = userDataStore.userData.first().refreshToken
                     )
                 }.data.accessToken
             }.onSuccess { token ->
                 runBlocking {
-                    userPreferencesDataSource.updateAccessToken(token)
+                    userDataStore.updateAccessToken(token)
                 }
             }.onFailure { throwable ->
                 Timber.e("FAIL REISSUE TOKEN: ${throwable.message}")
                 runBlocking {
-                    userPreferencesDataSource.clear()
+                    userDataStore.clear()
                 }
                 ProcessPhoenix.triggerRebirth(context)
             }.getOrThrow()
