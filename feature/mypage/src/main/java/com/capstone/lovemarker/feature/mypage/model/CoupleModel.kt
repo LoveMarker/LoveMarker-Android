@@ -1,6 +1,6 @@
 package com.capstone.lovemarker.feature.mypage.model
 
-import com.capstone.lovemarker.domain.mypage.entity.CoupleEntity
+import com.capstone.lovemarker.domain.mypage.entity.MyPageEntity
 
 data class CoupleModel(
     val anniversaryDays: Int = 0,
@@ -8,7 +8,7 @@ data class CoupleModel(
     val partnerNickname: String = "",
 )
 
-fun CoupleEntity.toModel() = CoupleModel(
+fun MyPageEntity.toCoupleModel() = CoupleModel(
     anniversaryDays = anniversaryDays,
     connected = connected,
     partnerNickname = partnerNickname

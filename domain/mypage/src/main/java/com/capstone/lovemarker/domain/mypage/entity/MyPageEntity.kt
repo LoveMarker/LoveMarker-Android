@@ -1,7 +1,8 @@
 package com.capstone.lovemarker.domain.mypage.entity
 
-data class CoupleEntity(
+data class MyPageEntity(
+    val nickname: String,
     val anniversaryDays: Int,
-    val partnerNickname: String,
     val connected: Boolean,
+    val partnerNickname: String,
 )

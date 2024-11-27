@@ -3,10 +3,9 @@ package com.capstone.lovemarker.feature.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
-import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
 import com.capstone.lovemarker.feature.mypage.model.CoupleModel
-import com.capstone.lovemarker.feature.mypage.model.toModel
+import com.capstone.lovemarker.feature.mypage.model.toCoupleModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -23,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val myPageRepository: MyPageRepository,
-    private val userDataStore: UserDataStore,
     private val coupleDataStore: CoupleDataStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
@@ -33,26 +30,24 @@ class MyPageViewModel @Inject constructor(
     val sideEffect: SharedFlow<MyPageSideEffect> = _sideEffect.asSharedFlow()
 
     init {
-        initUserNickname()
-        getCoupleInfo()
+        getMyPageInfo()
     }
 
-    private fun initUserNickname() {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(nickname = userDataStore.userData.first().nickname)
-            }
-        }
-    }
-
-    private fun getCoupleInfo() {
+    private fun getMyPageInfo() {
         viewModelScope.launch {
             myPageRepository.getCoupleInfo()
-                .onSuccess { couple ->
-                    updateCoupleModel(couple.toModel())
+                .onSuccess { response ->
+                    updateNickname(response.nickname)
+                    updateCoupleModel(response.toCoupleModel())
                 }.onFailure {
                     _sideEffect.emit(MyPageSideEffect.ShowErrorSnackbar(it))
                 }
+        }
+    }
+
+    private fun updateNickname(nickname: String) {
+        _state.update {
+            it.copy(nickname = nickname)
         }
     }
 

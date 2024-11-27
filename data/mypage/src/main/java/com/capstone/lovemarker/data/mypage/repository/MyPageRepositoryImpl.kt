@@ -1,14 +1,14 @@
 package com.capstone.lovemarker.data.mypage.repository
 
 import com.capstone.lovemarker.data.mypage.source.MyPageDataSource
-import com.capstone.lovemarker.domain.mypage.entity.CoupleEntity
+import com.capstone.lovemarker.domain.mypage.entity.MyPageEntity
 import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
 import javax.inject.Inject
 
 class MyPageRepositoryImpl @Inject constructor(
     private val myPageDataSource: MyPageDataSource,
 ) : MyPageRepository {
-    override suspend fun getCoupleInfo(): Result<CoupleEntity> = runCatching {
+    override suspend fun getCoupleInfo(): Result<MyPageEntity> = runCatching {
         myPageDataSource.getCoupleInfo().data.toDomain()
     }
 
