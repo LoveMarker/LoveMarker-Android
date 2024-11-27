@@ -85,7 +85,10 @@ fun MyPageRoute(
         onDisconnectButtonClick = {
             viewModel.updateDisconnectDialogState(true)
         },
-        onConfirmButtonClick = viewModel::deleteCouple,
+        onConfirmButtonClick = {
+            viewModel.updateDisconnectDialogState(false)
+            viewModel.deleteCouple()
+        },
         onDismissButtonClick = {
             viewModel.updateDisconnectDialogState(false)
         },
