@@ -146,10 +146,10 @@ fun MaPageScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             DoubleButtonDialog(
-                title = "커플 연결을 해제하시겠어요?",
+                title = stringResource(R.string.mypage_disconnect_dialog_title),
                 description = "",
-                confirmButtonText = "확인",
-                dismissButtonText = "취소",
+                confirmButtonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
+                dismissButtonText = stringResource(R.string.mypage_disconnect_dialog_dimiss_text),
                 onConfirmButtonClick = onConfirmButtonClick,
                 onDismissButtonClick = onDismissButtonClick,
             )
