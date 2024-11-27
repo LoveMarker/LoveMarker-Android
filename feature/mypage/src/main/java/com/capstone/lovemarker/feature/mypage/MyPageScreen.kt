@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,9 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray50
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
+import com.capstone.lovemarker.core.designsystem.theme.Red500
 import com.capstone.lovemarker.core.designsystem.theme.White
+import com.capstone.lovemarker.feature.mypage.model.CoupleModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -76,6 +79,8 @@ fun MyPageRoute(
 
     MaPageScreen(
         innerPadding = innerPadding,
+        nickname = state.nickname,
+        coupleModel = state.coupleModel,
         showDisconnectDialog = state.showDisconnectDialog,
         onDisconnectButtonClick = {
             viewModel.updateDisconnectDialogState(true)
@@ -92,6 +97,8 @@ fun MyPageRoute(
 @Composable
 fun MaPageScreen(
     innerPadding: PaddingValues,
+    nickname: String,
+    coupleModel: CoupleModel,
     showDisconnectDialog: Boolean,
     onDisconnectButtonClick: () -> Unit,
     onConfirmButtonClick: () -> Unit,
@@ -110,6 +117,8 @@ fun MaPageScreen(
             color = Gray200
         )
         CoupleSection(
+            nickname = nickname,
+            coupleModel = coupleModel,
             onMatchingButtonClick = onMatchingButtonClick
         )
         Spacer(
@@ -150,6 +159,8 @@ fun MaPageScreen(
 
 @Composable
 fun CoupleSection(
+    nickname: String,
+    coupleModel: CoupleModel,
     onMatchingButtonClick: () -> Unit,
 ) {
     Column(
@@ -157,7 +168,7 @@ fun CoupleSection(
     ) {
         Spacer(modifier = Modifier.padding(top = 30.dp))
         Text(
-            text = "사랑한지 ___일째",
+            text = "사랑한지 ${coupleModel.anniversaryDays}일째",
             style = LoveMarkerTheme.typography.body16M,
             textAlign = TextAlign.Center,
             color = Gray800,
@@ -168,7 +179,7 @@ fun CoupleSection(
             modifier = Modifier.padding(top = 26.dp)
         ) {
             Text(
-                text = "내 이름", // todo: 닉네임 길이 제한 필요 (한 줄 넘지 않게)
+                text = nickname, // todo: 닉네임 길이 제한 필요 (한 줄 넘지 않게)
                 style = LoveMarkerTheme.typography.headline18M,
                 textAlign = TextAlign.End,
                 color = Gray800,
@@ -179,31 +190,35 @@ fun CoupleSection(
             Image(
                 painter = painterResource(id = R.drawable.img_mypage_heart),
                 contentDescription = "heart image",
-                colorFilter = ColorFilter.tint(Gray300) // todo: Red500
+                colorFilter = if (coupleModel.connected) ColorFilter.tint(Red500)
+                else ColorFilter.tint(Gray300)
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "상대방 이름",
+                    text = if (coupleModel.connected) coupleModel.partnerNickname
+                    else stringResource(R.string.mypage_anonymous_partner_nickname),
                     style = LoveMarkerTheme.typography.headline18M,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 30.dp),
-                    color = Gray400 // todo: Gray700
+                    color = if (coupleModel.connected) Gray800 else Gray400
                 )
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_mypage_setting_nav),
-                    contentDescription = "icon for navigate to nickname",
-                    tint = Gray300,
-                    modifier = Modifier
-                        .padding(end = 14.dp)
-                        .noRippleClickable {
-                            onMatchingButtonClick()
-                        }
-                )
+                if (!coupleModel.connected) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_mypage_setting_nav),
+                        contentDescription = "icon for navigate to nickname",
+                        tint = Gray300,
+                        modifier = Modifier
+                            .padding(end = 14.dp)
+                            .noRippleClickable {
+                                onMatchingButtonClick()
+                            }
+                    )
+                }
             }
 
         }

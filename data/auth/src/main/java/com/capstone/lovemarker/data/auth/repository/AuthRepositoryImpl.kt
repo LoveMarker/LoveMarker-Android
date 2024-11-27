@@ -35,5 +35,5 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isAutoLoginEnabled() =
-        userDataStore.user.first().autoLoginConfigured
+        userDataStore.userData.first().autoLoginConfigured
 }

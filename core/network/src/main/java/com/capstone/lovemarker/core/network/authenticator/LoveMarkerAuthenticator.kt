@@ -24,7 +24,7 @@ class LoveMarkerAuthenticator @Inject constructor(
             val newAccessToken = runCatching {
                 runBlocking {
                     reissueTokenService.getNewAccessToken(
-                        refreshToken = userDataStore.user.first().refreshToken
+                        refreshToken = userDataStore.userData.first().refreshToken
                     )
                 }.data.accessToken
             }.onSuccess { token ->

@@ -2,8 +2,11 @@ package com.capstone.lovemarker.feature.mypage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
 import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
+import com.capstone.lovemarker.feature.mypage.model.CoupleModel
+import com.capstone.lovemarker.feature.mypage.model.toModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val myPageRepository: MyPageRepository,
-    private val userDataStore: UserDataStore
+    private val userDataStore: UserDataStore,
+    private val coupleDataStore: CoupleDataStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
     val state: StateFlow<MyPageState> = _state.asStateFlow()
@@ -29,9 +33,34 @@ class MyPageViewModel @Inject constructor(
     val sideEffect: SharedFlow<MyPageSideEffect> = _sideEffect.asSharedFlow()
 
     init {
+        initUserNickname()
+        getCoupleInfo()
+    }
+
+    private fun initUserNickname() {
         viewModelScope.launch {
-            updateNickname(userDataStore.user.first().nickname)
-            // todo: 데이터 스토어에서 가져오기 (상대방 닉네임, 커플 연결 정보)
+            _state.update {
+                it.copy(nickname = userDataStore.userData.first().nickname)
+            }
+        }
+    }
+
+    private fun getCoupleInfo() {
+        viewModelScope.launch {
+            myPageRepository.getCoupleInfo()
+                .onSuccess { couple ->
+                    updateCoupleModel(couple.toModel())
+                }.onFailure {
+                    _sideEffect.emit(MyPageSideEffect.ShowErrorSnackbar(it))
+                }
+        }
+    }
+
+    private fun updateCoupleModel(coupleModel: CoupleModel) {
+        _state.update {
+            it.copy(
+                coupleModel = coupleModel
+            )
         }
     }
 
@@ -41,24 +70,18 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    fun updateNickname(nickname: String) {
-        _state.update {
-            it.copy(nickname = nickname)
-        }
-    }
-
-    fun getCoupleInfo() {
-        viewModelScope.launch {
-            // todo: 데이터 스토어에 상대방 닉네임, 커플 연결 상태 저장
-        }
-    }
-
     fun deleteCouple() {
         viewModelScope.launch {
             myPageRepository.deleteCouple()
                 .onSuccess {
-                    // todo: 커플 연결 상태 업데이트 (데이터 스토어)
-                    Timber.d("success delete")
+                    updateCoupleModel(
+                        state.value.coupleModel.copy(
+                            connected = false
+                        )
+                    )
+
+                    // todo: 다른 화면에서도 커플 연결 상태를 조회하기 위해서 저장
+                    coupleDataStore.updateConnectedState(connected = false)
                 }
                 .onFailure { throwable ->
                     Timber.e(throwable.message)

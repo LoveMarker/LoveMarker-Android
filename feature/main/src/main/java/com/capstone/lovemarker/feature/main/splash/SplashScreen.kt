@@ -13,19 +13,21 @@ fun SplashScreen(
     navigateToLogin: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
+    navigateToLogin()
 
-    LaunchedEffect(Unit) {
-        viewModel.checkAutoLogin()
-    }
-
-    LaunchedEffect(viewModel.splashSideEffect, lifecycleOwner) {
-        viewModel.splashSideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
-            .collectLatest { sideEffect ->
-                when (sideEffect) {
-                    is SplashSideEffect.NavigateToMap -> navigateToMap()
-                    is SplashSideEffect.NavigateToLogin -> navigateToLogin()
-                }
-            }
-    }
+//    val lifecycleOwner = LocalLifecycleOwner.current
+//
+//    LaunchedEffect(Unit) {
+//        viewModel.checkAutoLogin()
+//    }
+//
+//    LaunchedEffect(viewModel.splashSideEffect, lifecycleOwner) {
+//        viewModel.splashSideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
+//            .collectLatest { sideEffect ->
+//                when (sideEffect) {
+//                    is SplashSideEffect.NavigateToMap -> navigateToMap()
+//                    is SplashSideEffect.NavigateToLogin -> navigateToLogin()
+//                }
+//            }
+//    }
 }

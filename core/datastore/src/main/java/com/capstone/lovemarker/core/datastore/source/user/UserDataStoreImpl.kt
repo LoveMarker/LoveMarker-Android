@@ -5,7 +5,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.capstone.lovemarker.core.datastore.model.User
+import com.capstone.lovemarker.core.datastore.di.qualifier.User
+import com.capstone.lovemarker.core.datastore.model.UserData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class UserDataStoreImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
+    @User private val dataStore: DataStore<Preferences>,
 ) : UserDataStore {
     object PreferencesKey {
         val ACCESS_TOKEN = stringPreferencesKey("ACCESS_TOKEN")
@@ -22,8 +23,8 @@ class UserDataStoreImpl @Inject constructor(
         val NICKNAME = stringPreferencesKey("NICKNAME")
     }
 
-    override val user: Flow<User> = dataStore.data.map { preferences ->
-        User(
+    override val userData: Flow<UserData> = dataStore.data.map { preferences ->
+        UserData(
             accessToken = preferences[PreferencesKey.ACCESS_TOKEN] ?: "",
             refreshToken = preferences[PreferencesKey.REFRESH_TOKEN] ?: "",
             autoLoginConfigured = preferences[PreferencesKey.AUTO_LOGIN] ?: false,

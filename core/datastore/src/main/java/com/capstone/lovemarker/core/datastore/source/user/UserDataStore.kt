@@ -1,10 +1,10 @@
 package com.capstone.lovemarker.core.datastore.source.user
 
-import com.capstone.lovemarker.core.datastore.model.User
+import com.capstone.lovemarker.core.datastore.model.UserData
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataStore {
-    val user: Flow<User>
+    val userData: Flow<UserData>
     suspend fun updateAccessToken(token: String)
     suspend fun updateRefreshToken(token: String)
     suspend fun updateAutoLogin(configured: Boolean)
