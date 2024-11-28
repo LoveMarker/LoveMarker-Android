@@ -2,12 +2,10 @@ package com.capstone.lovemarker.data.nickname.service
 
 import com.capstone.lovemarker.core.network.model.BaseResponse
 import com.capstone.lovemarker.data.nickname.dto.NicknameRequest
-import com.capstone.lovemarker.core.network.model.BaseResponseNothing
 import com.capstone.lovemarker.data.nickname.dto.NicknameResponse
 import retrofit2.http.Body
 import retrofit2.http.PATCH
 
-// todo: 변경된 닉네임 응답값으로 받아오기
 interface NicknameService {
     @PATCH("/api/user/nickname")
     suspend fun patchNickname(

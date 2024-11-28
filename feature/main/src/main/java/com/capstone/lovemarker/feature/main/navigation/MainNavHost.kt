@@ -59,7 +59,6 @@ fun MainNavHost(
         nicknameNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToMyPage = { nickname ->
-                // todo: 마이페이지 -> 닉네임 -> 마이페이지 (닉네임 화면은 스택에서 삭제)
                 navigator.navigateToMyPage(
                     nickname = nickname,
                     navOptions = navOptionsPopUpTo<Route.Nickname>()
