@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -70,7 +69,7 @@ class SenderViewModel @Inject constructor(
         }
     }
 
-    fun triggerNavigationEffect() {
+    fun triggerMapNavigationEffect() {
         viewModelScope.launch {
             _sideEffect.emit(SenderSideEffect.NavigateToMap)
         }

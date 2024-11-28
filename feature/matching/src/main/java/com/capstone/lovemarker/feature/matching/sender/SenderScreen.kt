@@ -90,7 +90,7 @@ fun SenderRoute(
         completeButtonEnabled = state.buttonEnabled,
         onCompleteButtonClick = {
             if (state.codeCreated) {
-                viewModel.triggerNavigationEffect()
+                viewModel.triggerMapNavigationEffect()
             } else {
                 viewModel.postInvitationCode(state.anniversary)
             }
