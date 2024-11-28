@@ -6,7 +6,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 @Composable
 fun SplashScreen(
@@ -16,15 +15,15 @@ fun SplashScreen(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
+    LaunchedEffect(Unit) {
+        viewModel.checkAutoLogin()
+    }
+
     LaunchedEffect(viewModel.splashSideEffect, lifecycleOwner) {
-        viewModel.splashSideEffect
-            .flowWithLifecycle(lifecycleOwner.lifecycle)
+        viewModel.splashSideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
-                    is SplashSideEffect.NavigateToMap -> {
-                        // todo: splash -> map 네비게이션 함수가 반복적으로 호출되는 이슈 해결하기
-                        navigateToMap()
-                    }
+                    is SplashSideEffect.NavigateToMap -> navigateToMap()
                     is SplashSideEffect.NavigateToLogin -> navigateToLogin()
                 }
             }

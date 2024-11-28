@@ -81,7 +81,6 @@ fun MainNavHost(
             navigateToPhoto = {
                 navigator.navigateToPhoto()
             },
-            showErrorSnackbar = showErrorSnackbar
         )
         archiveNavGraph(
             innerPadding = innerPadding
