@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,22 +18,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.capstone.lovemarker.core.common.extension.noRippleClickable
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Black
-import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.Gray600
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 
 @Composable
-fun SingleButtonDialog(
-    title: String,
-    description: String,
-    buttonText: String,
+fun CoupleMatchingDialog(
+    title: String = "커플 매칭이 필요해요",
+    description: String = "LoveMarker 기능은\n커플 연결 후 사용할 수 있어요",
+    buttonText: String = "매칭하러 가기",
     onConfirmButtonClick: () -> Unit,
-    onDismiss: () -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -44,9 +40,6 @@ fun SingleButtonDialog(
                 .weight(1f)
                 .background(Black.copy(alpha = 0.5f))
                 .padding(horizontal = 24.dp)
-                .noRippleClickable {
-                    onDismiss()
-                }
         ) {
             Card(
                 shape = RoundedCornerShape(8.dp),
@@ -96,7 +89,7 @@ fun SingleButtonDialog(
 @Composable
 private fun SingleButtonDialogPreview() {
     LoveMarkerTheme {
-        SingleButtonDialog(
+        CoupleMatchingDialog(
             title = "커플 연결이 필요해요",
             description = "LoveMarker 기능은\n커플 연결 후 사용할 수 있어요",
             buttonText = "매칭하러 가기",

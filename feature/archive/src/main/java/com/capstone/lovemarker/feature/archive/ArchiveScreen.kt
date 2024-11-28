@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,9 +39,8 @@ import androidx.paging.ItemSnapshotList
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
-import com.capstone.lovemarker.core.designsystem.component.dialog.SingleButtonDialog
+import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
-import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
@@ -97,17 +94,12 @@ fun ArchiveRoute(
     }
 
     if (state.showMatchingDialog) {
-        SingleButtonDialog(
-            title = "커플 연결이 필요해요",
-            description = "LoveMarker 기능은 커플 연결 후 사용할 수 있어요",
-            buttonText = "매칭하러 가기",
-            onConfirmButtonClick = {
-                viewModel.apply {
-                    updateMatchingDialogState(false)
-                    triggerMatchingNavigationEffect()
-                }
+        CoupleMatchingDialog {
+            viewModel.apply {
+                updateMatchingDialogState(false)
+                triggerMatchingNavigationEffect()
             }
-        )
+        }
     }
 }
 
