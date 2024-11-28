@@ -27,12 +27,6 @@ class SenderViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<SenderSideEffect>()
     val sideEffect: SharedFlow<SenderSideEffect> = _sideEffect.asSharedFlow()
 
-    init {
-        viewModelScope.launch {
-            myPageRepository.deleteCouple()
-        }
-    }
-
     fun updateAnniversary(anniversary: String) {
         _state.update {
             it.copy(anniversary = anniversary)
@@ -65,12 +59,12 @@ class SenderViewModel @Inject constructor(
 
     fun postInvitationCode(anniversary: String) {
         viewModelScope.launch {
+            myPageRepository.deleteCouple()
+
             matchingRepository.postInvitationCode(anniversary)
                 .onSuccess { response ->
-                    Timber.d(response.invitationCode)
                     _sideEffect.emit(SenderSideEffect.ShowShareDialog(response.invitationCode))
                 }.onFailure {
-                    Timber.e(it.message)
                     _sideEffect.emit(SenderSideEffect.ShowErrorSnackbar(it))
                 }
         }

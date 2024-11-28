@@ -75,7 +75,6 @@ class MyPageViewModel @Inject constructor(
                         )
                     )
 
-                    // todo: 다른 화면에서도 커플 연결 상태를 조회하기 위해서 저장
                     coupleDataStore.updateConnectedState(connected = false)
                 }
                 .onFailure { throwable ->
@@ -85,4 +84,3 @@ class MyPageViewModel @Inject constructor(
         }
     }
 }
-
