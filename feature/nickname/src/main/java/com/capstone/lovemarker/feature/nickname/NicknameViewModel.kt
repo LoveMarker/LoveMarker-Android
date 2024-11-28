@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -27,6 +28,25 @@ class NicknameViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<NicknameSideEffect>()
     val sideEffect: SharedFlow<NicknameSideEffect> = _sideEffect.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            val nickname = userDataStore.userData.first().nickname
+            if (nickname.isEmpty()) {
+                updatePlaceholder(DEFAULT_PLACE_HOLDER)
+            } else {
+                updatePlaceholder(nickname)
+            }
+        }
+    }
+
+    private fun updatePlaceholder(placeholder: String) {
+        _state.update {
+            it.copy(
+                placeholder = placeholder
+            )
+        }
+    }
 
     fun updateNickname(nickname: String) {
         _state.update {
@@ -70,12 +90,10 @@ class NicknameViewModel @Inject constructor(
         viewModelScope.launch {
             nicknameRepository.patchNickname(nickname)
                 .onSuccess { response ->
-                    // todo: 서버에서 응답으로 가져오기
                     updateInputUiState(
                         InputUiState.Success(response.nickname)
                     )
 
-                    // todo: 서버에서 항상 가져오니까 데이터 스토어에 저장할 필요가 있나 싶다..
                     userDataStore.updateNickname(nickname)
                 }.onFailure { throwable ->
                     val errorBody = (throwable as? HttpException)?.response()?.errorBody()?.string()
@@ -126,5 +144,6 @@ class NicknameViewModel @Inject constructor(
     companion object {
         private const val REGEX_PATTERN = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$"
         private const val NICKNAME_DUPLICATED_ERR_MSG = "중복"
+        private const val DEFAULT_PLACE_HOLDER = "닉네임"
     }
 }

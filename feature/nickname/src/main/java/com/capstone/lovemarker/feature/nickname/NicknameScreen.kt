@@ -118,6 +118,7 @@ fun NicknameRoute(
             viewModel.updateNickname(nickname = it)
         },
         guideTitle = state.guideTitle,
+        placeholder = state.placeholder,
         isError = state.uiState is InputUiState.Error,
         supportingText = state.supportingText,
         completeButtonText = state.completeButtonText,
@@ -166,6 +167,7 @@ fun NicknameScreen(
     guideTitle: String,
     nickname: String,
     onNicknameChanged: (String) -> Unit,
+    placeholder: String,
     isError: Boolean,
     supportingText: String,
     onClearIconClick: () -> Unit,
@@ -222,7 +224,7 @@ fun NicknameScreen(
                 LoveMarkerTextField(
                     value = nickname,
                     onValueChanged = onNicknameChanged,
-                    placeholder = stringResource(id = R.string.nickname_placeholder),
+                    placeholder = placeholder,
                     modifier = Modifier.padding(top = 38.dp),
                     isError = isError,
                     supportingText = supportingText,
@@ -258,6 +260,7 @@ private fun NicknamePreview() {
         NicknameScreen(
             nickname = "",
             onNicknameChanged = {},
+            placeholder = "닉네임",
             isError = false,
             guideTitle = stringResource(id = R.string.nickname_guide_title_from_login),
             supportingText = stringResource(id = R.string.nickname_duplicate_error_msg),
