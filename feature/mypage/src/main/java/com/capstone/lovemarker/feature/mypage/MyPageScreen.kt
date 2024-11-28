@@ -30,6 +30,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.capstone.lovemarker.core.common.extension.noRippleClickable
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
 import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
+import com.capstone.lovemarker.core.designsystem.component.dialog.SingleButtonDialog
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
@@ -140,14 +141,23 @@ fun MaPageScreen(
     }
 
     if (showDisconnectDialog) {
-        DoubleButtonDialog(
-            title = stringResource(R.string.mypage_disconnect_dialog_title),
-            description = "",
-            confirmButtonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
-            dismissButtonText = stringResource(R.string.mypage_disconnect_dialog_dimiss_text),
-            onConfirmButtonClick = onConfirmButtonClick,
-            onDismissButtonClick = onDismissButtonClick,
-        )
+        if (coupleModel.connected) {
+            DoubleButtonDialog(
+                title = stringResource(R.string.mypage_disconnect_dialog_title),
+                description = "",
+                confirmButtonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
+                dismissButtonText = stringResource(R.string.mypage_disconnect_dialog_dimiss_text),
+                onConfirmButtonClick = onConfirmButtonClick,
+                onDismissButtonClick = onDismissButtonClick,
+            )
+        } else {
+            SingleButtonDialog(
+                title = stringResource(R.string.mypage_already_disconnect_dialog_title),
+                description = "",
+                buttonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
+                onConfirmButtonClick = onDismissButtonClick
+            )
+        }
     }
 }
 
