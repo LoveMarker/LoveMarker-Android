@@ -143,19 +143,14 @@ fun MaPageScreen(
     }
 
     if (showDisconnectDialog) {
-        Surface(
-            color = Gray500.copy(alpha = 0.25f),
-            modifier = Modifier.fillMaxSize()
-        ) {
-            DoubleButtonDialog(
-                title = stringResource(R.string.mypage_disconnect_dialog_title),
-                description = "",
-                confirmButtonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
-                dismissButtonText = stringResource(R.string.mypage_disconnect_dialog_dimiss_text),
-                onConfirmButtonClick = onConfirmButtonClick,
-                onDismissButtonClick = onDismissButtonClick,
-            )
-        }
+        DoubleButtonDialog(
+            title = stringResource(R.string.mypage_disconnect_dialog_title),
+            description = "",
+            confirmButtonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
+            dismissButtonText = stringResource(R.string.mypage_disconnect_dialog_dimiss_text),
+            onConfirmButtonClick = onConfirmButtonClick,
+            onDismissButtonClick = onDismissButtonClick,
+        )
     }
 }
 
