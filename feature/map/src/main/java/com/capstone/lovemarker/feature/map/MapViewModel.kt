@@ -3,13 +3,10 @@ package com.capstone.lovemarker.feature.map
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReceiverViewModel @Inject constructor(
     private val matchingRepository: MatchingRepository,
-    private val myPageRepository: MyPageRepository
+    private val myPageRepository: MyPageRepository,
     private val coupleDataStore: CoupleDataStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(ReceiverState())

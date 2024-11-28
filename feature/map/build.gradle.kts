@@ -9,11 +9,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.compose.maps)
-    implementation(libs.google.maps)
-    implementation(libs.google.places)
-    implementation(libs.google.location)
     implementation(projects.core.datastore)
-
-    //implementation(libs.bundles.google.map)
+    implementation(libs.bundles.google.map)
 }
