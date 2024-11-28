@@ -149,7 +149,7 @@ class ContentUriToRequestBody(
     fun toFormData() = MultipartBody.Part.createFormData(KEY_NAME, fileName, this)
 
     companion object {
-        private const val KEY_NAME = "image"
+        private const val KEY_NAME = "images"
         private const val KiB = 1024
         private const val MAX_MB_SIZE = 5
     }
