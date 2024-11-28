@@ -38,25 +38,31 @@ import timber.log.Timber
 @Composable
 fun NicknameRoute(
     prevRouteName: String,
-    navigateUp: () -> Unit,
     navigateToMatching: () -> Unit,
+    navigateToMyPage: (String) -> Unit,
+    navigateUp: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: NicknameViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.nicknameState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val prevRoute = if (prevRouteName == "mypage") MainTabRoute.MyPage else Route.Login
+    val prevRoute: Route = if (prevRouteName == "mypage") MainTabRoute.MyPage() else Route.Login
 
     UpdateStateByPreviousRoute(prevRoute, viewModel)
 
-    LaunchedEffect(viewModel.nicknameSideEffect, lifecycleOwner) {
-        viewModel.nicknameSideEffect
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
-                    is NicknameSideEffect.NavigateToMyPage -> navigateUp()
+                    is NicknameSideEffect.NavigateToMyPage -> {
+                        Timber.d("nickname: ${sideEffect.nickname}")
+                        navigateToMyPage(sideEffect.nickname)
+                    }
+
                     is NicknameSideEffect.NavigateToMatching -> navigateToMatching()
+
                     is NicknameSideEffect.ShowErrorSnackbar -> {
                         showErrorSnackbar(sideEffect.throwable)
                     }
@@ -88,13 +94,17 @@ fun NicknameRoute(
         }
 
         is InputUiState.Success -> {
+            keyboardController?.hide()
+
             when (prevRoute) {
                 is Route.Login -> {
-                    keyboardController?.hide()
-                    navigateToMatching()
+                    viewModel.triggerMatchingNavigationEffect()
                 }
 
-                is MainTabRoute.MyPage -> navigateUp()
+                is MainTabRoute.MyPage -> {
+                    viewModel.triggerMyPageNavigationEffect(uiState.nickname)
+                }
+
                 else -> {
                     Timber.e("invalid navigation path on the nickname screen.")
                 }

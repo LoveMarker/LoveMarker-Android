@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,14 +34,11 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
 import com.capstone.lovemarker.core.designsystem.theme.Gray50
-import com.capstone.lovemarker.core.designsystem.theme.Gray500
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red500
 import com.capstone.lovemarker.core.designsystem.theme.White
-import com.capstone.lovemarker.core.navigation.MainTabRoute
-import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.mypage.model.CoupleModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -52,6 +48,7 @@ fun MyPageRoute(
     navigateToMatching: () -> Unit,
     navigateToNickname: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
+    modifiedNickname: String? = null,
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -78,7 +75,7 @@ fun MyPageRoute(
 
     MaPageScreen(
         innerPadding = innerPadding,
-        nickname = state.nickname,
+        nickname = modifiedNickname ?: state.nickname,
         coupleModel = state.coupleModel,
         showDisconnectDialog = state.showDisconnectDialog,
         onDisconnectButtonClick = {

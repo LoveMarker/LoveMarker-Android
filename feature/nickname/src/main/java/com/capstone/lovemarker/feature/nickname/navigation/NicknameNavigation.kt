@@ -13,8 +13,9 @@ fun NavController.navigateToNickname(prevRouteName: String, navOptions: NavOptio
 }
 
 fun NavGraphBuilder.nicknameNavGraph(
-    navigateUp: () -> Unit, // from MyPage
-    navigateToMatching: () -> Unit, // from Login
+    navigateUp: () -> Unit,
+    navigateToMyPage: (String) -> Unit,
+    navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit
 ) {
     composable<Route.Nickname> { backStackEntry ->
@@ -22,6 +23,7 @@ fun NavGraphBuilder.nicknameNavGraph(
         NicknameRoute(
             prevRouteName = route.prevRouteName,
             navigateUp = navigateUp,
+            navigateToMyPage = navigateToMyPage,
             navigateToMatching = navigateToMatching,
             showErrorSnackbar = showErrorSnackbar
         )

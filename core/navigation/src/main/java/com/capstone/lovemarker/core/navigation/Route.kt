@@ -51,5 +51,7 @@ sealed interface MainTabRoute : Route {
     data object Archive : MainTabRoute
 
     @Serializable
-    data object MyPage : MainTabRoute
+    data class MyPage(
+        val nickname: String? = null
+    ) : MainTabRoute
 }

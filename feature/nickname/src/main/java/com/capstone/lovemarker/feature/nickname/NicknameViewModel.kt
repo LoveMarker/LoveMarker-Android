@@ -22,14 +22,14 @@ class NicknameViewModel @Inject constructor(
     private val nicknameRepository: NicknameRepository,
     private val userDataStore: UserDataStore
 ) : ViewModel() {
-    private val _nicknameState = MutableStateFlow(NicknameState())
-    val nicknameState: StateFlow<NicknameState> = _nicknameState.asStateFlow()
+    private val _state = MutableStateFlow(NicknameState())
+    val state: StateFlow<NicknameState> = _state.asStateFlow()
 
-    private val _nicknameSideEffect = MutableSharedFlow<NicknameSideEffect>()
-    val nicknameSideEffect: SharedFlow<NicknameSideEffect> = _nicknameSideEffect.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<NicknameSideEffect>()
+    val sideEffect: SharedFlow<NicknameSideEffect> = _sideEffect.asSharedFlow()
 
     fun updateNickname(nickname: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(nickname = nickname)
         }
         validateNickname(nickname)
@@ -49,19 +49,19 @@ class NicknameViewModel @Inject constructor(
     }
 
     private fun updateInputUiState(uiState: InputUiState) {
-        _nicknameState.update {
+        _state.update {
             it.copy(uiState = uiState)
         }
     }
 
     fun updateSupportingText(text: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(supportingText = text)
         }
     }
 
     fun updateCompleteButtonEnabled(enabled: Boolean) {
-        _nicknameState.update {
+        _state.update {
             it.copy(completeButtonEnabled = enabled)
         }
     }
@@ -69,8 +69,13 @@ class NicknameViewModel @Inject constructor(
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
             nicknameRepository.patchNickname(nickname)
-                .onSuccess {
-                    updateInputUiState(InputUiState.Success)
+                .onSuccess { response ->
+                    // todo: 서버에서 응답으로 가져오기
+                    updateInputUiState(
+                        InputUiState.Success(response.nickname)
+                    )
+
+                    // todo: 서버에서 항상 가져오니까 데이터 스토어에 저장할 필요가 있나 싶다..
                     userDataStore.updateNickname(nickname)
                 }.onFailure { throwable ->
                     val errorBody = (throwable as? HttpException)?.response()?.errorBody()?.string()
@@ -78,9 +83,21 @@ class NicknameViewModel @Inject constructor(
                         updateInputUiState(InputUiState.Error.DUPLICATED)
                     } else {
                         Timber.e(throwable.message)
-                        _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
+                        _sideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
                     }
                 }
+        }
+    }
+
+    fun triggerMatchingNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(NicknameSideEffect.NavigateToMatching)
+        }
+    }
+
+    fun triggerMyPageNavigationEffect(nickname: String) {
+        viewModelScope.launch {
+            _sideEffect.emit(NicknameSideEffect.NavigateToMyPage(nickname))
         }
     }
 
@@ -89,19 +106,19 @@ class NicknameViewModel @Inject constructor(
      * 이전 화면에 따라 달라져야 하는 state
      * */
     fun updateGuideTitle(guideTitle: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(guideTitle = guideTitle)
         }
     }
 
     fun updateCompleteButtonText(text: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(completeButtonText = text)
         }
     }
 
     fun updateCloseButtonVisibility(visible: Boolean) {
-        _nicknameState.update {
+        _state.update {
             it.copy(closeButtonVisible = visible)
         }
     }

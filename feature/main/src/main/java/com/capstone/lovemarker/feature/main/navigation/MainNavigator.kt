@@ -48,7 +48,7 @@ class MainNavigator(
         when (tab) {
             MainTab.MAP -> navController.navigateToMap(navOptions)
             MainTab.ARCHIVE -> navController.navigateToArchive(navOptions)
-            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions)
+            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions = navOptions)
         }
     }
 
@@ -83,6 +83,10 @@ class MainNavigator(
      * */
     fun navigateToMap(navOptions: NavOptions) {
         navController.navigateToMap(navOptions)
+    }
+
+    fun navigateToMyPage(nickname: String, navOptions: NavOptions) {
+        navController.navigateToMyPage(nickname, navOptions)
     }
 
     /**
