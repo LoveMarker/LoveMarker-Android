@@ -8,6 +8,8 @@ import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
 import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
 import com.capstone.lovemarker.domain.archive.repository.ArchiveRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,15 +34,13 @@ class ArchiveViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<ArchiveSideEffect>()
     val sideEffect: SharedFlow<ArchiveSideEffect> = _sideEffect.asSharedFlow()
 
-    init {
-        viewModelScope.launch {
-            updateCoupleConnectState(
-                connected = coupleDataStore.coupleData.first().connected
-            )
+    fun getCoupleConnectState(): Deferred<Boolean> {
+        return viewModelScope.async {
+            coupleDataStore.coupleData.first().connected
         }
     }
 
-    private fun updateCoupleConnectState(connected: Boolean) {
+    fun updateCoupleConnectState(connected: Boolean) {
         _state.update {
             it.copy(coupleConnected = connected)
         }

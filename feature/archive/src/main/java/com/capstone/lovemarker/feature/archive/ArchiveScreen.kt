@@ -90,8 +90,13 @@ fun ArchiveRoute(
         }
     )
 
-    if (!state.coupleConnected) {
-        viewModel.updateMatchingDialogState(true)
+    LaunchedEffect(Unit) {
+        val coupleConnected = viewModel.getCoupleConnectState().await()
+        Timber.d("connect: $coupleConnected")
+        viewModel.apply {
+            updateCoupleConnectState(coupleConnected)
+            updateMatchingDialogState(!coupleConnected)
+        }
     }
 
     if (state.showMatchingDialog) {
