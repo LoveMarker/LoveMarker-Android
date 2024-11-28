@@ -39,6 +39,7 @@ include(
     ":feature:archive",
     ":feature:mypage",
     ":feature:upload",
+    ":feature:detail",
 )
 
 include(
@@ -48,6 +49,7 @@ include(
     ":domain:matching",
     ":domain:mypage",
     ":domain:archive",
+    ":domain:detail",
 )
 
 include(
@@ -57,4 +59,5 @@ include(
     ":data:matching",
     ":data:mypage",
     ":data:archive",
+    ":data:detail",
 )
