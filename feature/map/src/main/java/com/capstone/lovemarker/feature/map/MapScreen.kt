@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
@@ -50,7 +51,7 @@ import timber.log.Timber
 fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
-    viewModel: MapViewModel = viewModel()
+    viewModel: MapViewModel = hiltViewModel()
 ) {
     val cameraPositionState = rememberCameraPositionState()
     val context = LocalContext.current

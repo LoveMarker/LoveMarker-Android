@@ -10,6 +10,7 @@ android {
 
 dependencies {
     implementation(projects.domain.archive)
+    implementation(projects.core.datastore)
     implementation(libs.paging)
     implementation(libs.paging.compose)
 }

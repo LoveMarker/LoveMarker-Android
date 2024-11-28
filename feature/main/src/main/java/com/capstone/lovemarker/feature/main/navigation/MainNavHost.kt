@@ -83,6 +83,9 @@ fun MainNavHost(
         archiveNavGraph(
             innerPadding = innerPadding,
             navigateToDetail = { /* TODO */ },
+            navigateToMatching = {
+                navigator.navigateToMatching()
+            },
             showErrorSnackbar = showErrorSnackbar
         )
         myPageNavGraph(
