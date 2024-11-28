@@ -13,4 +13,5 @@ dependencies {
     implementation(libs.google.maps)
     implementation(libs.google.places)
     implementation(libs.google.location)
+    implementation(projects.core.datastore)
 }
