@@ -3,7 +3,6 @@ package com.capstone.lovemarker.feature.main.navigation
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import com.capstone.lovemarker.core.navigation.MainTabRoute
-import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.main.R
 
 enum class MainTab(
@@ -30,12 +29,15 @@ enum class MainTab(
     companion object {
         @Composable
         fun find(predicate: @Composable (MainTabRoute) -> Boolean): MainTab? {
-            return entries.find { predicate(it.route) }
+            return entries.find { tab ->
+                predicate(tab.route)
+            }
         }
 
         @Composable
-        fun contains(predicate: @Composable (Route) -> Boolean): Boolean {
-            return entries.map { it.route }.any { predicate(it) }
+        fun contains(predicate: @Composable (MainTabRoute) -> Boolean): Boolean {
+            return entries.map { tab -> tab.route }
+                .any { mainTabRoute -> predicate(mainTabRoute) }
         }
     }
 }
