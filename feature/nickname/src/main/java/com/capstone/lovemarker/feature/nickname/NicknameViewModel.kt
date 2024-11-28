@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.nickname
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.domain.nickname.repository.NicknameRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -19,15 +21,35 @@ import javax.inject.Inject
 @HiltViewModel
 class NicknameViewModel @Inject constructor(
     private val nicknameRepository: NicknameRepository,
+    private val userDataStore: UserDataStore
 ) : ViewModel() {
-    private val _nicknameState = MutableStateFlow(NicknameState())
-    val nicknameState: StateFlow<NicknameState> = _nicknameState.asStateFlow()
+    private val _state = MutableStateFlow(NicknameState())
+    val state: StateFlow<NicknameState> = _state.asStateFlow()
 
-    private val _nicknameSideEffect = MutableSharedFlow<NicknameSideEffect>()
-    val nicknameSideEffect: SharedFlow<NicknameSideEffect> = _nicknameSideEffect.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<NicknameSideEffect>()
+    val sideEffect: SharedFlow<NicknameSideEffect> = _sideEffect.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            val nickname = userDataStore.userData.first().nickname
+            if (nickname.isEmpty()) {
+                updatePlaceholder(DEFAULT_PLACE_HOLDER)
+            } else {
+                updatePlaceholder(nickname)
+            }
+        }
+    }
+
+    private fun updatePlaceholder(placeholder: String) {
+        _state.update {
+            it.copy(
+                placeholder = placeholder
+            )
+        }
+    }
 
     fun updateNickname(nickname: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(nickname = nickname)
         }
         validateNickname(nickname)
@@ -47,19 +69,19 @@ class NicknameViewModel @Inject constructor(
     }
 
     private fun updateInputUiState(uiState: InputUiState) {
-        _nicknameState.update {
+        _state.update {
             it.copy(uiState = uiState)
         }
     }
 
     fun updateSupportingText(text: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(supportingText = text)
         }
     }
 
     fun updateCompleteButtonEnabled(enabled: Boolean) {
-        _nicknameState.update {
+        _state.update {
             it.copy(completeButtonEnabled = enabled)
         }
     }
@@ -67,17 +89,33 @@ class NicknameViewModel @Inject constructor(
     fun patchNickname(nickname: String) {
         viewModelScope.launch {
             nicknameRepository.patchNickname(nickname)
-                .onSuccess {
-                    updateInputUiState(InputUiState.Success)
+                .onSuccess { response ->
+                    updateInputUiState(
+                        InputUiState.Success(response.nickname)
+                    )
+
+                    userDataStore.updateNickname(nickname)
                 }.onFailure { throwable ->
                     val errorBody = (throwable as? HttpException)?.response()?.errorBody()?.string()
                     if (errorBody?.contains(NICKNAME_DUPLICATED_ERR_MSG) == true) {
                         updateInputUiState(InputUiState.Error.DUPLICATED)
                     } else {
                         Timber.e(throwable.message)
-                        _nicknameSideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
+                        _sideEffect.emit(NicknameSideEffect.ShowErrorSnackbar(throwable))
                     }
                 }
+        }
+    }
+
+    fun triggerMatchingNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(NicknameSideEffect.NavigateToMatching)
+        }
+    }
+
+    fun triggerMyPageNavigationEffect(nickname: String) {
+        viewModelScope.launch {
+            _sideEffect.emit(NicknameSideEffect.NavigateToMyPage(nickname))
         }
     }
 
@@ -86,19 +124,19 @@ class NicknameViewModel @Inject constructor(
      * 이전 화면에 따라 달라져야 하는 state
      * */
     fun updateGuideTitle(guideTitle: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(guideTitle = guideTitle)
         }
     }
 
     fun updateCompleteButtonText(text: String) {
-        _nicknameState.update {
+        _state.update {
             it.copy(completeButtonText = text)
         }
     }
 
     fun updateCloseButtonVisibility(visible: Boolean) {
-        _nicknameState.update {
+        _state.update {
             it.copy(closeButtonVisible = visible)
         }
     }
@@ -106,5 +144,6 @@ class NicknameViewModel @Inject constructor(
     companion object {
         private const val REGEX_PATTERN = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$"
         private const val NICKNAME_DUPLICATED_ERR_MSG = "중복"
+        private const val DEFAULT_PLACE_HOLDER = "닉네임"
     }
 }

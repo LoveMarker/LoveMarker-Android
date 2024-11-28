@@ -67,6 +67,10 @@ fun SenderRoute(
                         }
                     }
 
+                    is SenderSideEffect.NavigateToMap -> {
+                        navigateToMap()
+                    }
+
                     is SenderSideEffect.ShowErrorSnackbar -> {
                         showErrorSnackbar(sideEffect.throwable)
                     }
@@ -86,7 +90,7 @@ fun SenderRoute(
         completeButtonEnabled = state.buttonEnabled,
         onCompleteButtonClick = {
             if (state.codeCreated) {
-                navigateToMap()
+                viewModel.triggerNavigationEffect()
             } else {
                 viewModel.postInvitationCode(state.anniversary)
             }

@@ -10,5 +10,6 @@ android {
 
 dependencies {
     implementation(projects.domain.nickname)
+    implementation(projects.core.datastore)
     implementation(libs.retrofit)
 }

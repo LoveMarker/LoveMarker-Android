@@ -12,7 +12,6 @@ import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
-import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
 import com.capstone.lovemarker.feature.login.navigation.navigateToLogin
 import com.capstone.lovemarker.feature.map.navigation.navigateToMap
@@ -51,7 +50,7 @@ class MainNavigator(
         when (tab) {
             MainTab.MAP -> navController.navigateToMap(navOptions)
             MainTab.ARCHIVE -> navController.navigateToArchive(navOptions)
-            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions)
+            MainTab.MY_PAGE -> navController.navigateToMyPage(navOptions = navOptions)
         }
     }
 
@@ -62,14 +61,14 @@ class MainNavigator(
         navController.navigateToLogin(navOptions)
     }
 
-    fun navigateToNickname(navOptions: NavOptions) {
-        navController.navigateToNickname(navOptions)
+    fun navigateToNickname(prevRouteName: String, navOptions: NavOptions? = null) {
+        navController.navigateToNickname(prevRouteName, navOptions)
     }
 
     /**
      * Couple Matching
      * */
-    fun navigateToMatching(navOptions: NavOptions) {
+    fun navigateToMatching(navOptions: NavOptions? = null) {
         navController.navigateToMatching(navOptions)
     }
 
@@ -86,6 +85,10 @@ class MainNavigator(
      * */
     fun navigateToMap(navOptions: NavOptions) {
         navController.navigateToMap(navOptions)
+    }
+
+    fun navigateToMyPage(nickname: String, navOptions: NavOptions) {
+        navController.navigateToMyPage(nickname, navOptions)
     }
 
     /**

@@ -2,6 +2,7 @@ package com.capstone.lovemarker.feature.matching.receiver
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
 import com.capstone.lovemarker.domain.matching.repository.MatchingRepository
 import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,15 +21,10 @@ import javax.inject.Inject
 class ReceiverViewModel @Inject constructor(
     private val matchingRepository: MatchingRepository,
     private val myPageRepository: MyPageRepository
+    private val coupleDataStore: CoupleDataStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(ReceiverState())
     val state: StateFlow<ReceiverState> = _state.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            myPageRepository.deleteCouple()
-        }
-    }
 
     private val _sideEffect = MutableSharedFlow<ReceiverSideEffect>()
     val sideEffect: SharedFlow<ReceiverSideEffect> = _sideEffect.asSharedFlow()
@@ -41,8 +37,11 @@ class ReceiverViewModel @Inject constructor(
 
     fun postCouple(invitationCode: String) {
         viewModelScope.launch {
+            myPageRepository.deleteCouple()
+
             matchingRepository.postCouple(invitationCode)
                 .onSuccess {
+                    coupleDataStore.updateConnectedState(connected = true)
                     _sideEffect.emit(ReceiverSideEffect.NavigateToMap)
                 }.onFailure {
                     Timber.e(it.message)

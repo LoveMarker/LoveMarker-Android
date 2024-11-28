@@ -11,4 +11,5 @@ android {
 dependencies {
     implementation(projects.domain.matching)
     implementation(projects.domain.mypage)
+    implementation(projects.core.datastore)
 }

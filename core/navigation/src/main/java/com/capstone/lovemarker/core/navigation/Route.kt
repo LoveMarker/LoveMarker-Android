@@ -11,7 +11,9 @@ sealed interface Route {
     data object Login : Route
 
     @Serializable
-    data object Nickname : Route
+    data class Nickname(
+        val prevRouteName: String
+    ) : Route
 
     @Serializable
     data object Detail : Route
@@ -52,5 +54,7 @@ sealed interface MainTabRoute : Route {
     data object Archive : MainTabRoute
 
     @Serializable
-    data object MyPage : MainTabRoute
+    data class MyPage(
+        val nickname: String? = null
+    ) : MainTabRoute
 }

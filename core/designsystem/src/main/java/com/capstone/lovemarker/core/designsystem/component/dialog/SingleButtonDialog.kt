@@ -27,9 +27,10 @@ fun SingleButtonDialog(
     description: String,
     buttonText: String,
     onConfirmButtonClick: () -> Unit,
+    onDismiss: () -> Unit = {},
 ) {
     Dialog(
-        onDismissRequest = onConfirmButtonClick
+        onDismissRequest = onDismiss
     ) {
         Card(
             shape = RoundedCornerShape(8.dp),
@@ -47,17 +48,20 @@ fun SingleButtonDialog(
                     modifier = Modifier.padding(top = 24.dp)
                 )
                 Spacer(modifier = Modifier.height(14.dp))
-                Text(
-                    text = description,
-                    style = LoveMarkerTheme.typography.body14M,
-                    textAlign = TextAlign.Center,
-                    color = Gray600,
-                )
-                Spacer(modifier = Modifier.height(6.dp))
+                if (description.isNotEmpty()) {
+                    Text(
+                        text = description,
+                        style = LoveMarkerTheme.typography.body14M,
+                        textAlign = TextAlign.Center,
+                        color = Gray600,
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
                 LoveMarkerButton(
                     onClick = onConfirmButtonClick,
                     buttonText = buttonText,
-                    enabled = true
+                    enabled = true,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
                 )
             }
         }
@@ -69,9 +73,9 @@ fun SingleButtonDialog(
 private fun SingleButtonDialogPreview() {
     LoveMarkerTheme {
         SingleButtonDialog(
-            title = "커플 연결이 필요해요",
-            description = "LoveMarker 기능은\n커플 연결 후 사용할 수 있어요",
-            buttonText = "매칭하러 가기",
+            title = "커플 연결이 이미 해제되어 있습니다",
+            description = "",
+            buttonText = "확인",
             onConfirmButtonClick = {}
         )
     }

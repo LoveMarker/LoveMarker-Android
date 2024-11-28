@@ -23,7 +23,7 @@ enum class MainTab(
     MY_PAGE(
         iconResId = R.drawable.ic_mypage,
         labelText = "마이페이지",
-        route = MainTabRoute.MyPage
+        route = MainTabRoute.MyPage()
     );
 
     companion object {

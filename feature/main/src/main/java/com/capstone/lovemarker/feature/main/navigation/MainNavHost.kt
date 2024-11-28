@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
-import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.main.splash.splashNavGraph
@@ -50,14 +49,21 @@ fun MainNavHost(
             },
             navigateToNickname = {
                 navigator.navigateToNickname(
+                    prevRouteName = "login",
                     navOptions = navOptionsPopUpTo<Route.Login>()
                 )
             },
             showErrorSnackbar = showErrorSnackbar
         )
         nicknameNavGraph(
-            prevRoute = Route.Login,
             navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToMyPage = { nickname ->
+                // todo: 마이페이지 -> 닉네임 -> 마이페이지 (닉네임 화면은 스택에서 삭제)
+                navigator.navigateToMyPage(
+                    nickname = nickname,
+                    navOptions = navOptionsPopUpTo<Route.Nickname>()
+                )
+            },
             navigateToMatching = {
                 navigator.navigateToMatching(
                     navOptions = navOptionsPopUpTo<Route.Nickname>()
@@ -83,10 +89,22 @@ fun MainNavHost(
             },
         )
         archiveNavGraph(
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            navigateToDetail = { /* TODO */ },
+            navigateToMatching = {
+                navigator.navigateToMatching()
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         myPageNavGraph(
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            navigateToMatching = { navigator.navigateToMatching() },
+            navigateToNickname = {
+                navigator.navigateToNickname(
+                     prevRouteName = "mypage"
+                )
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         uploadNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },

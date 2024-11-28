@@ -9,5 +9,6 @@ android {
 }
 
 dependencies {
-//    implementation(projects.domain.mypage)
+    implementation(projects.domain.mypage)
+    implementation(projects.core.datastore)
 }
