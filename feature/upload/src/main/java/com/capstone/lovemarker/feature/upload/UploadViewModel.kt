@@ -95,7 +95,6 @@ class UploadViewModel @Inject constructor(
                     )
                 }
             ).onSuccess { response ->
-                Timber.d("SUCCESS: ${response.memoryId}")
                 _sideEffect.emit(
                     UploadSideEffect.NavigateToMap(
                         memoryId = response.memoryId
