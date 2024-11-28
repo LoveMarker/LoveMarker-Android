@@ -37,25 +37,32 @@ import timber.log.Timber
 
 @Composable
 fun NicknameRoute(
-    prevRoute: Route,
-    navigateUp: () -> Unit,
+    prevRouteName: String,
     navigateToMatching: () -> Unit,
+    navigateToMyPage: (String) -> Unit,
+    navigateUp: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: NicknameViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.nicknameState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val prevRoute: Route = if (prevRouteName == "mypage") MainTabRoute.MyPage() else Route.Login
 
     UpdateStateByPreviousRoute(prevRoute, viewModel)
 
-    LaunchedEffect(viewModel.nicknameSideEffect, lifecycleOwner) {
-        viewModel.nicknameSideEffect
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
-                    is NicknameSideEffect.NavigateToMyPage -> navigateUp()
+                    is NicknameSideEffect.NavigateToMyPage -> {
+                        Timber.d("nickname: ${sideEffect.nickname}")
+                        navigateToMyPage(sideEffect.nickname)
+                    }
+
                     is NicknameSideEffect.NavigateToMatching -> navigateToMatching()
+
                     is NicknameSideEffect.ShowErrorSnackbar -> {
                         showErrorSnackbar(sideEffect.throwable)
                     }
@@ -87,13 +94,17 @@ fun NicknameRoute(
         }
 
         is InputUiState.Success -> {
+            keyboardController?.hide()
+
             when (prevRoute) {
                 is Route.Login -> {
-                    keyboardController?.hide()
-                    navigateToMatching()
+                    viewModel.triggerMatchingNavigationEffect()
                 }
 
-                is MainTabRoute.MyPage -> navigateUp()
+                is MainTabRoute.MyPage -> {
+                    viewModel.triggerMyPageNavigationEffect(uiState.nickname)
+                }
+
                 else -> {
                     Timber.e("invalid navigation path on the nickname screen.")
                 }
@@ -107,6 +118,7 @@ fun NicknameRoute(
             viewModel.updateNickname(nickname = it)
         },
         guideTitle = state.guideTitle,
+        placeholder = state.placeholder,
         isError = state.uiState is InputUiState.Error,
         supportingText = state.supportingText,
         completeButtonText = state.completeButtonText,
@@ -123,7 +135,10 @@ fun NicknameRoute(
 }
 
 @Composable
-fun UpdateStateByPreviousRoute(prevRoute: Route, viewModel: NicknameViewModel) {
+fun UpdateStateByPreviousRoute(
+    prevRoute: Route,
+    viewModel: NicknameViewModel
+) {
     when (prevRoute) {
         is Route.Login -> {
             viewModel.apply {
@@ -152,6 +167,7 @@ fun NicknameScreen(
     guideTitle: String,
     nickname: String,
     onNicknameChanged: (String) -> Unit,
+    placeholder: String,
     isError: Boolean,
     supportingText: String,
     onClearIconClick: () -> Unit,
@@ -208,7 +224,7 @@ fun NicknameScreen(
                 LoveMarkerTextField(
                     value = nickname,
                     onValueChanged = onNicknameChanged,
-                    placeholder = stringResource(id = R.string.nickname_placeholder),
+                    placeholder = placeholder,
                     modifier = Modifier.padding(top = 38.dp),
                     isError = isError,
                     supportingText = supportingText,
@@ -244,6 +260,7 @@ private fun NicknamePreview() {
         NicknameScreen(
             nickname = "",
             onNicknameChanged = {},
+            placeholder = "닉네임",
             isError = false,
             guideTitle = stringResource(id = R.string.nickname_guide_title_from_login),
             supportingText = stringResource(id = R.string.nickname_duplicate_error_msg),

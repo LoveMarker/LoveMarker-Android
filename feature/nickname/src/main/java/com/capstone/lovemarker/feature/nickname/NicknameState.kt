@@ -3,6 +3,7 @@ package com.capstone.lovemarker.feature.nickname
 data class NicknameState(
     val uiState: InputUiState = InputUiState.Empty,
     val nickname: String = "",
+    val placeholder: String = "",
     val guideTitle: String = "",
     val supportingText: String = "",
     val completeButtonText: String = "",
@@ -20,5 +21,7 @@ sealed interface InputUiState {
         DUPLICATED
     }
 
-    data object Success : InputUiState
+    data class Success(
+        val nickname: String
+    ) : InputUiState
 }
