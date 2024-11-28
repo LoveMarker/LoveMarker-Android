@@ -15,13 +15,11 @@ fun NavController.navigateToMap(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.mapNavGraph(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
-    showErrorSnackbar: (Throwable?) -> Unit
 ) {
     composable<MainTabRoute.Map> {
         MapRoute(
             innerPadding = innerPadding,
             navigateToPhoto = navigateToPhoto,
-            showErrorSnackbar = showErrorSnackbar
         )
     }
 }
