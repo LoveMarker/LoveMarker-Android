@@ -4,4 +4,5 @@
     <string name="mypage_disconnect_dialog_title">커플 연결을 해제하시겠어요?</string>
     <string name="mypage_disconnect_dialog_confirm_text">확인</string>
     <string name="mypage_disconnect_dialog_dimiss_text">취소</string>
+    <string name="mypage_already_disconnect_dialog_title">커플 연결이 이미 해제되어 있습니다</string>
 </resources>
