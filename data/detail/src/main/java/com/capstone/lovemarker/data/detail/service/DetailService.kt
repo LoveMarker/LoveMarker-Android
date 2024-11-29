@@ -3,11 +3,11 @@ package com.capstone.lovemarker.data.detail.service
 import com.capstone.lovemarker.core.network.model.BaseResponse
 import com.capstone.lovemarker.data.detail.dto.DetailResponse
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface DetailService {
-    @GET("/api/memory")
+    @GET("/api/memory/{memoryId}")
     suspend fun getDetail(
-        @Query("memoryId") memoryId: Long
+        @Path("memoryId") memoryId: Long
     ): BaseResponse<DetailResponse>
 }
