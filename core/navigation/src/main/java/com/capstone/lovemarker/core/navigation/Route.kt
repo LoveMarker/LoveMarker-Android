@@ -15,7 +15,9 @@ sealed interface Route {
     ) : Route
 
     @Serializable
-    data object Detail : Route
+    data class Detail(
+        val memoryId: Int,
+    ) : Route
 
     @Serializable
     data object MyFeed: Route

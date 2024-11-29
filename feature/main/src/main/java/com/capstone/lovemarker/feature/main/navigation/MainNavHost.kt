@@ -90,7 +90,9 @@ fun MainNavHost(
         )
         archiveNavGraph(
             innerPadding = innerPadding,
-            navigateToDetail = { /* TODO */ },
+            navigateToDetail = { memoryId ->
+                navigator.navigateToDetail(memoryId)
+            },
             navigateToMatching = {
                 navigator.navigateToMatching()
             },
@@ -101,7 +103,7 @@ fun MainNavHost(
             navigateToMatching = { navigator.navigateToMatching() },
             navigateToNickname = {
                 navigator.navigateToNickname(
-                     prevRouteName = "mypage"
+                    prevRouteName = "mypage"
                 )
             },
             showErrorSnackbar = showErrorSnackbar
@@ -116,7 +118,8 @@ fun MainNavHost(
         detailNavGraph(
             navigateUp = {
                 navigator.navigateUpIfNotHome()
-            }
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
     }
 }
