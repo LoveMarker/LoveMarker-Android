@@ -12,6 +12,7 @@ import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
+import com.capstone.lovemarker.feature.detail.navigation.navigateToDetail
 import com.capstone.lovemarker.feature.matching.navigation.navigateToMatching
 import com.capstone.lovemarker.feature.matching.navigation.navigateToReceiver
 import com.capstone.lovemarker.feature.matching.navigation.navigateToSender
@@ -87,6 +88,10 @@ class MainNavigator(
 
     fun navigateToMyPage(nickname: String, navOptions: NavOptions) {
         navController.navigateToMyPage(nickname, navOptions)
+    }
+
+    fun navigateToDetail(memoryId: Int) {
+        navController.navigateToDetail(memoryId)
     }
 
     /**

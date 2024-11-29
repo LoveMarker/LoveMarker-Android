@@ -40,6 +40,7 @@ dependencies {
     implementation(projects.data.matching)
     implementation(projects.data.mypage)
     implementation(projects.data.archive)
+    implementation(projects.data.detail)
 
     // android
     implementation(libs.core.ktx)

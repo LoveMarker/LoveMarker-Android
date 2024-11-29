@@ -8,6 +8,7 @@ import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
+import com.capstone.lovemarker.feature.detail.navigation.detailNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.main.splash.splashNavGraph
@@ -89,7 +90,9 @@ fun MainNavHost(
         )
         archiveNavGraph(
             innerPadding = innerPadding,
-            navigateToDetail = { /* TODO */ },
+            navigateToDetail = { memoryId ->
+                navigator.navigateToDetail(memoryId)
+            },
             navigateToMatching = {
                 navigator.navigateToMatching()
             },
@@ -100,7 +103,7 @@ fun MainNavHost(
             navigateToMatching = { navigator.navigateToMatching() },
             navigateToNickname = {
                 navigator.navigateToNickname(
-                     prevRouteName = "mypage"
+                    prevRouteName = "mypage"
                 )
             },
             showErrorSnackbar = showErrorSnackbar
@@ -111,6 +114,12 @@ fun MainNavHost(
             navigateToContent = {
                 navigator.navigateToContent()
             }
+        )
+        detailNavGraph(
+            navigateUp = {
+                navigator.navigateUpIfNotHome()
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
     }
 }
