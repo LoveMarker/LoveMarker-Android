@@ -8,6 +8,7 @@ import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
+import com.capstone.lovemarker.feature.detail.navigation.detailNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.main.splash.splashNavGraph
@@ -110,6 +111,11 @@ fun MainNavHost(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToContent = {
                 navigator.navigateToContent()
+            }
+        )
+        detailNavGraph(
+            navigateUp = {
+                navigator.navigateUpIfNotHome()
             }
         )
     }

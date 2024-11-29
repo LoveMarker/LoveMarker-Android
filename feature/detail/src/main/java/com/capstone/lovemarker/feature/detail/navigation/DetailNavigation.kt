@@ -10,8 +10,12 @@ fun NavController.navigateToDetail() {
     navigate(Route.Detail)
 }
 
-fun NavGraphBuilder.detailNavGraph() {
+fun NavGraphBuilder.detailNavGraph(
+    navigateUp: () -> Unit,
+) {
     composable<Route.Detail> {
-
+        DetailRoute(
+            navigateUp = navigateUp
+        )
     }
 }
