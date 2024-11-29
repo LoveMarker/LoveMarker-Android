@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,9 +46,9 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray100
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
+import com.capstone.lovemarker.core.designsystem.theme.White
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailRoute(
     memoryId: Int,
@@ -56,7 +57,6 @@ fun DetailRoute(
     viewModel: DetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val scrollState = rememberScrollState()
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(Unit) {
@@ -74,11 +74,37 @@ fun DetailRoute(
             }
     }
 
+    DetailScreen(
+        navigateUp = navigateUp,
+        title = state.detailModel.title,
+        writer = state.detailModel.writer,
+        imageUrls = state.detailModel.images,
+        address = state.detailModel.address,
+        date = state.detailModel.date,
+        content = state.detailModel.content
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun DetailScreen(
+    navigateUp: () -> Unit,
+    title: String,
+    writer: String,
+    imageUrls: List<String>,
+    address: String,
+    date: String,
+    content: String
+) {
+    val scrollState = rememberScrollState()
+
     CompositionLocalProvider(
         LocalOverscrollConfiguration provides null
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(White)
         ) {
             DetailTopAppBar(
                 onBackButtonClick = navigateUp
@@ -91,19 +117,19 @@ fun DetailRoute(
             ) {
                 HorizontalDivider(color = Gray100, thickness = 2.dp)
                 DetailHeader(
-                    title = state.detailModel.title,
-                    writer = state.detailModel.writer
+                    title = title,
+                    writer = writer
                 )
                 ImageSection(
-                    imageUrls = state.detailModel.images
+                    imageUrls = imageUrls
                 )
                 DetailFooter(
-                    address = state.detailModel.address,
-                    date = state.detailModel.date
+                    address = address,
+                    date = date
                 )
                 HorizontalDivider(color = Gray100, thickness = 6.dp)
                 ContentSection(
-                    content = state.detailModel.content
+                    content = content
                 )
             }
         }
@@ -145,7 +171,7 @@ fun DetailHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 20.dp)
+            .padding(16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -164,7 +190,7 @@ fun DetailHeader(
         Text(
             text = writer,
             style = LoveMarkerTheme.typography.body14M,
-            modifier = Modifier.padding(vertical = 12.dp)
+            modifier = Modifier.padding(top = 12.dp)
         )
     }
 }
@@ -188,13 +214,16 @@ fun ImageSection(
         ) { pageIdx ->
             AsyncImage(
                 model = imageUrls[pageIdx],
-                contentDescription = "detail feed image"
+                contentDescription = "detail feed image",
+                contentScale = ContentScale.Crop
             )
         }
         Row(
             modifier = Modifier
                 .wrapContentHeight()
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+            ,
             horizontalArrangement = Arrangement.Center
         ) {
             repeat(pagerState.pageCount) { iteration ->
@@ -217,7 +246,7 @@ fun DetailFooter(
     date: String,
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)
+        modifier = Modifier.padding(16.dp)
     ) {
         Text(
             text = address,
@@ -241,7 +270,7 @@ fun ContentSection(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .padding(horizontal = 16.dp, vertical = 20.dp)
+            .padding(16.dp)
     )
 }
 
