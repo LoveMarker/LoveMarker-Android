@@ -95,11 +95,13 @@ class UploadViewModel @Inject constructor(
                     )
                 }
             ).onSuccess { response ->
-                _sideEffect.emit(
-                    UploadSideEffect.NavigateToMap(
-                        memoryId = response.memoryId
-                    )
-                )
+                _sideEffect.emit(UploadSideEffect.ShowSuccessSnackbar("업로드에 성공했습니다."))
+
+//                _sideEffect.emit(
+//                    UploadSideEffect.NavigateToMap(
+//                        memoryId = response.memoryId
+//                    )
+//                )
             }.onFailure {
                 updateButtonEnabled(true)
                 Timber.e(it.message)

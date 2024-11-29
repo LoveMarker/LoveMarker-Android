@@ -23,6 +23,7 @@ fun MainNavHost(
     navigator: MainNavigator,
     innerPadding: PaddingValues,
     showErrorSnackbar: (throwable: Throwable?) -> Unit,
+    showUploadSuccessSnackBar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -118,7 +119,8 @@ fun MainNavHost(
             getBackStackEntryFromPhoto = {
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
             },
-            showErrorSnackbar = showErrorSnackbar
+            showErrorSnackbar = showErrorSnackbar,
+            showUploadSuccessSnackBar = showUploadSuccessSnackBar
         )
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },

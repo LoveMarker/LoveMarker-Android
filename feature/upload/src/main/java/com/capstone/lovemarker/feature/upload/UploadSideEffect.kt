@@ -5,6 +5,10 @@ sealed interface UploadSideEffect {
         val memoryId: Int
     ) : UploadSideEffect
 
+    data class ShowSuccessSnackbar(
+        val message: String
+    ) : UploadSideEffect
+
     data class ShowErrorSnackbar(
         val throwable: Throwable
     ) : UploadSideEffect

@@ -58,6 +58,7 @@ fun ContentRoute(
     navigateToPlaceSearch: () -> Unit,
     navigateToMap: (Int) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
+    showUploadSuccessSnackBar: (String) -> Unit,
     searchPlace: SearchPlace? = null,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
@@ -78,6 +79,10 @@ fun ContentRoute(
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
+                    is UploadSideEffect.ShowSuccessSnackbar -> {
+                        showUploadSuccessSnackBar(sideEffect.message)
+                    }
+
                     is UploadSideEffect.NavigateToMap -> {
                         navigateToMap(sideEffect.memoryId)
                     }

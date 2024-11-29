@@ -46,9 +46,20 @@ fun MainScreen(
         }
     }
 
+    val onUploadSuccessSnackbar: (String) -> Unit = { message ->
+        coroutineScope.launch {
+            val job = launch {
+                snackBarHostState.showSnackbar(message)
+            }
+            delay(SNACK_BAR_DURATION)
+            job.cancel()
+        }
+    }
+
     MainScreenContent(
         navigator = navigator,
         showErrorSnackbar = onShowErrorSnackBar,
+        showUploadSuccessSnackBar = onUploadSuccessSnackbar,
         snackbarHostState = snackBarHostState
     )
 }
@@ -57,6 +68,7 @@ fun MainScreen(
 fun MainScreenContent(
     navigator: MainNavigator,
     showErrorSnackbar: (throwable: Throwable?) -> Unit,
+    showUploadSuccessSnackBar: (String) -> Unit,
     snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
@@ -71,6 +83,7 @@ fun MainScreenContent(
                     navigator = navigator,
                     innerPadding = innerPadding,
                     showErrorSnackbar = showErrorSnackbar,
+                    showUploadSuccessSnackBar = showUploadSuccessSnackBar,
                 )
             }
         },
