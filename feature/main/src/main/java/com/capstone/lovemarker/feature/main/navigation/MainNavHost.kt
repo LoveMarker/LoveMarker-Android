@@ -86,6 +86,9 @@ fun MainNavHost(
             innerPadding = innerPadding,
             navigateToPhoto = {
                 navigator.navigateToPhoto()
+            },
+            navigateToMatching = {
+                navigator.navigateToMatching()
             }
         )
         archiveNavGraph(
