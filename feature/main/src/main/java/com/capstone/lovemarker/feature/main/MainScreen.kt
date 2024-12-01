@@ -83,7 +83,6 @@ fun MainScreenContent(
                     navigator = navigator,
                     innerPadding = innerPadding,
                     showErrorSnackbar = showErrorSnackbar,
-                    showUploadSuccessSnackBar = showUploadSuccessSnackBar,
                 )
             }
         },

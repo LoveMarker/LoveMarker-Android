@@ -30,7 +30,6 @@ fun NavGraphBuilder.uploadNavGraph(
     navigateToPlaceSearch: () -> Unit,
     navigateToMap: (Int) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-    showUploadSuccessSnackBar: (String) -> Unit,
     getBackStackEntryFromPhoto: () -> NavBackStackEntry,
 ) {
     composable<UploadRoute.Photo> {
@@ -54,7 +53,6 @@ fun NavGraphBuilder.uploadNavGraph(
             navigateToPlaceSearch = navigateToPlaceSearch,
             navigateToMap = navigateToMap,
             showErrorSnackbar = showErrorSnackbar,
-            showUploadSuccessSnackBar = showUploadSuccessSnackBar,
             searchPlace = content.searchPlace,
             viewModel = hiltViewModel(backStackEntryFromPhoto)
         )
