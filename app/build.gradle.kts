@@ -15,11 +15,9 @@ android {
         applicationId = "com.capstone.lovemarker"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        defaultConfig {
-            val mapsApiKey = properties.getProperty("maps.api.key")
-            buildConfigField("String", "MAPS_API_KEY", "\"${mapsApiKey}\"")
-            manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
-        }
+        val mapsApiKey = properties.getProperty("maps.api.key")
+        buildConfigField("String", "MAPS_API_KEY", "\"${mapsApiKey}\"")
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     packaging {
@@ -46,6 +44,7 @@ dependencies {
     implementation(projects.data.archive)
     implementation(projects.data.upload)
     implementation(projects.data.search)
+    implementation(projects.data.detail)
 
     // android
     implementation(libs.core.ktx)

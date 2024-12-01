@@ -9,7 +9,9 @@ import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
+import com.capstone.lovemarker.feature.detail.navigation.detailNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
+import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.main.splash.splashNavGraph
 import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
@@ -23,7 +25,6 @@ fun MainNavHost(
     navigator: MainNavigator,
     innerPadding: PaddingValues,
     showErrorSnackbar: (throwable: Throwable?) -> Unit,
-    showUploadSuccessSnackBar: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -88,10 +89,15 @@ fun MainNavHost(
             navigateToPhoto = {
                 navigator.navigateToPhoto()
             },
+            navigateToMatching = {
+                navigator.navigateToMatching()
+            }
         )
         archiveNavGraph(
             innerPadding = innerPadding,
-            navigateToDetail = { /* TODO */ },
+            navigateToDetail = { memoryId ->
+                navigator.navigateToDetail(memoryId)
+            },
             navigateToMatching = {
                 navigator.navigateToMatching()
             },
@@ -102,7 +108,7 @@ fun MainNavHost(
             navigateToMatching = { navigator.navigateToMatching() },
             navigateToNickname = {
                 navigator.navigateToNickname(
-                     prevRouteName = "mypage"
+                    prevRouteName = "mypage"
                 )
             },
             showErrorSnackbar = showErrorSnackbar
@@ -120,7 +126,6 @@ fun MainNavHost(
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
             },
             showErrorSnackbar = showErrorSnackbar,
-            showUploadSuccessSnackBar = showUploadSuccessSnackBar
         )
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
@@ -129,6 +134,12 @@ fun MainNavHost(
                     place = place,
                     navOptions = navOptionsPopUpTo<UploadRoute.PlaceSearch>()
                 )
+            },
+            showErrorSnackbar = showErrorSnackbar
+        )
+        detailNavGraph(
+            navigateUp = {
+                navigator.navigateUpIfNotHome()
             },
             showErrorSnackbar = showErrorSnackbar
         )

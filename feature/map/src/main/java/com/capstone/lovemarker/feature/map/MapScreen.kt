@@ -33,8 +33,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.dropShadow
+import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.LocationServices
@@ -45,18 +49,34 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @Composable
 fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
+    navigateToMatching: () -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     val cameraPositionState = rememberCameraPositionState()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
     val userLocation by viewModel.userLocation
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is MapSideEffect.NavigateToMatching -> {
+                        navigateToMatching()
+                    }
+                }
+            }
+    }
 
     RequestLocationPermission(
         context = context,
@@ -71,6 +91,23 @@ fun MapRoute(
         userLocation = userLocation,
         onUploadButtonClick = navigateToPhoto
     )
+
+    LaunchedEffect(Unit) {
+        val coupleConnected = viewModel.getCoupleConnectState().await()
+        viewModel.apply {
+            updateCoupleConnectState(coupleConnected)
+            updateMatchingDialogState(!coupleConnected)
+        }
+    }
+
+    if (state.showMatchingDialog) {
+        CoupleMatchingDialog {
+            viewModel.apply {
+                updateMatchingDialogState(false)
+                triggerMatchingNavigationEffect()
+            }
+        }
+    }
 }
 
 @Composable

@@ -14,6 +14,7 @@ import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
+import com.capstone.lovemarker.feature.detail.navigation.navigateToDetail
 import com.capstone.lovemarker.feature.login.navigation.navigateToLogin
 import com.capstone.lovemarker.feature.map.navigation.navigateToMap
 import com.capstone.lovemarker.feature.matching.navigation.navigateToMatching
@@ -31,7 +32,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = UploadRoute.Photo
+    val startDestination = Route.Splash
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -90,6 +91,10 @@ class MainNavigator(
 
     fun navigateToMyPage(nickname: String, navOptions: NavOptions) {
         navController.navigateToMyPage(nickname, navOptions)
+    }
+
+    fun navigateToDetail(memoryId: Int) {
+        navController.navigateToDetail(memoryId)
     }
 
     /**

@@ -9,20 +9,17 @@ android {
 }
 
 dependencies {
-    // feature onboarding
+    // feature
     implementation(projects.feature.login)
     implementation(projects.feature.nickname)
     implementation(projects.feature.matching)
-
-    // feature main
     implementation(projects.feature.map)
     implementation(projects.feature.archive)
     implementation(projects.feature.mypage)
-
-    // feature upload
     implementation(projects.feature.upload)
     implementation(projects.feature.search)
+    implementation(projects.feature.detail)
 
-    // domain
+    // domain (for check auto login in splash)
     implementation(projects.domain.auth)
 }
