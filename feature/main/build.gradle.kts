@@ -19,6 +19,6 @@ dependencies {
     implementation(projects.feature.upload)
     implementation(projects.feature.detail)
 
-    // domain (for check auto login in splash)
+    // domain
     implementation(projects.domain.auth)
 }

@@ -88,7 +88,8 @@ fun MainNavHost(
             },
             navigateToMatching = {
                 navigator.navigateToMatching()
-            }
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         archiveNavGraph(
             innerPadding = innerPadding,

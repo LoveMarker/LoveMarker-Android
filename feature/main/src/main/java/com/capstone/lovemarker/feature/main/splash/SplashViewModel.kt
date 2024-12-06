@@ -14,15 +14,15 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
-    private val _splashSideEffect = MutableSharedFlow<SplashSideEffect>()
-    val splashSideEffect: SharedFlow<SplashSideEffect> get() = _splashSideEffect.asSharedFlow()
+    private val _sideEffect = MutableSharedFlow<SplashSideEffect>()
+    val sideEffect: SharedFlow<SplashSideEffect> get() = _sideEffect.asSharedFlow()
 
     fun checkAutoLogin() {
         viewModelScope.launch {
             if (authRepository.isAutoLoginEnabled()) {
-                _splashSideEffect.emit(SplashSideEffect.NavigateToMap)
+                _sideEffect.emit(SplashSideEffect.NavigateToMap)
             } else {
-                _splashSideEffect.emit(SplashSideEffect.NavigateToLogin)
+                _sideEffect.emit(SplashSideEffect.NavigateToLogin)
             }
         }
     }

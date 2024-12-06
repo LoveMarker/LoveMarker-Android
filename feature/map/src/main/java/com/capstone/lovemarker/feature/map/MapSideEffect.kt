@@ -9,4 +9,8 @@ sealed interface MapSideEffect {
 
     data object NavigateToMatching: MapSideEffect
     data object NavigateToPhoto: MapSideEffect
+
+    data class ShowErrorSnackbar(
+        val throwable: Throwable
+    ): MapSideEffect
 }

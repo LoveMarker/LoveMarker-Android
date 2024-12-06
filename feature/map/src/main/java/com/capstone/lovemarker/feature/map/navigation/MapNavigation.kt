@@ -16,12 +16,14 @@ fun NavGraphBuilder.mapNavGraph(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
     navigateToMatching: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<MainTabRoute.Map> {
         MapRoute(
             innerPadding = innerPadding,
             navigateToPhoto = navigateToPhoto,
-            navigateToMatching = navigateToMatching
+            navigateToMatching = navigateToMatching,
+            showErrorSnackbar = showErrorSnackbar
         )
     }
 }

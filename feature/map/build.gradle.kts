@@ -13,5 +13,7 @@ dependencies {
     implementation(libs.google.maps)
     implementation(libs.google.places)
     implementation(libs.google.location)
+
+    implementation(projects.domain.mypage)
     implementation(projects.core.datastore)
 }
