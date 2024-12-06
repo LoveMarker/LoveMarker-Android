@@ -9,14 +9,17 @@ import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.feature.mypage.MyPageRoute
 
-fun NavController.navigateToMyPage(nickname: String? = null, navOptions: NavOptions? = null) {
-    navigate(MainTabRoute.MyPage(nickname), navOptions)
+fun NavController.navigateToMyPage(
+    modifiedNickname: String? = null,
+    navOptions: NavOptions? = null
+) {
+    navigate(route = MainTabRoute.MyPage(modifiedNickname), navOptions = navOptions)
 }
 
 fun NavGraphBuilder.myPageNavGraph(
     innerPadding: PaddingValues,
     navigateToMatching: () -> Unit,
-    navigateToNickname: () -> Unit,
+    navigateToNickname: (String) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<MainTabRoute.MyPage> { backStackEntry ->
@@ -26,7 +29,7 @@ fun NavGraphBuilder.myPageNavGraph(
             navigateToMatching = navigateToMatching,
             navigateToNickname = navigateToNickname,
             showErrorSnackbar = showErrorSnackbar,
-            modifiedNickname = route.nickname
+            modifiedNickname = route.modifiedNickname
         )
     }
 }

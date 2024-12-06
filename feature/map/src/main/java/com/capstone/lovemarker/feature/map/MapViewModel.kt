@@ -1,10 +1,11 @@
 package com.capstone.lovemarker.feature.map
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
+import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,24 +25,64 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val coupleDataStore: CoupleDataStore
+    private val myPageRepository: MyPageRepository,
+    private val userDataStore: UserDataStore,
+    private val coupleDataStore: CoupleDataStore,
 ) : ViewModel() {
-    private val _userLocation = mutableStateOf<LatLng?>(null)
-    val userLocation: State<LatLng?> = _userLocation
-
     private val _state = MutableStateFlow(MapState())
     val state: StateFlow<MapState> = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<MapSideEffect>()
     val sideEffect: SharedFlow<MapSideEffect> = _sideEffect.asSharedFlow()
 
+    init {
+        getCoupleInfo()
+    }
+
+    private fun getCoupleInfo() {
+        viewModelScope.launch {
+            updateUiState(UiState.Loading)
+
+            myPageRepository.getCoupleInfo()
+                .onSuccess { response ->
+                    userDataStore.updateNickname(response.nickname)
+                    coupleDataStore.updateConnectedState(response.connected)
+                    updateUiState(UiState.Success(Unit))
+                }.onFailure {
+                    Timber.e(it.message)
+                }
+        }
+    }
+
+    private fun updateUiState(uiState: UiState<Unit>) {
+        _state.update {
+            it.copy(
+                uiState = uiState
+            )
+        }
+    }
+
     fun getUserLocation(fusedLocationClient: FusedLocationProviderClient) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             location?.let {
-                _userLocation.value = LatLng(it.latitude, it.longitude)
+                viewModelScope.launch {
+                    _sideEffect.emit(
+                        MapSideEffect.MoveCurrentLocation(
+                            location = LatLng(it.latitude, it.longitude)
+                        )
+                    )
+                }
             }
         }.addOnFailureListener { throwable ->
             Timber.e(throwable.message)
+        }
+    }
+
+    fun updateCurrentLocation(location: LatLng) {
+        _state.update {
+            it.copy(
+                currentLocation = location
+            )
         }
     }
 
@@ -68,6 +109,12 @@ class MapViewModel @Inject constructor(
     fun triggerMatchingNavigationEffect() {
         viewModelScope.launch {
             _sideEffect.emit(MapSideEffect.NavigateToMatching)
+        }
+    }
+
+    fun triggerPhotoNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(MapSideEffect.NavigateToPhoto)
         }
     }
 }

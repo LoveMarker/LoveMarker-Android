@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +40,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.dropShadow
+import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
+import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.LocationServices
@@ -57,6 +61,7 @@ fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
     navigateToMatching: () -> Unit,
+    showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -65,14 +70,25 @@ fun MapRoute(
     val cameraPositionState = rememberCameraPositionState()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val userLocation by viewModel.userLocation
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
+                    is MapSideEffect.MoveCurrentLocation -> {
+                        viewModel.updateCurrentLocation(sideEffect.location)
+                    }
+
                     is MapSideEffect.NavigateToMatching -> {
                         navigateToMatching()
+                    }
+
+                    is MapSideEffect.NavigateToPhoto -> {
+                        navigateToPhoto()
+                    }
+
+                    is MapSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
                     }
                 }
             }
@@ -88,16 +104,35 @@ fun MapRoute(
     MapScreen(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
-        userLocation = userLocation,
-        onUploadButtonClick = navigateToPhoto
+        userLocation = state.currentLocation,
+        onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 
-    LaunchedEffect(Unit) {
-        val coupleConnected = viewModel.getCoupleConnectState().await()
-        viewModel.apply {
-            updateCoupleConnectState(coupleConnected)
-            updateMatchingDialogState(!coupleConnected)
+    when (state.uiState) {
+        is UiState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = Gray200
+                )
+            }
         }
+
+        is UiState.Success -> {
+            LaunchedEffect(Unit) {
+                val coupleConnected = viewModel.getCoupleConnectState().await()
+                viewModel.apply {
+                    updateCoupleConnectState(connected = coupleConnected)
+                    updateMatchingDialogState(showDialog = !coupleConnected)
+                }
+            }
+        }
+
+        else -> {}
     }
 
     if (state.showMatchingDialog) {

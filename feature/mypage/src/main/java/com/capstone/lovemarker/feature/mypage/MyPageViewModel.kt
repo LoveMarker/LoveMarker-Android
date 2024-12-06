@@ -83,4 +83,20 @@ class MyPageViewModel @Inject constructor(
                 }
         }
     }
+
+    fun triggerNicknameNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(
+                MyPageSideEffect.NavigateToNickname(nickname = state.value.nickname)
+            )
+        }
+    }
+
+    fun triggerMatchingNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(
+                MyPageSideEffect.NavigateToMatching
+            )
+        }
+    }
 }

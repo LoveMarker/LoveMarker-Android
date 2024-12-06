@@ -31,15 +31,15 @@ include(
 )
 
 include(
-    ":feature:main",
-    ":feature:login",
-    ":feature:nickname",
-    ":feature:matching",
-    ":feature:map",
-    ":feature:archive",
-    ":feature:mypage",
-    ":feature:upload",
-    ":feature:detail",
+    ":data:auth",
+    ":data:oauth",
+    ":data:nickname",
+    ":data:matching",
+    ":data:mypage",
+    ":data:archive",
+    ":data:detail",
+    ":data:upload",
+    ":data:search",
 )
 
 include(
@@ -50,14 +50,19 @@ include(
     ":domain:mypage",
     ":domain:archive",
     ":domain:detail",
+    ":domain:upload",
+    ":domain:search",
 )
 
 include(
-    ":data:auth",
-    ":data:oauth",
-    ":data:nickname",
-    ":data:matching",
-    ":data:mypage",
-    ":data:archive",
-    ":data:detail",
+    ":feature:main",
+    ":feature:login",
+    ":feature:nickname",
+    ":feature:matching",
+    ":feature:map",
+    ":feature:archive",
+    ":feature:mypage",
+    ":feature:detail",
+    ":feature:upload",
+    ":feature:search",
 )

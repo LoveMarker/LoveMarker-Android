@@ -19,33 +19,17 @@ class CoupleDataStoreImpl @Inject constructor(
 ) : CoupleDataStore {
     object PreferencesKey {
         val CONNECTED = booleanPreferencesKey("CONNECTED")
-        val ANNIVERSARY_DAYS = intPreferencesKey("ANNIVERSARY_DAYS")
-        val PARTNER_NICKNAME = stringPreferencesKey("PARTNER_NICKNAME")
     }
 
     override val coupleData: Flow<CoupleData> = dataStore.data.map { preferences ->
         CoupleData(
             connected = preferences[PreferencesKey.CONNECTED] ?: false,
-            anniversaryDays = preferences[PreferencesKey.ANNIVERSARY_DAYS] ?: 0,
-            partnerNickname = preferences[PreferencesKey.PARTNER_NICKNAME] ?: "",
         )
     }
 
     override suspend fun updateConnectedState(connected: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKey.CONNECTED] = connected
-        }
-    }
-
-    override suspend fun updateAnniversaryDays(days: Int) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKey.ANNIVERSARY_DAYS] = days
-        }
-    }
-
-    override suspend fun updatePartnerNickname(nickname: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferencesKey.PARTNER_NICKNAME] = nickname
         }
     }
 

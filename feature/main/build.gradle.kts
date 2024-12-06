@@ -16,9 +16,10 @@ dependencies {
     implementation(projects.feature.map)
     implementation(projects.feature.archive)
     implementation(projects.feature.mypage)
-    implementation(projects.feature.upload)
     implementation(projects.feature.detail)
+    implementation(projects.feature.upload)
+    implementation(projects.feature.search)
 
-    // domain (for check auto login in splash)
+    // domain
     implementation(projects.domain.auth)
 }

@@ -42,13 +42,20 @@ fun NicknameRoute(
     navigateToMyPage: (String) -> Unit,
     navigateUp: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
+    currentNickname: String? = null,
     viewModel: NicknameViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val prevRoute: Route = if (prevRouteName == "mypage") MainTabRoute.MyPage() else Route.Login
 
+    LaunchedEffect(Unit) {
+        currentNickname?.let { nickname ->
+            viewModel.updatePlaceholder(nickname)
+        }
+    }
+
+    val prevRoute: Route = if (prevRouteName == "mypage") MainTabRoute.MyPage() else Route.Login
     UpdateStateByPreviousRoute(prevRoute, viewModel)
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
@@ -57,7 +64,6 @@ fun NicknameRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is NicknameSideEffect.NavigateToMyPage -> {
-                        Timber.d("nickname: ${sideEffect.nickname}")
                         navigateToMyPage(sideEffect.nickname)
                     }
 
@@ -127,7 +133,10 @@ fun NicknameRoute(
             viewModel.patchNickname(state.nickname)
         },
         closeButtonVisible = state.closeButtonVisible,
-        onCloseButtonClick = navigateUp,
+        onCloseButtonClick = {
+            keyboardController?.hide()
+            navigateUp()
+        },
         onClearIconClick = {
             viewModel.updateNickname(nickname = "")
         },
@@ -231,7 +240,7 @@ fun NicknameScreen(
                     trailingIcon = { isFocused, iconTint ->
                         if (nickname.isNotBlank()) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_input_clear),
+                                painter = painterResource(id = com.capstone.lovemarker.core.designsystem.R.drawable.ic_clear_outlined_24),
                                 contentDescription = stringResource(R.string.nickname_clear_icon_desc),
                                 tint = iconTint,
                                 modifier = Modifier.clickable(enabled = isFocused) {

@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
 import com.capstone.lovemarker.feature.detail.navigation.detailNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
@@ -15,7 +16,9 @@ import com.capstone.lovemarker.feature.main.splash.splashNavGraph
 import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
 import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
+import com.capstone.lovemarker.feature.search.navigation.searchNavGraph
 import com.capstone.lovemarker.feature.upload.navigation.uploadNavGraph
+import timber.log.Timber
 
 @Composable
 fun MainNavHost(
@@ -57,10 +60,9 @@ fun MainNavHost(
         )
         nicknameNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToMyPage = { nickname ->
-                // todo: 마이페이지 -> 닉네임 -> 마이페이지 (닉네임 화면은 스택에서 삭제)
+            navigateToMyPage = { modifiedNickname ->
                 navigator.navigateToMyPage(
-                    nickname = nickname,
+                    modifiedNickname = modifiedNickname,
                     navOptions = navOptionsPopUpTo<Route.Nickname>()
                 )
             },
@@ -89,7 +91,8 @@ fun MainNavHost(
             },
             navigateToMatching = {
                 navigator.navigateToMatching()
-            }
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         archiveNavGraph(
             innerPadding = innerPadding,
@@ -104,19 +107,38 @@ fun MainNavHost(
         myPageNavGraph(
             innerPadding = innerPadding,
             navigateToMatching = { navigator.navigateToMatching() },
-            navigateToNickname = {
+            navigateToNickname = { nickname ->
                 navigator.navigateToNickname(
-                    prevRouteName = "mypage"
+                    prevRouteName = "mypage",
+                    currentNickname = nickname
                 )
             },
             showErrorSnackbar = showErrorSnackbar
         )
         uploadNavGraph(
-            navController = navigator.navController,
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToContent = {
-                navigator.navigateToContent()
-            }
+            navigateToContent = { navigator.navigateToContent() },
+            navigateToPlaceSearch = { navigator.navigateToPlaceSearch() },
+            navigateToMap = {
+                navigator.navigateToMap(
+                    navOptions = navOptionsPopUpTo<UploadRoute.Photo>()
+                )
+            },
+            getBackStackEntryFromPhoto = {
+                // to share upload viewmodel between photo and content
+                navigator.navController.getBackStackEntry(UploadRoute.Photo)
+            },
+            showErrorSnackbar = showErrorSnackbar,
+        )
+        searchNavGraph(
+            navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToContent = { place ->
+                navigator.navigateToContent(
+                    searchPlace = place,
+                    navOptions = navOptionsPopUpTo<UploadRoute.PlaceSearch>()
+                )
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         detailNavGraph(
             navigateUp = {

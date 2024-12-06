@@ -28,7 +28,7 @@ class UserDataStoreImpl @Inject constructor(
             accessToken = preferences[PreferencesKey.ACCESS_TOKEN] ?: "",
             refreshToken = preferences[PreferencesKey.REFRESH_TOKEN] ?: "",
             autoLoginConfigured = preferences[PreferencesKey.AUTO_LOGIN] ?: false,
-            nickname = preferences[PreferencesKey.NICKNAME] ?: ""
+            nickname = preferences[PreferencesKey.NICKNAME] ?: "",
         )
     }
 

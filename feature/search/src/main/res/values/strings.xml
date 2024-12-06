@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="upload_place_search_location_icon_desc">search item location icon</string>
+    <string name="upload_place_search_warning_icon_desc">search result is empty</string>
+    <string name="upload_place_search_nothing_text">검색 결과가 없습니다\n검색어를 다시 확인해주세요</string>
+</resources>

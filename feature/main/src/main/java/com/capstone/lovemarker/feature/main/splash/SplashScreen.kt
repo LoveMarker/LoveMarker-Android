@@ -19,8 +19,8 @@ fun SplashScreen(
         viewModel.checkAutoLogin()
     }
 
-    LaunchedEffect(viewModel.splashSideEffect, lifecycleOwner) {
-        viewModel.splashSideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycle = lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is SplashSideEffect.NavigateToMap -> navigateToMap()
