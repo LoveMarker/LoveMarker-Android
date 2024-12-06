@@ -82,7 +82,6 @@ fun PhotoRoute(
             )
         },
         onNextButtonClick = {
-            Timber.d("images: ${state.images}")
             navigateToContent()
         }
     )
