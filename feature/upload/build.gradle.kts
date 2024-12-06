@@ -10,4 +10,6 @@ android {
 
 dependencies {
 //    implementation(projects.domain.upload)
+    implementation(libs.bundles.google.maps)
+    implementation(libs.kotlinx.serialization.json)
 }
