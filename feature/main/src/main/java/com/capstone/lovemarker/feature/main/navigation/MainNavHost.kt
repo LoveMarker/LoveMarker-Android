@@ -133,7 +133,11 @@ fun MainNavHost(
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToContent = { place ->
-                Timber.tag("search to content").d("$place")
+                // todo: navOptions 확인
+                navigator.navigateToContent(
+                    searchPlace = place,
+                    navOptions = navOptionsPopUpTo<UploadRoute.PlaceSearch>()
+                )
             },
             showErrorSnackbar = showErrorSnackbar
         )

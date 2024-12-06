@@ -2,8 +2,10 @@ package com.capstone.lovemarker.core.navigation
 
 import android.os.Bundle
 import androidx.navigation.NavType
+import com.capstone.lovemarker.core.model.SearchPlace
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlin.reflect.typeOf
 
 inline fun <reified T : Any?> serializableNavType(
     isNullableAllowed: Boolean = false,
@@ -20,3 +22,7 @@ inline fun <reified T : Any?> serializableNavType(
         bundle.putString(key, json.encodeToString(value))
     }
 }
+
+val searchPlaceTypeMap = mapOf(
+    typeOf<SearchPlace?>() to serializableNavType<SearchPlace?>(isNullableAllowed = true)
+)

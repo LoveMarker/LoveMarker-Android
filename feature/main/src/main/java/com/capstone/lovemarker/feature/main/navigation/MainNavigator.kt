@@ -9,6 +9,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.archive.navigation.navigateToArchive
@@ -110,8 +111,15 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    fun navigateToContent() {
-        navController.navigateToContent()
+    // todo: recomposition 유의
+    fun navigateToContent(
+        searchPlace: SearchPlace? = null,
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateToContent(
+            searchPlace = searchPlace,
+            navOptions = navOptions
+        )
     }
 
     fun navigateToPlaceSearch() {

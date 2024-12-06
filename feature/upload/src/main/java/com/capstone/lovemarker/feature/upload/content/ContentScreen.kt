@@ -45,6 +45,7 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray400
 import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
+import com.capstone.lovemarker.core.model.SearchPlace
 import com.capstone.lovemarker.feature.upload.R
 import com.capstone.lovemarker.feature.upload.UploadSideEffect
 import com.capstone.lovemarker.feature.upload.UploadViewModel
@@ -59,21 +60,21 @@ fun ContentRoute(
     navigateToPlaceSearch: () -> Unit,
     navigateToMap: (Int) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
-//    searchPlace: SearchPlace? = null,
+    searchPlace: SearchPlace? = null,
     viewModel: UploadViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
 
-//    LaunchedEffect(searchPlace) {
-//        if (searchPlace != null) {
-//            viewModel.updatePlace(
-//                address = searchPlace.address,
-//                latLng = Pair(searchPlace.latitude, searchPlace.longitude)
-//            )
-//        }
-//    }
+    LaunchedEffect(searchPlace) {
+        if (searchPlace != null) {
+            viewModel.updatePlace(
+                address = searchPlace.address,
+                latLng = Pair(searchPlace.latitude, searchPlace.longitude)
+            )
+        }
+    }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)

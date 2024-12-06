@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.core.navigation
 
+import com.capstone.lovemarker.core.model.SearchPlace
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
@@ -40,7 +41,9 @@ sealed interface UploadRoute: Route {
     data object Photo: UploadRoute
 
     @Serializable
-    data object Content: UploadRoute
+    data class Content(
+        val searchPlace: SearchPlace? = null
+    ): UploadRoute
 
     @Serializable
     data object PlaceSearch : UploadRoute
