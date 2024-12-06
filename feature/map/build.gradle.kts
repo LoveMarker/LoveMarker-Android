@@ -9,11 +9,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.compose.maps)
-    implementation(libs.google.maps)
-    implementation(libs.google.places)
-    implementation(libs.google.location)
-
+    // modules
     implementation(projects.domain.mypage)
     implementation(projects.core.datastore)
+
+    // libraries
+    implementation(libs.bundles.google.maps)
 }
