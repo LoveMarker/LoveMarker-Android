@@ -40,7 +40,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
-import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
+import com.capstone.lovemarker.core.designsystem.component.dialog.NotFullSizeDialog
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
@@ -100,7 +100,7 @@ fun ArchiveRoute(
     }
 
     if (state.showMatchingDialog) {
-        CoupleMatchingDialog {
+        NotFullSizeDialog {
             viewModel.apply {
                 updateMatchingDialogState(false)
                 triggerMatchingNavigationEffect()

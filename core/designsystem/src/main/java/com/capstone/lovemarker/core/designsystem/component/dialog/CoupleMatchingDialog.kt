@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.capstone.lovemarker.core.common.extension.noRippleClickable
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.theme.Black
 import com.capstone.lovemarker.core.designsystem.theme.Gray600
@@ -26,7 +25,7 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 
 @Composable
-fun CoupleMatchingDialog(
+fun NotFullSizeDialog(
     title: String = "커플 매칭이 필요해요",
     description: String = "LoveMarker 기능은\n커플 연결 후 사용할 수 있어요",
     buttonText: String = "매칭하러 가기",
@@ -89,7 +88,7 @@ fun CoupleMatchingDialog(
 @Composable
 private fun SingleButtonDialogPreview() {
     LoveMarkerTheme {
-        CoupleMatchingDialog(
+        NotFullSizeDialog(
             title = "커플 연결이 필요해요",
             description = "LoveMarker 기능은\n커플 연결 후 사용할 수 있어요",
             buttonText = "매칭하러 가기",
