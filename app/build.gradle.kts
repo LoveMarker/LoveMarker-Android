@@ -43,6 +43,7 @@ dependencies {
     implementation(projects.data.mypage)
     implementation(projects.data.archive)
     implementation(projects.data.detail)
+    implementation(projects.data.upload)
 
     // android
     implementation(libs.core.ktx)

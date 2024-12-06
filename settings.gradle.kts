@@ -38,8 +38,8 @@ include(
     ":feature:map",
     ":feature:archive",
     ":feature:mypage",
-    ":feature:upload",
     ":feature:detail",
+    ":feature:upload",
 )
 
 include(
@@ -50,6 +50,7 @@ include(
     ":domain:mypage",
     ":domain:archive",
     ":domain:detail",
+    ":domain:upload",
 )
 
 include(
@@ -60,4 +61,5 @@ include(
     ":data:mypage",
     ":data:archive",
     ":data:detail",
+    ":data:upload",
 )
