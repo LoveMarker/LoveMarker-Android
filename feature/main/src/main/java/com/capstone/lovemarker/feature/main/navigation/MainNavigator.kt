@@ -86,8 +86,8 @@ class MainNavigator(
         navController.navigateToMap(navOptions)
     }
 
-    fun navigateToMyPage(nickname: String, navOptions: NavOptions) {
-        navController.navigateToMyPage(nickname, navOptions)
+    fun navigateToMyPage(modifiedNickname: String, navOptions: NavOptions) {
+        navController.navigateToMyPage(modifiedNickname, navOptions)
     }
 
     fun navigateToDetail(memoryId: Int) {
