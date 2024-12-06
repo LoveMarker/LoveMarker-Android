@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.capstone.lovemarker.core.common.extension.clearFocus
 import com.capstone.lovemarker.core.designsystem.component.button.LoveMarkerButton
 import com.capstone.lovemarker.core.designsystem.component.datepicker.DatePickerModal
 import com.capstone.lovemarker.core.designsystem.component.textfield.CounterTextField
@@ -120,10 +122,13 @@ fun ContentScreen(
     onSearchButtonClick: () -> Unit,
     onCompleteButtonClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
+            .clearFocus(focusManager)
     ) {
         CenterAlignedTopAppBar(
             navigationIcon = {
