@@ -26,8 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -36,6 +34,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.capstone.lovemarker.core.designsystem.theme.Beige400
+import com.capstone.lovemarker.core.designsystem.theme.Brown600
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Error
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
@@ -71,7 +70,7 @@ fun LoveMarkerTextField(
     val borderColor = if (isError) Error else if (isFocused) Brown700 else Gray400
     val textSelectionColors = TextSelectionColors(
         handleColor = if (isError) Error else Brown700,
-        backgroundColor = if (isError) Error.copy(alpha = 0.4f) else Brown700.copy(alpha = 0.4f)
+        backgroundColor = if (isError) Error.copy(alpha = 0.4f) else Brown600.copy(alpha = 0.4f)
     )
 
     Column(

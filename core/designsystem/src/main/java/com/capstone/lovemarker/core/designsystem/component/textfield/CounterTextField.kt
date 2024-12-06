@@ -5,7 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.capstone.lovemarker.core.designsystem.theme.Brown600
 import com.capstone.lovemarker.core.designsystem.theme.Brown700
 import com.capstone.lovemarker.core.designsystem.theme.Gray300
 import com.capstone.lovemarker.core.designsystem.theme.Gray400
@@ -45,9 +46,9 @@ fun CounterTextField(
     placeholder: String,
     currentLength: Int,
     maxLength: Int,
-    minHeight: Dp,
-    singleLine: Boolean,
+    height: Dp,
     modifier: Modifier = Modifier,
+    singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
 ) {
@@ -58,7 +59,7 @@ fun CounterTextField(
     val borderColor = if (isFocused) Brown700 else Gray400
     val textSelectionColors = TextSelectionColors(
         handleColor = Brown700,
-        backgroundColor = Brown700.copy(alpha = 0.4f)
+        backgroundColor = Brown600.copy(alpha = 0.4f)
     )
 
     Column(
@@ -73,7 +74,7 @@ fun CounterTextField(
                     }
                 },
                 modifier = Modifier
-                    .heightIn(minHeight)
+                    .height(height)
                     .border(
                         width = 1.dp,
                         color = borderColor,
@@ -135,7 +136,7 @@ private fun CounterTextFieldPreview() {
             onValueChanged = {},
             currentLength = 120,
             maxLength = 200,
-            minHeight = 150.dp,
+            height = 150.dp,
             singleLine = false,
             placeholder = "내용을 입력해주세요",
         )
