@@ -65,12 +65,15 @@ fun MapRoute(
     val cameraPositionState = rememberCameraPositionState()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val userLocation by viewModel.userLocation
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
+                    is MapSideEffect.MoveCurrentLocation -> {
+                        viewModel.updateCurrentLocation(sideEffect.location)
+                    }
+
                     is MapSideEffect.NavigateToMatching -> {
                         navigateToMatching()
                     }
@@ -92,7 +95,7 @@ fun MapRoute(
     MapScreen(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
-        userLocation = userLocation,
+        userLocation = state.currentLocation,
         onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 

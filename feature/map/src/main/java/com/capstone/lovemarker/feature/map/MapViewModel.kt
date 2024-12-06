@@ -26,9 +26,6 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val coupleDataStore: CoupleDataStore
 ) : ViewModel() {
-    private val _userLocation = mutableStateOf<LatLng?>(null)
-    val userLocation: State<LatLng?> = _userLocation
-
     private val _state = MutableStateFlow(MapState())
     val state: StateFlow<MapState> = _state.asStateFlow()
 
@@ -38,10 +35,24 @@ class MapViewModel @Inject constructor(
     fun getUserLocation(fusedLocationClient: FusedLocationProviderClient) {
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             location?.let {
-                _userLocation.value = LatLng(it.latitude, it.longitude)
+                viewModelScope.launch {
+                    _sideEffect.emit(
+                        MapSideEffect.MoveCurrentLocation(
+                            location = LatLng(it.latitude, it.longitude)
+                        )
+                    )
+                }
             }
         }.addOnFailureListener { throwable ->
             Timber.e(throwable.message)
+        }
+    }
+
+    fun updateCurrentLocation(location: LatLng) {
+        _state.update {
+            it.copy(
+                currentLocation = location
+            )
         }
     }
 

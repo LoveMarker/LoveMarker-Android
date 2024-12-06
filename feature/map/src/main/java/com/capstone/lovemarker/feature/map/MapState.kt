@@ -1,6 +1,9 @@
 package com.capstone.lovemarker.feature.map
 
+import com.google.android.gms.maps.model.LatLng
+
 data class MapState(
+    val currentLocation: LatLng? = null,
     val coupleConnected: Boolean = true,
-    val showMatchingDialog: Boolean = false
+    val showMatchingDialog: Boolean = false,
 )
