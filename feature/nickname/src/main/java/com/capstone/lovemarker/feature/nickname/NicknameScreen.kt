@@ -57,7 +57,6 @@ fun NicknameRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is NicknameSideEffect.NavigateToMyPage -> {
-                        Timber.d("nickname: ${sideEffect.nickname}")
                         navigateToMyPage(sideEffect.nickname)
                     }
 
