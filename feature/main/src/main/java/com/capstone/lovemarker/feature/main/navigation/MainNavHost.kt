@@ -3,8 +3,10 @@ package com.capstone.lovemarker.feature.main.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
+import com.capstone.lovemarker.core.navigation.MainTabRoute
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.core.navigation.UploadRoute
@@ -19,6 +21,7 @@ import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
 import com.capstone.lovemarker.feature.search.navigation.searchNavGraph
 import com.capstone.lovemarker.feature.upload.navigation.uploadNavGraph
+import timber.log.Timber
 
 @Composable
 fun MainNavHost(
@@ -27,23 +30,13 @@ fun MainNavHost(
     showErrorSnackbar: (throwable: Throwable?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+//    Timber.tag("recomposition").d("Main Nav Host")
+
     NavHost(
         navController = navigator.navController,
         startDestination = navigator.startDestination,
         modifier = modifier
     ) {
-        splashNavGraph(
-            navigateToMap = {
-                navigator.navigateToMap(
-                    navOptions = navOptionsPopUpTo<Route.Splash>()
-                )
-            },
-            navigateToLogin = {
-                navigator.navigateToLogin(
-                    navOptions = navOptionsPopUpTo<Route.Splash>()
-                )
-            }
-        )
         loginNavGraph(
             navigateToMap = {
                 navigator.navigateToMap(

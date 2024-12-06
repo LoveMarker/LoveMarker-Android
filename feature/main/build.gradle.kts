@@ -20,6 +20,6 @@ dependencies {
     implementation(projects.feature.search)
     implementation(projects.feature.detail)
 
-    // domain (for check auto login in splash)
-    implementation(projects.domain.auth)
+    // core
+    implementation(projects.core.datastore)
 }

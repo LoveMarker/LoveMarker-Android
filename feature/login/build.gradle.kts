@@ -11,4 +11,5 @@ android {
 dependencies {
     implementation(projects.domain.auth)
     implementation(projects.domain.oauth)
+    implementation(projects.core.datastore)
 }

@@ -2,7 +2,7 @@ package com.capstone.lovemarker.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.capstone.lovemarker.domain.auth.entity.Token
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.domain.auth.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,6 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val userDataStore: UserDataStore
 ) : ViewModel() {
     private val _loginSideEffect = MutableSharedFlow<LoginSideEffect>()
     val loginSideEffect: SharedFlow<LoginSideEffect> = _loginSideEffect.asSharedFlow()
@@ -27,16 +28,11 @@ class LoginViewModel @Inject constructor(
                 socialToken = socialToken,
                 provider = OAUTH_PROVIDER
             ).onSuccess { response ->
-                authRepository.apply {
-                    saveTokens(
-                        Token(
-                            accessToken = response.accessToken,
-                            refreshToken = response.refreshToken
-                        )
-                    )
-                    updateAutoLogin(configured = true)
+                userDataStore.apply {
+                    updateAccessToken(response.accessToken)
+                    updateRefreshToken(response.refreshToken)
+                    updateAutoLogin(true)
                 }
-
                 _loginSideEffect.emit(LoginSideEffect.LoginSuccess(response.isRegistered))
             }.onFailure { throwable ->
                 Timber.e(throwable.message)

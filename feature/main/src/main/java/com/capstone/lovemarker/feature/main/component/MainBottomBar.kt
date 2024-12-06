@@ -19,6 +19,7 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.feature.main.navigation.MainTab
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList
+import timber.log.Timber
 
 @Composable
 fun MainBottomBar(
@@ -27,6 +28,8 @@ fun MainBottomBar(
     currentTab: MainTab?,
     onTabSelected: (MainTab) -> Unit,
 ) {
+//    Timber.tag("recomposition").d("Main bottom bar")
+
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn() + slideIn { IntOffset(0, it.height) },

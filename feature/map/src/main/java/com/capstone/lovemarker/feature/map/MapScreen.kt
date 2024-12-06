@@ -16,12 +16,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +39,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.dropShadow
-import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
+import com.capstone.lovemarker.core.designsystem.component.dialog.NotFullSizeDialog
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.LocationServices
@@ -57,57 +59,51 @@ fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
     navigateToMatching: () -> Unit,
-    viewModel: MapViewModel = hiltViewModel()
+//    viewModel: MapViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val lifecycleOwner = LocalLifecycleOwner.current
+    Timber.tag("recomposition").d("Map Route")
 
-    val cameraPositionState = rememberCameraPositionState()
+//    val state by viewModel.state.collectAsStateWithLifecycle()
+//    val cameraPositionState = rememberCameraPositionState()
+
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val userLocation by viewModel.userLocation
-
-    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
-        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
-            .collectLatest { sideEffect ->
-                when (sideEffect) {
-                    is MapSideEffect.NavigateToMatching -> {
-                        navigateToMatching()
-                    }
-                }
-            }
-    }
 
     RequestLocationPermission(
         context = context,
         onPermissionGranted = {
-            viewModel.getUserLocation(fusedLocationClient)
+//            viewModel.initCurrentLocation(fusedLocationClient)
         }
     )
 
-    MapScreen(
-        innerPadding = innerPadding,
-        cameraPositionState = cameraPositionState,
-        userLocation = userLocation,
-        onUploadButtonClick = navigateToPhoto
-    )
+//    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+//        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+//            .collectLatest { sideEffect ->
+//                when (sideEffect) {
+//                    is MapSideEffect.NavigateToPhoto -> {
+//                        navigateToPhoto()
+//                    }
+//
+//                    is MapSideEffect.NavigateToMatching -> {
+//                        navigateToMatching()
+//                    }
+//                }
+//            }
+//    }
 
-    LaunchedEffect(Unit) {
-        val coupleConnected = viewModel.getCoupleConnectState().await()
-        viewModel.apply {
-            updateCoupleConnectState(coupleConnected)
-            updateMatchingDialogState(!coupleConnected)
-        }
+    Button(onClick = {
+        navigateToPhoto()
+    }) {
+        Text("navigate to photo")
     }
 
-    if (state.showMatchingDialog) {
-        CoupleMatchingDialog {
-            viewModel.apply {
-                updateMatchingDialogState(false)
-                triggerMatchingNavigationEffect()
-            }
-        }
-    }
+//    MapScreen(
+//        innerPadding = innerPadding,
+//        currentLocation = state.currentLocation,
+//        cameraPositionState = cameraPositionState,
+//        onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
+//    )
 }
 
 @Composable
@@ -144,8 +140,8 @@ fun RequestLocationPermission(
 @Composable
 fun MapScreen(
     innerPadding: PaddingValues,
+    currentLocation: LatLng?,
     cameraPositionState: CameraPositionState,
-    userLocation: LatLng?,
     onUploadButtonClick: () -> Unit,
 ) {
     Box(
@@ -156,64 +152,14 @@ fun MapScreen(
         GoogleMap(
             cameraPositionState = cameraPositionState
         ) {
-            userLocation?.let { position ->
+            currentLocation?.let { position ->
                 cameraPositionState.position = CameraPosition.fromLatLngZoom(position, 18f)
-
-                MarkerComposable(
-                    state = rememberMarkerState(position = position),
-                    title = "Your Location",
-                    snippet = "This is where you are currently located."
-                ) {
-                    Box {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_marker_area),
-                            contentDescription = stringResource(R.string.map_location_marker_desc),
-                            tint = Color.Unspecified,
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_marker_pin),
-                            contentDescription = stringResource(R.string.map_location_marker_desc),
-                            tint = Color.Unspecified,
-                            modifier = Modifier
-                                .dropShadow(
-                                    shape = CircleShape,
-                                )
-                                .clip(CircleShape)
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
+                CurrentLocationMarker(position)
             }
         }
-        Column(
+        MapGuideHeader(
             modifier = Modifier.align(Alignment.TopCenter)
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Box(
-                modifier = Modifier
-                    .dropShadow(
-                        shape = RoundedCornerShape(30.dp),
-                        offsetY = 2.dp,
-                    )
-                    .clip(RoundedCornerShape(30.dp))
-                    .background(color = Color.White)
-
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_app_logo),
-                    contentDescription = stringResource(R.string.map_logo_icon_desc),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.align(Alignment.TopStart)
-                )
-                Text(
-                    text = stringResource(R.string.map_guide_title),
-                    style = LoveMarkerTheme.typography.label13M,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(start = 48.dp, end = 26.dp, top = 11.dp, bottom = 11.dp)
-                )
-            }
-        }
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -221,10 +167,7 @@ fun MapScreen(
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = 24.dp)
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_btn_location),
-                contentDescription = stringResource(R.string.map_location_btn_desc),
-                tint = Color.Unspecified,
+            MoveCurrentLocationButton(
                 modifier = Modifier
                     .dropShadow(
                         shape = CircleShape,
@@ -235,25 +178,109 @@ fun MapScreen(
                     .align(Alignment.Start)
             )
             Spacer(modifier = Modifier.padding(14.dp))
-            Box(
+            MemoryUploadButton(
+                onUploadButtonClick = onUploadButtonClick
+            )
+            Spacer(modifier = Modifier.padding(28.dp))
+        }
+    }
+}
+
+@Composable
+fun MemoryUploadButton(
+    onUploadButtonClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .dropShadow(
+                shape = RoundedCornerShape(12.dp),
+                offsetY = 3.dp
+            )
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(color = Red200)
+            .clickable {
+                onUploadButtonClick()
+            }
+    ) {
+        Text(
+            text = stringResource(R.string.map_upload_btn_text),
+            style = LoveMarkerTheme.typography.label13M,
+            modifier = Modifier.padding(horizontal = 96.dp, vertical = 14.dp)
+        )
+    }
+}
+
+@Composable
+fun MoveCurrentLocationButton(
+    modifier: Modifier
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_btn_location),
+        contentDescription = stringResource(R.string.map_location_btn_desc),
+        tint = Color.Unspecified,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun MapGuideHeader(modifier: Modifier) {
+    Column(
+        modifier = modifier
+    ) {
+        Spacer(modifier = Modifier.height(24.dp))
+        Box(
+            modifier = Modifier
+                .dropShadow(
+                    shape = RoundedCornerShape(30.dp),
+                    offsetY = 2.dp,
+                )
+                .clip(RoundedCornerShape(30.dp))
+                .background(color = Color.White)
+
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_app_logo),
+                contentDescription = stringResource(R.string.map_logo_icon_desc),
+                tint = Color.Unspecified,
+                modifier = Modifier.align(Alignment.TopStart)
+            )
+            Text(
+                text = stringResource(R.string.map_guide_title),
+                style = LoveMarkerTheme.typography.label13M,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(start = 48.dp, end = 26.dp, top = 11.dp, bottom = 11.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun CurrentLocationMarker(
+    position: LatLng
+) {
+    MarkerComposable(
+        state = rememberMarkerState(position = position),
+        title = "Your Location",
+        snippet = "This is where you are currently located."
+    ) {
+        Box {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_marker_area),
+                contentDescription = stringResource(R.string.map_location_marker_desc),
+                tint = Color.Unspecified,
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_marker_pin),
+                contentDescription = stringResource(R.string.map_location_marker_desc),
+                tint = Color.Unspecified,
                 modifier = Modifier
                     .dropShadow(
-                        shape = RoundedCornerShape(12.dp),
-                        offsetY = 3.dp
+                        shape = CircleShape,
                     )
-                    .clip(shape = RoundedCornerShape(12.dp))
-                    .background(color = Red200)
-                    .clickable {
-                        onUploadButtonClick()
-                    }
-            ) {
-                Text(
-                    text = stringResource(R.string.map_upload_btn_text),
-                    style = LoveMarkerTheme.typography.label13M,
-                    modifier = Modifier.padding(horizontal = 96.dp, vertical = 14.dp)
-                )
-            }
-            Spacer(modifier = Modifier.padding(28.dp))
+                    .clip(CircleShape)
+                    .align(Alignment.Center)
+            )
         }
     }
 }

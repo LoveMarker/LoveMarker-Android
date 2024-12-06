@@ -25,6 +25,7 @@ import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 import com.capstone.lovemarker.feature.search.navigation.navigateToPlaceSearch
 import com.capstone.lovemarker.feature.upload.navigation.navigateToContent
 import com.capstone.lovemarker.feature.upload.navigation.navigateToPhoto
+import timber.log.Timber
 
 class MainNavigator(
     val navController: NavHostController,
@@ -32,7 +33,7 @@ class MainNavigator(
     private val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    val startDestination = Route.Splash
+    val startDestination = MainTabRoute.Map
 
     val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
@@ -130,8 +131,9 @@ class MainNavigator(
     }
 
     @Composable
-    fun shouldShowBottomBar() = MainTab.contains {
-        currentDestination?.hasRoute(it::class) == true
+    fun shouldShowBottomBar() = MainTab.contains { route ->
+        Timber.tag("recomposition").d("${currentDestination?.route}")
+        currentDestination?.hasRoute(route::class) == true
     }
 }
 
