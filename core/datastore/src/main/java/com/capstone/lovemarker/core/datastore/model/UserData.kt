@@ -4,5 +4,4 @@ data class UserData(
     val accessToken: String,
     val refreshToken: String,
     val autoLoginConfigured: Boolean,
-    val nickname: String,
 )

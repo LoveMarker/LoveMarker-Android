@@ -8,6 +8,5 @@ interface UserDataStore {
     suspend fun updateAccessToken(token: String)
     suspend fun updateRefreshToken(token: String)
     suspend fun updateAutoLogin(configured: Boolean)
-    suspend fun updateNickname(nickname: String)
     suspend fun clear()
 }

@@ -30,14 +30,7 @@ class NicknameViewModel @Inject constructor(
     val sideEffect: SharedFlow<NicknameSideEffect> = _sideEffect.asSharedFlow()
 
     init {
-        viewModelScope.launch {
-            val nickname = userDataStore.userData.first().nickname
-            if (nickname.isEmpty()) {
-                updatePlaceholder(DEFAULT_PLACE_HOLDER)
-            } else {
-                updatePlaceholder(nickname)
-            }
-        }
+        // todo: 이전 화면이 로그인이면 디폴트 문자열, 마이페이지인 경우 서버로부터 받아오기
     }
 
     private fun updatePlaceholder(placeholder: String) {
@@ -93,8 +86,6 @@ class NicknameViewModel @Inject constructor(
                     updateInputUiState(
                         InputUiState.Success(response.nickname)
                     )
-
-                    userDataStore.updateNickname(nickname)
                 }.onFailure { throwable ->
                     val errorBody = (throwable as? HttpException)?.response()?.errorBody()?.string()
                     if (errorBody?.contains(NICKNAME_DUPLICATED_ERR_MSG) == true) {
