@@ -60,11 +60,11 @@ fun MyPageRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is MyPageSideEffect.NavigateToMatching -> {
-                        navigateToMatching() // todo: 커플 연결되면 UI 갱신
+                        navigateToMatching()
                     }
 
                     is MyPageSideEffect.NavigateToNickname -> {
-                        navigateToNickname() // todo: 변경된 닉네임으로 갱신
+                        navigateToNickname()
                     }
 
                     is MyPageSideEffect.ShowErrorSnackbar -> {
