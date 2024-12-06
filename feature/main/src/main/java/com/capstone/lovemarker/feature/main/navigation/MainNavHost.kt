@@ -16,7 +16,9 @@ import com.capstone.lovemarker.feature.main.splash.splashNavGraph
 import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
 import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
+import com.capstone.lovemarker.feature.search.navigation.searchNavGraph
 import com.capstone.lovemarker.feature.upload.navigation.uploadNavGraph
+import timber.log.Timber
 
 @Composable
 fun MainNavHost(
@@ -116,17 +118,24 @@ fun MainNavHost(
         uploadNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToContent = { navigator.navigateToContent() },
-            navigateToPlaceSearch = {  },
+            navigateToPlaceSearch = { navigator.navigateToPlaceSearch() },
             navigateToMap = {
                 navigator.navigateToMap(
                     navOptions = navOptionsPopUpTo<UploadRoute.Photo>()
                 )
             },
             getBackStackEntryFromPhoto = {
-                // to share upload viewmodel
+                // to share upload viewmodel between photo and content
                 navigator.navController.getBackStackEntry(UploadRoute.Photo)
             },
             showErrorSnackbar = showErrorSnackbar,
+        )
+        searchNavGraph(
+            navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToContent = { place ->
+                Timber.tag("search to content").d("$place")
+            },
+            showErrorSnackbar = showErrorSnackbar
         )
         detailNavGraph(
             navigateUp = {

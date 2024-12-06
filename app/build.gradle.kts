@@ -44,6 +44,7 @@ dependencies {
     implementation(projects.data.archive)
     implementation(projects.data.detail)
     implementation(projects.data.upload)
+    implementation(projects.data.search)
 
     // android
     implementation(libs.core.ktx)
