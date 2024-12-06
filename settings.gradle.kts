@@ -51,6 +51,7 @@ include(
     ":domain:archive",
     ":domain:detail",
     ":domain:upload",
+    ":domain:search",
 )
 
 include(
@@ -62,4 +63,5 @@ include(
     ":data:archive",
     ":data:detail",
     ":data:upload",
+    ":data:search",
 )
