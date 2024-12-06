@@ -109,7 +109,7 @@ fun ReceiverScreen(
                     trailingIcon = { isFocused, iconTint ->
                         if (invitationCode.isNotBlank()) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_input_clear),
+                                painter = painterResource(id = com.capstone.lovemarker.core.designsystem.R.drawable.ic_clear_outlined_24),
                                 contentDescription = stringResource(R.string.matching_receiver_clear_btn_desc),
                                 tint = iconTint,
                                 modifier = Modifier.clickable(enabled = isFocused) {
