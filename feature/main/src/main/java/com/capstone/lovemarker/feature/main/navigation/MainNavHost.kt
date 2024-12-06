@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navOptions
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.core.navigation.Route
+import com.capstone.lovemarker.core.navigation.UploadRoute
 import com.capstone.lovemarker.feature.archive.navigation.archiveNavGraph
 import com.capstone.lovemarker.feature.detail.navigation.detailNavGraph
 import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
@@ -113,11 +114,19 @@ fun MainNavHost(
             showErrorSnackbar = showErrorSnackbar
         )
         uploadNavGraph(
-            navController = navigator.navController,
             navigateUp = { navigator.navigateUpIfNotHome() },
-            navigateToContent = {
-                navigator.navigateToContent()
-            }
+            navigateToContent = { navigator.navigateToContent() },
+            navigateToPlaceSearch = {  },
+            navigateToMap = {
+                navigator.navigateToMap(
+                    navOptions = navOptionsPopUpTo<UploadRoute.Photo>()
+                )
+            },
+            getBackStackEntryFromPhoto = {
+                // to share upload viewmodel
+                navigator.navController.getBackStackEntry(UploadRoute.Photo)
+            },
+            showErrorSnackbar = showErrorSnackbar,
         )
         detailNavGraph(
             navigateUp = {
