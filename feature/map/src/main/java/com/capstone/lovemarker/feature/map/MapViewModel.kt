@@ -70,4 +70,10 @@ class MapViewModel @Inject constructor(
             _sideEffect.emit(MapSideEffect.NavigateToMatching)
         }
     }
+
+    fun triggerPhotoNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(MapSideEffect.NavigateToPhoto)
+        }
+    }
 }

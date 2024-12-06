@@ -74,6 +74,10 @@ fun MapRoute(
                     is MapSideEffect.NavigateToMatching -> {
                         navigateToMatching()
                     }
+
+                    is MapSideEffect.NavigateToPhoto -> {
+                        navigateToPhoto()
+                    }
                 }
             }
     }
@@ -89,14 +93,14 @@ fun MapRoute(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
         userLocation = userLocation,
-        onUploadButtonClick = navigateToPhoto
+        onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 
     LaunchedEffect(Unit) {
         val coupleConnected = viewModel.getCoupleConnectState().await()
         viewModel.apply {
-            updateCoupleConnectState(coupleConnected)
-            updateMatchingDialogState(!coupleConnected)
+            updateCoupleConnectState(connected = coupleConnected)
+            updateMatchingDialogState(showDialog = !coupleConnected)
         }
     }
 
