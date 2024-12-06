@@ -111,7 +111,6 @@ class MainNavigator(
         navController.navigateToPhoto()
     }
 
-    // todo: recomposition 유의
     fun navigateToContent(
         searchPlace: SearchPlace? = null,
         navOptions: NavOptions? = null

@@ -133,7 +133,6 @@ fun MainNavHost(
         searchNavGraph(
             navigateUp = { navigator.navigateUpIfNotHome() },
             navigateToContent = { place ->
-                // todo: navOptions 확인
                 navigator.navigateToContent(
                     searchPlace = place,
                     navOptions = navOptionsPopUpTo<UploadRoute.PlaceSearch>()
