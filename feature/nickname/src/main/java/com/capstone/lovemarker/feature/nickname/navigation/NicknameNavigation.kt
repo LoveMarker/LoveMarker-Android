@@ -8,8 +8,18 @@ import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.navigation.Route
 import com.capstone.lovemarker.feature.nickname.NicknameRoute
 
-fun NavController.navigateToNickname(prevRouteName: String, navOptions: NavOptions? = null) {
-    navigate(route = Route.Nickname(prevRouteName), navOptions = navOptions)
+fun NavController.navigateToNickname(
+    prevRouteName: String,
+    currentNickname: String? = null,
+    navOptions: NavOptions? = null
+) {
+    navigate(
+        route = Route.Nickname(
+            prevRouteName = prevRouteName,
+            currentNickname = currentNickname
+        ),
+        navOptions = navOptions
+    )
 }
 
 fun NavGraphBuilder.nicknameNavGraph(
@@ -22,6 +32,7 @@ fun NavGraphBuilder.nicknameNavGraph(
         val route = backStackEntry.toRoute<Route.Nickname>()
         NicknameRoute(
             prevRouteName = route.prevRouteName,
+            currentNickname = route.currentNickname,
             navigateUp = navigateUp,
             navigateToMyPage = navigateToMyPage,
             navigateToMatching = navigateToMatching,

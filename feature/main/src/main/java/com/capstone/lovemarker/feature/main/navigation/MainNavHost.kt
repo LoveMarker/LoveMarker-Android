@@ -103,9 +103,10 @@ fun MainNavHost(
         myPageNavGraph(
             innerPadding = innerPadding,
             navigateToMatching = { navigator.navigateToMatching() },
-            navigateToNickname = {
+            navigateToNickname = { nickname ->
                 navigator.navigateToNickname(
-                    prevRouteName = "mypage"
+                    prevRouteName = "mypage",
+                    currentNickname = nickname
                 )
             },
             showErrorSnackbar = showErrorSnackbar

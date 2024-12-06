@@ -3,7 +3,7 @@ package com.capstone.lovemarker.feature.nickname
 data class NicknameState(
     val uiState: InputUiState = InputUiState.Empty,
     val nickname: String = "",
-    val placeholder: String = "",
+    val placeholder: String = "닉네임",
     val guideTitle: String = "",
     val supportingText: String = "",
     val completeButtonText: String = "",

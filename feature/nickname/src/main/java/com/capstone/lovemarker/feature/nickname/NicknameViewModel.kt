@@ -21,25 +21,12 @@ import javax.inject.Inject
 @HiltViewModel
 class NicknameViewModel @Inject constructor(
     private val nicknameRepository: NicknameRepository,
-    private val userDataStore: UserDataStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(NicknameState())
     val state: StateFlow<NicknameState> = _state.asStateFlow()
 
     private val _sideEffect = MutableSharedFlow<NicknameSideEffect>()
     val sideEffect: SharedFlow<NicknameSideEffect> = _sideEffect.asSharedFlow()
-
-    init {
-        // todo: 이전 화면이 로그인이면 디폴트 문자열, 마이페이지인 경우 서버로부터 받아오기
-    }
-
-    private fun updatePlaceholder(placeholder: String) {
-        _state.update {
-            it.copy(
-                placeholder = placeholder
-            )
-        }
-    }
 
     fun updateNickname(nickname: String) {
         _state.update {
@@ -114,6 +101,14 @@ class NicknameViewModel @Inject constructor(
      * from Login vs from MyPage
      * 이전 화면에 따라 달라져야 하는 state
      * */
+    fun updatePlaceholder(placeholder: String) {
+        _state.update {
+            it.copy(
+                placeholder = placeholder
+            )
+        }
+    }
+
     fun updateGuideTitle(guideTitle: String) {
         _state.update {
             it.copy(guideTitle = guideTitle)
@@ -135,6 +130,5 @@ class NicknameViewModel @Inject constructor(
     companion object {
         private const val REGEX_PATTERN = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$"
         private const val NICKNAME_DUPLICATED_ERR_MSG = "중복"
-        private const val DEFAULT_PLACE_HOLDER = "닉네임"
     }
 }

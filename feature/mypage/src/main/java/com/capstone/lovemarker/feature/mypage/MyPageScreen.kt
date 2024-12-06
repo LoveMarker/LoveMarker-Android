@@ -47,7 +47,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun MyPageRoute(
     innerPadding: PaddingValues,
     navigateToMatching: () -> Unit,
-    navigateToNickname: () -> Unit,
+    navigateToNickname: (String) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     modifiedNickname: String? = null,
     viewModel: MyPageViewModel = hiltViewModel()
@@ -64,7 +64,7 @@ fun MyPageRoute(
                     }
 
                     is MyPageSideEffect.NavigateToNickname -> {
-                        navigateToNickname()
+                        navigateToNickname(sideEffect.nickname)
                     }
 
                     is MyPageSideEffect.ShowErrorSnackbar -> {
@@ -89,8 +89,8 @@ fun MyPageRoute(
         onDismissButtonClick = {
             viewModel.updateDisconnectDialogState(false)
         },
-        onMatchingButtonClick = navigateToMatching,
-        onNicknameButtonClick = navigateToNickname
+        onMatchingButtonClick = viewModel::triggerMatchingNavigationEffect,
+        onNicknameButtonClick = viewModel::triggerNicknameNavigationEffect
     )
 }
 

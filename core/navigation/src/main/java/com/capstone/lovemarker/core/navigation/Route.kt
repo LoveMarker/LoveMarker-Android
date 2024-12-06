@@ -11,7 +11,8 @@ sealed interface Route {
 
     @Serializable
     data class Nickname(
-        val prevRouteName: String
+        val prevRouteName: String,
+        val currentNickname: String? = null
     ) : Route
 
     @Serializable
@@ -54,6 +55,6 @@ sealed interface MainTabRoute : Route {
 
     @Serializable
     data class MyPage(
-        val nickname: String? = null
+        val modifiedNickname: String? = null
     ) : MainTabRoute
 }

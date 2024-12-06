@@ -60,8 +60,16 @@ class MainNavigator(
         navController.navigateToLogin(navOptions)
     }
 
-    fun navigateToNickname(prevRouteName: String, navOptions: NavOptions? = null) {
-        navController.navigateToNickname(prevRouteName, navOptions)
+    fun navigateToNickname(
+        prevRouteName: String,
+        currentNickname: String? = null,
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateToNickname(
+            prevRouteName = prevRouteName,
+            currentNickname = currentNickname,
+            navOptions = navOptions
+        )
     }
 
     /**

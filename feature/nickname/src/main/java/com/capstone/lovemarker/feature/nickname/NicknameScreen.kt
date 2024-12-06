@@ -42,13 +42,20 @@ fun NicknameRoute(
     navigateToMyPage: (String) -> Unit,
     navigateUp: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
+    currentNickname: String? = null,
     viewModel: NicknameViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val prevRoute: Route = if (prevRouteName == "mypage") MainTabRoute.MyPage() else Route.Login
 
+    LaunchedEffect(Unit) {
+        currentNickname?.let { nickname ->
+            viewModel.updatePlaceholder(nickname)
+        }
+    }
+
+    val prevRoute: Route = if (prevRouteName == "mypage") MainTabRoute.MyPage() else Route.Login
     UpdateStateByPreviousRoute(prevRoute, viewModel)
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
@@ -126,7 +133,10 @@ fun NicknameRoute(
             viewModel.patchNickname(state.nickname)
         },
         closeButtonVisible = state.closeButtonVisible,
-        onCloseButtonClick = navigateUp,
+        onCloseButtonClick = {
+            keyboardController?.hide()
+            navigateUp()
+        },
         onClearIconClick = {
             viewModel.updateNickname(nickname = "")
         },
