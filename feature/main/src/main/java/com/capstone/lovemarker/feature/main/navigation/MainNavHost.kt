@@ -68,15 +68,20 @@ fun MainNavHost(
             },
             navigateToMatching = {
                 navigator.navigateToMatching(
+                    prevRouteName = "nickname",
                     navOptions = navOptionsPopUpTo<Route.Nickname>()
                 )
             },
             showErrorSnackbar = showErrorSnackbar
         )
         matchingNavGraph(
-            navigateToSender = { navigator.navigateToSender() },
-            navigateToReceiver = { navigator.navigateToReceiver() },
             navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToSender = { prevRouteName ->
+                navigator.navigateToSender(prevRouteName)
+            },
+            navigateToReceiver = { prevRouteName ->
+                navigator.navigateToReceiver(prevRouteName)
+            },
             navigateToMap = {
                 navigator.navigateToMap(
                     navOptions = navOptionsPopUpTo<MatchingRoute.Home>()
@@ -90,7 +95,7 @@ fun MainNavHost(
                 navigator.navigateToPhoto()
             },
             navigateToMatching = {
-                navigator.navigateToMatching()
+                navigator.navigateToMatching(prevRouteName = "map")
             },
             showErrorSnackbar = showErrorSnackbar
         )
@@ -100,13 +105,13 @@ fun MainNavHost(
                 navigator.navigateToDetail(memoryId)
             },
             navigateToMatching = {
-                navigator.navigateToMatching()
+                navigator.navigateToMatching(prevRouteName = "archive")
             },
             showErrorSnackbar = showErrorSnackbar
         )
         myPageNavGraph(
             innerPadding = innerPadding,
-            navigateToMatching = { navigator.navigateToMatching() },
+            navigateToMatching = { navigator.navigateToMatching(prevRouteName = "mypage") },
             navigateToNickname = { nickname ->
                 navigator.navigateToNickname(
                     prevRouteName = "mypage",

@@ -12,7 +12,7 @@ sealed interface Route {
 
     @Serializable
     data class Nickname(
-        val prevRouteName: String,
+        val prevRouteName: String, // login or mypage
         val currentNickname: String? = null
     ) : Route
 
@@ -27,13 +27,19 @@ sealed interface Route {
 
 sealed interface MatchingRoute: Route {
     @Serializable
-    data object Home : MatchingRoute
+    data class Home(
+        val prevRouteName: String // nickname or main tab
+    ) : MatchingRoute
 
     @Serializable
-    data object Sender : MatchingRoute
+    data class Sender(
+        val prevRouteName: String
+    ): MatchingRoute
 
     @Serializable
-    data object Receiver : MatchingRoute
+    data class Receiver(
+        val prevRouteName: String
+    ) : MatchingRoute
 }
 
 sealed interface UploadRoute: Route {

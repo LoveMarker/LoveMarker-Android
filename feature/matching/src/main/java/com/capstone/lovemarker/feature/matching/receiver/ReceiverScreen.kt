@@ -48,6 +48,15 @@ fun ReceiverRoute(
             .flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
+                    is ReceiverSideEffect.MatchingSuccess -> {
+                        if (state.prevRouteName == "nickname") {
+                            viewModel.triggerMapNavigationEffect()
+                        } else {
+                            keyboardController?.hide()
+                            navigateUp()
+                        }
+                    }
+
                     is ReceiverSideEffect.NavigateToMap -> {
                         keyboardController?.hide()
                         navigateToMap()

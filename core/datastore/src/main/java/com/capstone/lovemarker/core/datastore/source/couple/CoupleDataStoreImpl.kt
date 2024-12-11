@@ -27,7 +27,7 @@ class CoupleDataStoreImpl @Inject constructor(
         )
     }
 
-    override suspend fun updateConnectedState(connected: Boolean) {
+    override suspend fun updateCoupleConnectState(connected: Boolean) {
         dataStore.edit { preferences ->
             preferences[PreferencesKey.CONNECTED] = connected
         }

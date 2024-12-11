@@ -46,7 +46,7 @@ class MapViewModel @Inject constructor(
             myPageRepository.getCoupleInfo()
                 .onSuccess { response ->
                     userDataStore.updateNickname(response.nickname)
-                    coupleDataStore.updateConnectedState(response.connected)
+                    coupleDataStore.updateCoupleConnectState(response.connected)
                     updateUiState(UiState.Success(Unit))
                 }.onFailure {
                     Timber.e(it.message)

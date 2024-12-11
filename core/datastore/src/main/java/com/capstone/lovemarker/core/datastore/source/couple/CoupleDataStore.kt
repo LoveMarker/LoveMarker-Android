@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CoupleDataStore {
     val coupleData: Flow<CoupleData>
-    suspend fun updateConnectedState(connected: Boolean)
+    suspend fun updateCoupleConnectState(connected: Boolean)
     suspend fun clear()
 }

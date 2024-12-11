@@ -77,16 +77,16 @@ class MainNavigator(
     /**
      * Couple Matching
      * */
-    fun navigateToMatching(navOptions: NavOptions? = null) {
-        navController.navigateToMatching(navOptions)
+    fun navigateToMatching(prevRouteName: String, navOptions: NavOptions? = null) {
+        navController.navigateToMatching(prevRouteName, navOptions)
     }
 
-    fun navigateToSender() {
-        navController.navigateToSender()
+    fun navigateToSender(prevRouteName: String) {
+        navController.navigateToSender(prevRouteName)
     }
 
-    fun navigateToReceiver() {
-        navController.navigateToReceiver()
+    fun navigateToReceiver(prevRouteName: String) {
+        navController.navigateToReceiver(prevRouteName)
     }
 
     /**

@@ -4,35 +4,43 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.capstone.lovemarker.core.navigation.MatchingRoute
 import com.capstone.lovemarker.feature.matching.home.MatchingScreen
 import com.capstone.lovemarker.feature.matching.receiver.ReceiverRoute
-import com.capstone.lovemarker.feature.matching.receiver.ReceiverScreen
 import com.capstone.lovemarker.feature.matching.sender.SenderRoute
 
-fun NavController.navigateToMatching(navOptions: NavOptions? = null) {
-    navigate(MatchingRoute.Home, navOptions)
+fun NavController.navigateToMatching(prevRouteName: String, navOptions: NavOptions? = null) {
+    navigate(
+        route = MatchingRoute.Home(prevRouteName = prevRouteName),
+        navOptions = navOptions
+    )
 }
 
-fun NavController.navigateToSender() {
-    navigate(MatchingRoute.Sender)
+fun NavController.navigateToSender(prevRouteName: String) {
+    navigate(MatchingRoute.Sender(prevRouteName))
 }
 
-fun NavController.navigateToReceiver() {
-    navigate(MatchingRoute.Receiver)
+fun NavController.navigateToReceiver(prevRouteName: String) {
+    navigate(MatchingRoute.Receiver(prevRouteName))
 }
 
 fun NavGraphBuilder.matchingNavGraph(
-    navigateToSender: () -> Unit,
-    navigateToReceiver: () -> Unit,
+    navigateToSender: (String) -> Unit,
+    navigateToReceiver: (String) -> Unit,
     navigateUp: () -> Unit,
     navigateToMap: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
 ) {
-    composable<MatchingRoute.Home> {
+    composable<MatchingRoute.Home> { backStackEntry ->
+        val matchingRoute = backStackEntry.toRoute<MatchingRoute.Home>()
         MatchingScreen(
-            navigateToSender = navigateToSender,
-            navigateToReceiver = navigateToReceiver,
+            navigateToSender = {
+                navigateToSender(matchingRoute.prevRouteName)
+            },
+            navigateToReceiver = {
+                navigateToReceiver(matchingRoute.prevRouteName)
+            },
         )
     }
     composable<MatchingRoute.Sender> {

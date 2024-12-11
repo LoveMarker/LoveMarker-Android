@@ -40,8 +40,8 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red500
 import com.capstone.lovemarker.core.designsystem.theme.White
-import com.capstone.lovemarker.feature.mypage.model.CoupleModel
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
 fun MyPageRoute(
@@ -54,6 +54,10 @@ fun MyPageRoute(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getMyPageInfo()
+    }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -74,10 +78,12 @@ fun MyPageRoute(
             }
     }
 
-    MaPageScreen(
+    MyPageScreen(
         innerPadding = innerPadding,
         nickname = modifiedNickname ?: state.nickname,
-        coupleModel = state.coupleModel,
+        anniversaryDays = state.anniversaryDays,
+        coupleConnected = state.coupleConnected,
+        partnerNickname = state.partnerNickname,
         showDisconnectDialog = state.showDisconnectDialog,
         onDisconnectButtonClick = {
             viewModel.updateDisconnectDialogState(true)
@@ -95,10 +101,12 @@ fun MyPageRoute(
 }
 
 @Composable
-fun MaPageScreen(
+fun MyPageScreen(
     innerPadding: PaddingValues,
     nickname: String,
-    coupleModel: CoupleModel,
+    anniversaryDays: Int,
+    coupleConnected: Boolean,
+    partnerNickname: String,
     showDisconnectDialog: Boolean,
     onDisconnectButtonClick: () -> Unit,
     onConfirmButtonClick: () -> Unit,
@@ -118,7 +126,9 @@ fun MaPageScreen(
         )
         CoupleSection(
             nickname = nickname,
-            coupleModel = coupleModel,
+            anniversaryDays = anniversaryDays,
+            coupleConnected = coupleConnected,
+            partnerNickname = partnerNickname,
             onMatchingButtonClick = onMatchingButtonClick
         )
         Spacer(
@@ -141,7 +151,7 @@ fun MaPageScreen(
     }
 
     if (showDisconnectDialog) {
-        if (coupleModel.connected) {
+        if (coupleConnected) {
             DoubleButtonDialog(
                 title = stringResource(R.string.mypage_disconnect_dialog_title),
                 description = "",
@@ -164,7 +174,9 @@ fun MaPageScreen(
 @Composable
 fun CoupleSection(
     nickname: String,
-    coupleModel: CoupleModel,
+    anniversaryDays: Int,
+    coupleConnected: Boolean,
+    partnerNickname: String,
     onMatchingButtonClick: () -> Unit,
 ) {
     Column(
@@ -172,7 +184,7 @@ fun CoupleSection(
     ) {
         Spacer(modifier = Modifier.padding(top = 30.dp))
         Text(
-            text = "사랑한지 ${coupleModel.anniversaryDays}일째",
+            text = "사랑한지 ${anniversaryDays}일째",
             style = LoveMarkerTheme.typography.body16M,
             textAlign = TextAlign.Center,
             color = Gray800,
@@ -194,7 +206,7 @@ fun CoupleSection(
             Image(
                 painter = painterResource(id = R.drawable.img_mypage_heart),
                 contentDescription = "heart image",
-                colorFilter = if (coupleModel.connected) ColorFilter.tint(Red500)
+                colorFilter = if (coupleConnected) ColorFilter.tint(Red500)
                 else ColorFilter.tint(Gray300)
             )
             Row(
@@ -202,16 +214,16 @@ fun CoupleSection(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = if (coupleModel.connected) coupleModel.partnerNickname
+                    text = if (coupleConnected) partnerNickname
                     else stringResource(R.string.mypage_anonymous_partner_nickname),
                     style = LoveMarkerTheme.typography.headline18M,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 30.dp),
-                    color = if (coupleModel.connected) Gray800 else Gray400
+                    color = if (coupleConnected) Gray800 else Gray400
                 )
-                if (!coupleModel.connected) {
+                if (!coupleConnected) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_mypage_setting_nav),
                         contentDescription = "icon for navigate to nickname",
