@@ -74,7 +74,7 @@ fun MyPageRoute(
             }
     }
 
-    MaPageScreen(
+    MyPageScreen(
         innerPadding = innerPadding,
         nickname = modifiedNickname ?: state.nickname,
         coupleModel = state.coupleModel,
@@ -95,7 +95,7 @@ fun MyPageRoute(
 }
 
 @Composable
-fun MaPageScreen(
+fun MyPageScreen(
     innerPadding: PaddingValues,
     nickname: String,
     coupleModel: CoupleModel,
