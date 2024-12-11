@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,7 +45,9 @@ import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatching
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -52,8 +55,12 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
+
+private const val CAMERA_DEFAULT_ZOOM = 18f
 
 @Composable
 fun MapRoute(
@@ -65,10 +72,10 @@ fun MapRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
-
-    val cameraPositionState = rememberCameraPositionState()
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
@@ -76,6 +83,9 @@ fun MapRoute(
                 when (sideEffect) {
                     is MapSideEffect.MoveCurrentLocation -> {
                         viewModel.updateCurrentLocation(sideEffect.location)
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(sideEffect.location, CAMERA_DEFAULT_ZOOM)
+                        )
                     }
 
                     is MapSideEffect.NavigateToMatching -> {
@@ -96,7 +106,12 @@ fun MapRoute(
     RequestLocationPermission(
         context = context,
         onPermissionGranted = {
-            viewModel.getUserLocation(fusedLocationClient)
+            moveCurrentLocation(
+                coroutineScope = coroutineScope,
+                viewModel = viewModel,
+                fusedLocationClient = fusedLocationClient,
+                showErrorSnackbar = showErrorSnackbar
+            )
         }
     )
 
@@ -104,6 +119,14 @@ fun MapRoute(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
         currentLocation = state.currentLocation,
+        onMoveCurrentLocationButtonClick = {
+            moveCurrentLocation(
+                coroutineScope = coroutineScope,
+                viewModel = viewModel,
+                fusedLocationClient = fusedLocationClient,
+                showErrorSnackbar = showErrorSnackbar
+            )
+        },
         onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 
@@ -131,6 +154,23 @@ fun MapRoute(
                 updateMatchingDialogState(false)
                 triggerMatchingNavigationEffect()
             }
+        }
+    }
+}
+
+fun moveCurrentLocation(
+    coroutineScope: CoroutineScope,
+    viewModel: MapViewModel,
+    fusedLocationClient: FusedLocationProviderClient,
+    showErrorSnackbar: (Throwable?) -> Unit
+) {
+    coroutineScope.launch {
+        runCatching {
+            viewModel.getUserLocation(fusedLocationClient)
+        }.onSuccess { location ->
+            viewModel.triggerMoveCurrentLocationEffect(location)
+        }.onFailure { throwable ->
+            showErrorSnackbar(throwable)
         }
     }
 }
@@ -185,6 +225,7 @@ fun MapScreen(
     innerPadding: PaddingValues,
     cameraPositionState: CameraPositionState,
     currentLocation: LatLng?,
+    onMoveCurrentLocationButtonClick: () -> Unit,
     onUploadButtonClick: () -> Unit,
 ) {
     Box(
@@ -196,7 +237,7 @@ fun MapScreen(
             cameraPositionState = cameraPositionState
         ) {
             currentLocation?.let { location ->
-                cameraPositionState.position = CameraPosition.fromLatLngZoom(location, 18f)
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(location, CAMERA_DEFAULT_ZOOM)
                 CurrentLocationMarker(location)
             }
         }
@@ -212,9 +253,12 @@ fun MapScreen(
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = 24.dp)
         ) {
-            MoveCurrentLocationButton(modifier = Modifier.align(Alignment.Start))
+            MoveCurrentLocationButton(
+                onClick = onMoveCurrentLocationButtonClick,
+                modifier = Modifier.align(Alignment.Start),
+            )
             Spacer(modifier = Modifier.padding(14.dp))
-            MemoryUploadButton(onUploadButtonClick = onUploadButtonClick)
+            MemoryUploadButton(onClick = onUploadButtonClick)
             Spacer(modifier = Modifier.padding(28.dp))
         }
     }
@@ -281,7 +325,8 @@ fun CurrentLocationMarker(
 
 @Composable
 fun MoveCurrentLocationButton(
-    modifier: Modifier
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Icon(
         painter = painterResource(id = R.drawable.ic_btn_location),
@@ -294,12 +339,15 @@ fun MoveCurrentLocationButton(
                 offsetY = 3.dp
             )
             .clip(CircleShape)
+            .clickable {
+                onClick()
+            }
     )
 }
 
 @Composable
 fun MemoryUploadButton(
-    onUploadButtonClick: () -> Unit,
+    onClick: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -310,7 +358,7 @@ fun MemoryUploadButton(
             .clip(shape = RoundedCornerShape(12.dp))
             .background(color = Red200)
             .clickable {
-                onUploadButtonClick()
+                onClick()
             }
     ) {
         Text(
