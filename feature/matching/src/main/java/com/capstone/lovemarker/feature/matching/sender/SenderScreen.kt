@@ -33,8 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -97,10 +95,15 @@ fun SenderRoute(
         },
         completeButtonEnabled = state.buttonEnabled,
         onCompleteButtonClick = {
-            if (state.codeCreated) {
-                viewModel.triggerNavigationEffect()
-            } else {
+            if (!state.codeCreated) {
                 viewModel.postInvitationCode(state.anniversary)
+                return@SenderScreen
+            }
+
+            if (state.prevRouteName == "nickname") {
+                viewModel.triggerMapNavigationEffect()
+            } else {
+                navigateUp()
             }
         },
         invitationCode = state.invitationCode,

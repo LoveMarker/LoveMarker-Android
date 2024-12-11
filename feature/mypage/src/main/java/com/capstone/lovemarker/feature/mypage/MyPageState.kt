@@ -1,10 +1,10 @@
 package com.capstone.lovemarker.feature.mypage
 
-import com.capstone.lovemarker.feature.mypage.model.CoupleModel
-
 data class MyPageState(
     val nickname: String = "",
-    val coupleModel: CoupleModel = CoupleModel(),
+    val anniversaryDays: Int = 0,
+    val coupleConnected: Boolean = false,
+    val partnerNickname: String = "",
     val showDisconnectDialog: Boolean = false,
     val showLogoutDialog: Boolean = false,
 )

@@ -1,6 +1,8 @@
 package com.capstone.lovemarker.feature.matching.receiver
 
 sealed interface ReceiverSideEffect {
+    data object MatchingSuccess: ReceiverSideEffect
+
     data object NavigateToMap: ReceiverSideEffect
 
     data class ShowErrorSnackbar(
