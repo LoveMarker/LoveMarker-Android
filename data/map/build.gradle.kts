@@ -1,9 +1,13 @@
+import com.capstone.lovemarker.convention.setNamespace
+
 plugins {
-    id("java-library")
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.lovemarker.data)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+android {
+    setNamespace("data.map")
+}
+
+dependencies {
+    implementation(projects.domain.map)
 }

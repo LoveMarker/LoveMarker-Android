@@ -55,6 +55,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerComposable
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -82,9 +83,10 @@ fun MapRoute(
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is MapSideEffect.MoveCurrentLocation -> {
-                        viewModel.updateCurrentLocation(sideEffect.location)
+                        val location = sideEffect.location
+                        viewModel.updateCurrentLocation(location)
                         cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(sideEffect.location, CAMERA_DEFAULT_ZOOM)
+                            CameraUpdateFactory.newLatLngZoom(location, CAMERA_DEFAULT_ZOOM)
                         )
                     }
 
@@ -119,6 +121,7 @@ fun MapRoute(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
         currentLocation = state.currentLocation,
+        memories = state.memories,
         onMoveCurrentLocationButtonClick = {
             moveCurrentLocation(
                 coroutineScope = coroutineScope,
@@ -129,6 +132,16 @@ fun MapRoute(
         },
         onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
+
+    // todo: 현위치가 변경될 때마다 주변의 추억 리스트 재조회
+    LaunchedEffect(state.currentLocation) {
+        state.currentLocation?.let { location ->
+            viewModel.getMemories(
+                latitude = location.latitude,
+                longitude = location.longitude
+            )
+        }
+    }
 
     when (state.uiState) {
         is UiState.Loading -> {
@@ -225,6 +238,7 @@ fun MapScreen(
     innerPadding: PaddingValues,
     cameraPositionState: CameraPositionState,
     currentLocation: LatLng?,
+    memories: PersistentList<MemoryModel>,
     onMoveCurrentLocationButtonClick: () -> Unit,
     onUploadButtonClick: () -> Unit,
 ) {
