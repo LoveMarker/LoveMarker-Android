@@ -4,10 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.map
 import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
 import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
 import com.capstone.lovemarker.domain.archive.repository.ArchiveRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
@@ -18,10 +21,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
+import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 @HiltViewModel
 class ArchiveViewModel @Inject constructor(
@@ -33,6 +41,11 @@ class ArchiveViewModel @Inject constructor(
 
     private val _sideEffect = MutableSharedFlow<ArchiveSideEffect>()
     val sideEffect: SharedFlow<ArchiveSideEffect> = _sideEffect.asSharedFlow()
+
+    val memories = archiveRepository.getMemories()
+        .catch { throwable ->
+            _sideEffect.emit(ArchiveSideEffect.ShowErrorSnackbar(throwable))
+        }
 
     fun getCoupleConnectState(): Deferred<Boolean> {
         return viewModelScope.async {
@@ -53,11 +66,6 @@ class ArchiveViewModel @Inject constructor(
             )
         }
     }
-
-    val memories: Flow<PagingData<MemoryEntity>> = archiveRepository.getMemories()
-        .catch { throwable ->
-            _sideEffect.emit(ArchiveSideEffect.ShowErrorSnackbar(throwable))
-        }.cachedIn(viewModelScope)
 
     fun triggerDetailNavigationEffect(memoryId: Int) {
         viewModelScope.launch {
