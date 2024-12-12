@@ -32,7 +32,6 @@ import kotlin.coroutines.resumeWithException
 
 // todo: 현위치 기준 반경 3km 추억 목록 조회
 //  줌 확대/축소에 따라 추억 재조회
-
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val mapRepository: MapRepository,
@@ -96,6 +95,8 @@ class MapViewModel @Inject constructor(
     }
 
     fun getMemories(radius: Double = 3000.0, latitude: Double, longitude: Double) {
+        Timber.d("get memories")
+
         viewModelScope.launch {
             mapRepository.getMemories(radius, latitude, longitude)
                 .onSuccess { response ->

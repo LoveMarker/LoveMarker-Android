@@ -48,11 +48,14 @@ import com.capstone.lovemarker.core.designsystem.theme.Red200
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerComposable
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.collections.immutable.PersistentList
@@ -61,7 +64,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-private const val CAMERA_DEFAULT_ZOOM = 18f
+private const val CAMERA_DEFAULT_ZOOM = 15f
 
 @Composable
 fun MapRoute(
@@ -122,6 +125,10 @@ fun MapRoute(
         cameraPositionState = cameraPositionState,
         currentLocation = state.currentLocation,
         memories = state.memories,
+        onMemoryIconClick = { memoryId ->
+            // todo: navigate to detail screen
+            Timber.d("id: $memoryId")
+        },
         onMoveCurrentLocationButtonClick = {
             moveCurrentLocation(
                 coroutineScope = coroutineScope,
@@ -239,6 +246,7 @@ fun MapScreen(
     cameraPositionState: CameraPositionState,
     currentLocation: LatLng?,
     memories: PersistentList<MemoryModel>,
+    onMemoryIconClick: (Int) -> Unit,
     onMoveCurrentLocationButtonClick: () -> Unit,
     onUploadButtonClick: () -> Unit,
 ) {
@@ -253,6 +261,13 @@ fun MapScreen(
             currentLocation?.let { location ->
                 cameraPositionState.position = CameraPosition.fromLatLngZoom(location, CAMERA_DEFAULT_ZOOM)
                 CurrentLocationMarker(location)
+            }
+
+            memories.forEach { memory ->
+                MemoryMarker(
+                    latLng = LatLng(memory.latitude, memory.longitude),
+                    onClick = { onMemoryIconClick(memory.memoryId) }
+                )
             }
         }
         Column(
@@ -313,17 +328,15 @@ fun CurrentLocationMarker(
 ) {
     MarkerComposable(
         state = rememberMarkerState(position = currentLocation),
-        title = "Your Location",
-        snippet = "This is where you are currently located."
     ) {
         Box {
             Icon(
-                painter = painterResource(id = R.drawable.ic_marker_area),
+                painter = painterResource(id = R.drawable.ic_current_location_marker_area),
                 contentDescription = stringResource(R.string.map_location_marker_desc),
                 tint = Color.Unspecified,
             )
             Icon(
-                painter = painterResource(id = R.drawable.ic_marker_pin),
+                painter = painterResource(id = R.drawable.ic_current_location_marker_pin),
                 contentDescription = stringResource(R.string.map_location_marker_desc),
                 tint = Color.Unspecified,
                 modifier = Modifier
@@ -338,12 +351,27 @@ fun CurrentLocationMarker(
 }
 
 @Composable
+fun MemoryMarker(
+    latLng: LatLng,
+    onClick: () -> Unit
+) {
+    Marker(
+        icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_memory_location_marker),
+        state = MarkerState(position = latLng),
+        onClick = {
+            onClick()
+            true // 기본 클릭 동작 소비 (윈도우 창 표시 X)
+        }
+    )
+}
+
+@Composable
 fun MoveCurrentLocationButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Icon(
-        painter = painterResource(id = R.drawable.ic_btn_location),
+        painter = painterResource(id = R.drawable.ic_move_current_location_btn),
         contentDescription = stringResource(R.string.map_location_btn_desc),
         tint = Color.Unspecified,
         modifier = modifier
