@@ -47,7 +47,6 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 @Composable
 fun ArchiveRoute(
@@ -60,7 +59,6 @@ fun ArchiveRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val memories = viewModel.memories.collectAsLazyPagingItems()
-    Timber.d("memories: ${memories.itemSnapshotList}")
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect
@@ -92,7 +90,6 @@ fun ArchiveRoute(
 
     LaunchedEffect(Unit) {
         val coupleConnected = viewModel.getCoupleConnectState().await()
-        Timber.d("connect: $coupleConnected")
         viewModel.apply {
             updateCoupleConnectState(coupleConnected)
             updateMatchingDialogState(!coupleConnected)
