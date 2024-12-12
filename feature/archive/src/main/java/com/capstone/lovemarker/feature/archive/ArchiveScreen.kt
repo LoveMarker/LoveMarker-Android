@@ -3,6 +3,7 @@ package com.capstone.lovemarker.feature.archive
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -35,10 +37,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import androidx.paging.CombinedLoadStates
 import androidx.paging.ItemSnapshotList
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.capstone.lovemarker.core.common.extension.dropShadow
+import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
 import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
@@ -46,7 +51,10 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 @Composable
 fun ArchiveRoute(
@@ -59,6 +67,38 @@ fun ArchiveRoute(
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val memories = viewModel.memories.collectAsLazyPagingItems()
+
+    when (val refreshState = memories.loadState.refresh) {
+        is LoadState.Loading -> {
+            viewModel.updateUiState(UiState.Loading)
+        }
+
+        is LoadState.Error -> {
+            showErrorSnackbar(refreshState.error)
+        }
+
+        is LoadState.NotLoading -> {
+            viewModel.updateUiState(UiState.Success(Unit))
+        }
+    }
+
+    when (state.uiState) {
+        is UiState.Loading -> {
+            LoadingProgressBar()
+        }
+
+        is UiState.Success -> {
+            ArchiveScreen(
+                innerPadding = innerPadding,
+                memories = memories.itemSnapshotList.items.toPersistentList(),
+                onMemoryItemClick = { memoryId ->
+                    viewModel.triggerDetailNavigationEffect(memoryId)
+                }
+            )
+        }
+
+        else -> {}
+    }
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect
@@ -79,14 +119,6 @@ fun ArchiveRoute(
                 }
             }
     }
-
-    ArchiveScreen(
-        innerPadding = innerPadding,
-        memories = memories.itemSnapshotList,
-        onMemoryItemClick = { memoryId ->
-            viewModel.triggerDetailNavigationEffect(memoryId)
-        }
-    )
 
     LaunchedEffect(Unit) {
         val coupleConnected = viewModel.getCoupleConnectState().await()
@@ -109,9 +141,11 @@ fun ArchiveRoute(
 @Composable
 fun ArchiveScreen(
     innerPadding: PaddingValues,
-    memories: ItemSnapshotList<MemoryEntity>,
+    memories: PersistentList<MemoryEntity>,
     onMemoryItemClick: (Int) -> Unit,
 ) {
+    Timber.d("$memories")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -134,21 +168,36 @@ fun ArchiveScreen(
 }
 
 @Composable
+fun LoadingProgressBar() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = Gray200
+        )
+    }
+}
+
+@Composable
 fun ArchiveItems(
-    memories: ItemSnapshotList<MemoryEntity>,
+    memories: PersistentList<MemoryEntity>,
     onMemoryItemClick: (Int) -> Unit,
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(14.dp),
         contentPadding = PaddingValues(16.dp),
     ) {
-        items(memories) { memory ->
-            if (memory != null) {
-                MemoryItem(
-                    item = memory,
-                    onItemClick = onMemoryItemClick
-                )
-            }
+        items(
+            key = { memory -> memory.memoryId },
+            items = memories,
+        ) { memory ->
+            MemoryItem(
+                item = memory,
+                onItemClick = onMemoryItemClick
+            )
         }
     }
 }
