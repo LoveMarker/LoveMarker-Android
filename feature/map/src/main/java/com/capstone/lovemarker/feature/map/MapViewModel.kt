@@ -161,4 +161,10 @@ class MapViewModel @Inject constructor(
             _sideEffect.emit(MapSideEffect.NavigateToPhoto)
         }
     }
+
+    fun triggerDetailNavigationEffect(memoryId: Int) {
+        viewModelScope.launch {
+            _sideEffect.emit(MapSideEffect.NavigateToDetail(memoryId))
+        }
+    }
 }

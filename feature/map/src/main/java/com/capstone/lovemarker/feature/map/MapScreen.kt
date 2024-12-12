@@ -70,6 +70,7 @@ private const val CAMERA_DEFAULT_ZOOM = 15f
 fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
     navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
@@ -101,6 +102,10 @@ fun MapRoute(
                         navigateToPhoto()
                     }
 
+                    is MapSideEffect.NavigateToDetail -> {
+                        navigateToDetail(sideEffect.memoryId)
+                    }
+
                     is MapSideEffect.ShowErrorSnackbar -> {
                         showErrorSnackbar(sideEffect.throwable)
                     }
@@ -126,8 +131,7 @@ fun MapRoute(
         currentLocation = state.currentLocation,
         memories = state.memories,
         onMemoryIconClick = { memoryId ->
-            // todo: navigate to detail screen
-            Timber.d("id: $memoryId")
+            viewModel.triggerDetailNavigationEffect(memoryId)
         },
         onMoveCurrentLocationButtonClick = {
             moveCurrentLocation(
@@ -140,7 +144,6 @@ fun MapRoute(
         onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 
-    // todo: 현위치가 변경될 때마다 주변의 추억 리스트 재조회
     LaunchedEffect(state.currentLocation) {
         state.currentLocation?.let { location ->
             viewModel.getMemories(
