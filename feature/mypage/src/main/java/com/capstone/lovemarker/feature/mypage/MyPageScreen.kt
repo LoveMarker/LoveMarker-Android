@@ -144,7 +144,7 @@ fun MyPageScreen(
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = "탈퇴하기",
-            style = LoveMarkerTheme.typography.body16M,
+            style = LoveMarkerTheme.typography.body14M,
             color = Gray400,
             modifier = Modifier.padding(horizontal = 22.dp, vertical = 16.dp)
         )
