@@ -95,8 +95,6 @@ class MapViewModel @Inject constructor(
     }
 
     fun getMemories(radius: Double = 3000.0, latitude: Double, longitude: Double) {
-        Timber.d("get memories")
-
         viewModelScope.launch {
             mapRepository.getMemories(radius, latitude, longitude)
                 .onSuccess { response ->
