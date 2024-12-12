@@ -90,6 +90,7 @@ fun SearchRoute(
             viewModel.updateSearchKeyword("")
         },
         onSearchActionDone = {
+            if (state.keyword.isBlank()) return@SearchScreen
             lifecycleOwner.lifecycleScope.launch {
                 runCatching {
                     viewModel.updateUiState(UiState.Loading)

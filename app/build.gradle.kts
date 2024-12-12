@@ -40,6 +40,7 @@ dependencies {
     implementation(projects.data.oauth)
     implementation(projects.data.nickname)
     implementation(projects.data.matching)
+    implementation(projects.data.map)
     implementation(projects.data.mypage)
     implementation(projects.data.archive)
     implementation(projects.data.detail)

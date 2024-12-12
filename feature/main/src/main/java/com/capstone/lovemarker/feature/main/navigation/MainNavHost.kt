@@ -94,6 +94,9 @@ fun MainNavHost(
             navigateToPhoto = {
                 navigator.navigateToPhoto()
             },
+            navigateToDetail = { memoryId ->
+                navigator.navigateToDetail(memoryId)
+            },
             navigateToMatching = {
                 navigator.navigateToMatching(prevRouteName = "map")
             },

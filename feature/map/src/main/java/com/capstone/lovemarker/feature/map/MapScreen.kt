@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,45 +39,59 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red200
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerComposable
+import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
+
+private const val CAMERA_DEFAULT_ZOOM = 12f
 
 @Composable
 fun MapRoute(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
     navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: MapViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
-
-    val cameraPositionState = rememberCameraPositionState()
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val cameraPositionState = rememberCameraPositionState()
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
             .collectLatest { sideEffect ->
                 when (sideEffect) {
                     is MapSideEffect.MoveCurrentLocation -> {
-                        viewModel.updateCurrentLocation(sideEffect.location)
+                        val location = sideEffect.location
+                        viewModel.updateCurrentLocation(location)
+                        cameraPositionState.animate(
+                            CameraUpdateFactory.newLatLngZoom(location, CAMERA_DEFAULT_ZOOM)
+                        )
                     }
 
                     is MapSideEffect.NavigateToMatching -> {
@@ -85,6 +100,10 @@ fun MapRoute(
 
                     is MapSideEffect.NavigateToPhoto -> {
                         navigateToPhoto()
+                    }
+
+                    is MapSideEffect.NavigateToDetail -> {
+                        navigateToDetail(sideEffect.memoryId)
                     }
 
                     is MapSideEffect.ShowErrorSnackbar -> {
@@ -97,29 +116,46 @@ fun MapRoute(
     RequestLocationPermission(
         context = context,
         onPermissionGranted = {
-            viewModel.getUserLocation(fusedLocationClient)
+            moveCurrentLocation(
+                coroutineScope = coroutineScope,
+                viewModel = viewModel,
+                fusedLocationClient = fusedLocationClient,
+                showErrorSnackbar = showErrorSnackbar
+            )
         }
     )
 
     MapScreen(
         innerPadding = innerPadding,
         cameraPositionState = cameraPositionState,
-        userLocation = state.currentLocation,
+        currentLocation = state.currentLocation,
+        memories = state.memories,
+        onMemoryIconClick = { memoryId ->
+            viewModel.triggerDetailNavigationEffect(memoryId)
+        },
+        onMoveCurrentLocationButtonClick = {
+            moveCurrentLocation(
+                coroutineScope = coroutineScope,
+                viewModel = viewModel,
+                fusedLocationClient = fusedLocationClient,
+                showErrorSnackbar = showErrorSnackbar
+            )
+        },
         onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 
+    LaunchedEffect(state.currentLocation) {
+        state.currentLocation?.let { location ->
+            viewModel.getMemories(
+                latitude = location.latitude,
+                longitude = location.longitude
+            )
+        }
+    }
+
     when (state.uiState) {
         is UiState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = Gray200
-                )
-            }
+            LoadingProgressBar()
         }
 
         is UiState.Success -> {
@@ -142,6 +178,37 @@ fun MapRoute(
                 triggerMatchingNavigationEffect()
             }
         }
+    }
+}
+
+fun moveCurrentLocation(
+    coroutineScope: CoroutineScope,
+    viewModel: MapViewModel,
+    fusedLocationClient: FusedLocationProviderClient,
+    showErrorSnackbar: (Throwable?) -> Unit
+) {
+    coroutineScope.launch {
+        runCatching {
+            viewModel.getUserLocation(fusedLocationClient)
+        }.onSuccess { location ->
+            viewModel.triggerMoveCurrentLocationEffect(location)
+        }.onFailure { throwable ->
+            showErrorSnackbar(throwable)
+        }
+    }
+}
+
+@Composable
+fun LoadingProgressBar() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = Gray200
+        )
     }
 }
 
@@ -180,7 +247,10 @@ fun RequestLocationPermission(
 fun MapScreen(
     innerPadding: PaddingValues,
     cameraPositionState: CameraPositionState,
-    userLocation: LatLng?,
+    currentLocation: LatLng?,
+    memories: PersistentList<MemoryModel>,
+    onMemoryIconClick: (Int) -> Unit,
+    onMoveCurrentLocationButtonClick: () -> Unit,
     onUploadButtonClick: () -> Unit,
 ) {
     Box(
@@ -191,63 +261,22 @@ fun MapScreen(
         GoogleMap(
             cameraPositionState = cameraPositionState
         ) {
-            userLocation?.let { position ->
-                cameraPositionState.position = CameraPosition.fromLatLngZoom(position, 18f)
+            currentLocation?.let { location ->
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(location, CAMERA_DEFAULT_ZOOM)
+                CurrentLocationMarker(location)
+            }
 
-                MarkerComposable(
-                    state = rememberMarkerState(position = position),
-                    title = "Your Location",
-                    snippet = "This is where you are currently located."
-                ) {
-                    Box {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_marker_area),
-                            contentDescription = stringResource(R.string.map_location_marker_desc),
-                            tint = Color.Unspecified,
-                        )
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_marker_pin),
-                            contentDescription = stringResource(R.string.map_location_marker_desc),
-                            tint = Color.Unspecified,
-                            modifier = Modifier
-                                .dropShadow(
-                                    shape = CircleShape,
-                                )
-                                .clip(CircleShape)
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
+            memories.forEach { memory ->
+                MemoryMarker(
+                    latLng = LatLng(memory.latitude, memory.longitude),
+                    onClick = { onMemoryIconClick(memory.memoryId) }
+                )
             }
         }
         Column(
             modifier = Modifier.align(Alignment.TopCenter)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Box(
-                modifier = Modifier
-                    .dropShadow(
-                        shape = RoundedCornerShape(30.dp),
-                        offsetY = 2.dp,
-                    )
-                    .clip(RoundedCornerShape(30.dp))
-                    .background(color = Color.White)
-
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_app_logo),
-                    contentDescription = stringResource(R.string.map_logo_icon_desc),
-                    tint = Color.Unspecified,
-                    modifier = Modifier.align(Alignment.TopStart)
-                )
-                Text(
-                    text = stringResource(R.string.map_guide_title),
-                    style = LoveMarkerTheme.typography.label13M,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(start = 48.dp, end = 26.dp, top = 11.dp, bottom = 11.dp)
-                )
-            }
+            MapHeader()
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -256,40 +285,132 @@ fun MapScreen(
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = 24.dp)
         ) {
+            MoveCurrentLocationButton(
+                onClick = onMoveCurrentLocationButtonClick,
+                modifier = Modifier.align(Alignment.Start),
+            )
+            Spacer(modifier = Modifier.padding(14.dp))
+            MemoryUploadButton(onClick = onUploadButtonClick)
+            Spacer(modifier = Modifier.padding(28.dp))
+        }
+    }
+}
+
+@Composable
+fun MapHeader() {
+    Spacer(modifier = Modifier.height(24.dp))
+    Box(
+        modifier = Modifier
+            .dropShadow(
+                shape = RoundedCornerShape(30.dp),
+                offsetY = 2.dp,
+            )
+            .clip(RoundedCornerShape(30.dp))
+            .background(color = Color.White)
+
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_app_logo),
+            contentDescription = stringResource(R.string.map_logo_icon_desc),
+            tint = Color.Unspecified,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
+        Text(
+            text = stringResource(R.string.map_guide_title),
+            style = LoveMarkerTheme.typography.label13M,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(start = 48.dp, end = 26.dp, top = 11.dp, bottom = 11.dp)
+        )
+    }
+}
+
+@Composable
+fun CurrentLocationMarker(
+    currentLocation: LatLng
+) {
+    MarkerComposable(
+        state = rememberMarkerState(position = currentLocation),
+    ) {
+        Box {
             Icon(
-                painter = painterResource(id = R.drawable.ic_btn_location),
-                contentDescription = stringResource(R.string.map_location_btn_desc),
+                painter = painterResource(id = R.drawable.ic_current_location_marker_area),
+                contentDescription = stringResource(R.string.map_location_marker_desc),
+                tint = Color.Unspecified,
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_current_location_marker_pin),
+                contentDescription = stringResource(R.string.map_location_marker_desc),
                 tint = Color.Unspecified,
                 modifier = Modifier
                     .dropShadow(
                         shape = CircleShape,
-                        blur = 10.dp,
-                        offsetY = 3.dp
                     )
                     .clip(CircleShape)
-                    .align(Alignment.Start)
+                    .align(Alignment.Center)
             )
-            Spacer(modifier = Modifier.padding(14.dp))
-            Box(
-                modifier = Modifier
-                    .dropShadow(
-                        shape = RoundedCornerShape(12.dp),
-                        offsetY = 3.dp
-                    )
-                    .clip(shape = RoundedCornerShape(12.dp))
-                    .background(color = Red200)
-                    .clickable {
-                        onUploadButtonClick()
-                    }
-            ) {
-                Text(
-                    text = stringResource(R.string.map_upload_btn_text),
-                    style = LoveMarkerTheme.typography.label13M,
-                    modifier = Modifier.padding(horizontal = 96.dp, vertical = 14.dp)
-                )
-            }
-            Spacer(modifier = Modifier.padding(28.dp))
         }
+    }
+}
+
+@Composable
+fun MemoryMarker(
+    latLng: LatLng,
+    onClick: () -> Unit
+) {
+    Marker(
+        icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_memory_location_marker),
+        state = MarkerState(position = latLng),
+        onClick = {
+            onClick()
+            true // 기본 클릭 동작 소비 (윈도우 창 표시 X)
+        }
+    )
+}
+
+@Composable
+fun MoveCurrentLocationButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Icon(
+        painter = painterResource(id = R.drawable.ic_move_current_location_btn),
+        contentDescription = stringResource(R.string.map_location_btn_desc),
+        tint = Color.Unspecified,
+        modifier = modifier
+            .dropShadow(
+                shape = CircleShape,
+                blur = 10.dp,
+                offsetY = 3.dp
+            )
+            .clip(CircleShape)
+            .clickable {
+                onClick()
+            }
+    )
+}
+
+@Composable
+fun MemoryUploadButton(
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .dropShadow(
+                shape = RoundedCornerShape(12.dp),
+                offsetY = 3.dp
+            )
+            .clip(shape = RoundedCornerShape(12.dp))
+            .background(color = Red200)
+            .clickable {
+                onClick()
+            }
+    ) {
+        Text(
+            text = stringResource(R.string.map_upload_btn_text),
+            style = LoveMarkerTheme.typography.label13M,
+            modifier = Modifier.padding(horizontal = 96.dp, vertical = 14.dp)
+        )
     }
 }
 

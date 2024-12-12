@@ -15,6 +15,7 @@ fun NavController.navigateToMap(navOptions: NavOptions? = null) {
 fun NavGraphBuilder.mapNavGraph(
     innerPadding: PaddingValues,
     navigateToPhoto: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
     navigateToMatching: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
 ) {
@@ -22,6 +23,7 @@ fun NavGraphBuilder.mapNavGraph(
         MapRoute(
             innerPadding = innerPadding,
             navigateToPhoto = navigateToPhoto,
+            navigateToDetail = navigateToDetail,
             navigateToMatching = navigateToMatching,
             showErrorSnackbar = showErrorSnackbar
         )

@@ -7,8 +7,12 @@ sealed interface MapSideEffect {
         val location: LatLng
     ): MapSideEffect
 
-    data object NavigateToMatching: MapSideEffect
+    data class NavigateToDetail(
+        val memoryId: Int
+    ): MapSideEffect
+
     data object NavigateToPhoto: MapSideEffect
+    data object NavigateToMatching: MapSideEffect
 
     data class ShowErrorSnackbar(
         val throwable: Throwable

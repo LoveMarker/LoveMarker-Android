@@ -9,10 +9,11 @@ android {
 }
 
 dependencies {
-    // modules
+    // module
+    implementation(projects.domain.map)
     implementation(projects.domain.mypage)
     implementation(projects.core.datastore)
 
-    // libraries
+    // library
     implementation(libs.bundles.google.maps)
 }
