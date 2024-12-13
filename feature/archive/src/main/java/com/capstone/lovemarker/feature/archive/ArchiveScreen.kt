@@ -72,6 +72,7 @@ fun ArchiveRoute(
         }
 
         is LoadState.Error -> {
+            viewModel.updateUiState(UiState.Failure("fail to load memory items"))
             showErrorSnackbar(refreshState.error)
         }
 
@@ -211,6 +212,9 @@ fun MemoryItem(
             model = item.imageUrl,
             contentDescription = stringResource(
                 id = com.capstone.lovemarker.core.designsystem.R.string.memory_item_image_desc
+            ),
+            placeholder = painterResource(
+                id = com.capstone.lovemarker.core.designsystem.R.drawable.ic_memory_img_loading
             ),
             contentScale = ContentScale.Crop,
             modifier = Modifier
