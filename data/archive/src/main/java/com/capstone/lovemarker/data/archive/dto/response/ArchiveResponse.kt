@@ -8,12 +8,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ArchiveResponse(
     @SerialName("pageInfo")
-    val pageInfo: Page,
+    val pageInfo: PageInfo,
     @SerialName("memories")
     val memories: List<Memory>
 ) {
     @Serializable
-    data class Page(
+    data class PageInfo(
         @SerialName("totalElements")
         val totalElements: Int,
         @SerialName("hasNext")

@@ -20,6 +20,7 @@ fun NavGraphBuilder.myPageNavGraph(
     innerPadding: PaddingValues,
     navigateToMatching: () -> Unit,
     navigateToNickname: (String) -> Unit,
+    navigateToMyFeed: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
 ) {
     composable<MainTabRoute.MyPage> { backStackEntry ->
@@ -28,6 +29,7 @@ fun NavGraphBuilder.myPageNavGraph(
             innerPadding = innerPadding,
             navigateToMatching = navigateToMatching,
             navigateToNickname = navigateToNickname,
+            navigateToMyFeed = navigateToMyFeed,
             showErrorSnackbar = showErrorSnackbar,
             modifiedNickname = route.modifiedNickname
         )

@@ -30,8 +30,6 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-// todo: 현위치 기준 반경 3km 추억 목록 조회
-//  줌 확대/축소에 따라 추억 재조회
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val mapRepository: MapRepository,
@@ -60,7 +58,7 @@ class MapViewModel @Inject constructor(
                     coupleDataStore.updateCoupleConnectState(response.connected)
                     updateUiState(UiState.Success(Unit))
                 }.onFailure {
-                    Timber.e(it.message)
+                    updateUiState(UiState.Failure(it.message.toString()))
                     _sideEffect.emit(MapSideEffect.ShowErrorSnackbar(it))
                 }
         }

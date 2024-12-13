@@ -14,6 +14,7 @@ import com.capstone.lovemarker.feature.login.navigation.loginNavGraph
 import com.capstone.lovemarker.feature.matching.navigation.matchingNavGraph
 import com.capstone.lovemarker.feature.main.splash.splashNavGraph
 import com.capstone.lovemarker.feature.map.navigation.mapNavGraph
+import com.capstone.lovemarker.feature.myfeed.navigation.myFeedNavGraph
 import com.capstone.lovemarker.feature.mypage.navigation.myPageNavGraph
 import com.capstone.lovemarker.feature.nickname.navigation.nicknameNavGraph
 import com.capstone.lovemarker.feature.search.navigation.searchNavGraph
@@ -120,6 +121,14 @@ fun MainNavHost(
                     prevRouteName = "mypage",
                     currentNickname = nickname
                 )
+            },
+            navigateToMyFeed = { navigator.navigateToMyFeed() },
+            showErrorSnackbar = showErrorSnackbar
+        )
+        myFeedNavGraph(
+            navigateUp = { navigator.navigateUpIfNotHome() },
+            navigateToDetail = { memoryId ->
+                navigator.navigateToDetail(memoryId)
             },
             showErrorSnackbar = showErrorSnackbar
         )

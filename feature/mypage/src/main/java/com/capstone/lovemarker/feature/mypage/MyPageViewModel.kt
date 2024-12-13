@@ -105,4 +105,10 @@ class MyPageViewModel @Inject constructor(
             )
         }
     }
+
+    fun triggerMyFeedNavigationEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(MyPageSideEffect.NavigateToMyFeed)
+        }
+    }
 }

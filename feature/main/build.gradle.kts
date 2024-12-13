@@ -16,6 +16,7 @@ dependencies {
     implementation(projects.feature.map)
     implementation(projects.feature.archive)
     implementation(projects.feature.mypage)
+    implementation(projects.feature.myfeed)
     implementation(projects.feature.detail)
     implementation(projects.feature.upload)
     implementation(projects.feature.search)

@@ -19,6 +19,7 @@ import com.capstone.lovemarker.feature.matching.navigation.navigateToReceiver
 import com.capstone.lovemarker.feature.matching.navigation.navigateToSender
 import com.capstone.lovemarker.feature.login.navigation.navigateToLogin
 import com.capstone.lovemarker.feature.map.navigation.navigateToMap
+import com.capstone.lovemarker.feature.myfeed.navigation.navigateToMyFeed
 import com.capstone.lovemarker.feature.mypage.navigation.navigateToMyPage
 import com.capstone.lovemarker.feature.nickname.navigation.navigateToNickname
 import com.capstone.lovemarker.feature.search.navigation.navigateToPlaceSearch
@@ -98,6 +99,10 @@ class MainNavigator(
 
     fun navigateToMyPage(modifiedNickname: String, navOptions: NavOptions) {
         navController.navigateToMyPage(modifiedNickname, navOptions)
+    }
+
+    fun navigateToMyFeed() {
+        navController.navigateToMyFeed()
     }
 
     fun navigateToDetail(memoryId: Int) {

@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.capstone.lovemarker.core.common.util.UiState
+import com.capstone.lovemarker.core.designsystem.component.progressbar.LoadingProgressBar
 import com.capstone.lovemarker.core.designsystem.component.textfield.SearchTextField
 import com.capstone.lovemarker.core.designsystem.theme.Gray100
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
@@ -161,16 +162,7 @@ fun SearchScreen(
 
         when (uiState) {
             is UiState.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        color = Gray200
-                    )
-                }
+                LoadingProgressBar()
             }
 
             is UiState.Success -> {
