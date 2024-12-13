@@ -315,7 +315,7 @@ fun NicknameSection(
         modifier = Modifier.padding(top = 26.dp)
     ) {
         Text(
-            text = nickname, // todo: 닉네임 길이 제한 필요 (한 줄 넘지 않게)
+            text = nickname,
             style = LoveMarkerTheme.typography.headline18M,
             textAlign = TextAlign.End,
             color = Gray800,
