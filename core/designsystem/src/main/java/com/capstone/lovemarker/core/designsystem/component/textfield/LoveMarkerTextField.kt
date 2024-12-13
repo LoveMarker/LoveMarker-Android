@@ -56,6 +56,7 @@ fun LoveMarkerTextField(
     onValueChanged: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
+    maxLength: Int = 50,
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -79,7 +80,11 @@ fun LoveMarkerTextField(
         CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
             BasicTextField(
                 value = value,
-                onValueChange = onValueChanged,
+                onValueChange = { input ->
+                    if (input.length <= maxLength) {
+                        onValueChanged(input)
+                    }
+                },
                 modifier = Modifier
                     .height(54.dp)
                     .border(
