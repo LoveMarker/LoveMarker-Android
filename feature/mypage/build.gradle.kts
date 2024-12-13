@@ -10,5 +10,8 @@ android {
 
 dependencies {
     implementation(projects.domain.mypage)
+    implementation(projects.domain.oauth)
     implementation(projects.core.datastore)
+
+    implementation(libs.process.phoenix)
 }

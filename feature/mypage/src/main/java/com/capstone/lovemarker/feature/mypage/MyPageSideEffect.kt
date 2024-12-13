@@ -9,6 +9,8 @@ sealed interface MyPageSideEffect {
 
     data object NavigateToMyFeed: MyPageSideEffect
 
+    data object RestartApp: MyPageSideEffect
+
     data class ShowErrorSnackbar(
         val throwable: Throwable
     ): MyPageSideEffect
