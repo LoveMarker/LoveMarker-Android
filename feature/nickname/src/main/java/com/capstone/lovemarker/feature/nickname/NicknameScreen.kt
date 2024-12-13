@@ -35,6 +35,8 @@ import com.capstone.lovemarker.core.navigation.Route
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
+private const val NICKNAME_MAX_LENGTH = 8
+
 @Composable
 fun NicknameRoute(
     prevRouteName: String,
@@ -228,13 +230,14 @@ fun NicknameScreen(
                     text = stringResource(id = R.string.nickname_guide_detail),
                     style = LoveMarkerTheme.typography.label13M,
                     color = LoveMarkerTheme.colorScheme.onSurface700,
-                    modifier = Modifier.padding(top = 13.dp)
+                    modifier = Modifier.padding(top = 16.dp)
                 )
                 LoveMarkerTextField(
                     value = nickname,
                     onValueChanged = onNicknameChanged,
                     placeholder = placeholder,
-                    modifier = Modifier.padding(top = 38.dp),
+                    modifier = Modifier.padding(top = 24.dp),
+                    maxLength = NICKNAME_MAX_LENGTH,
                     isError = isError,
                     supportingText = supportingText,
                     trailingIcon = { isFocused, iconTint ->
