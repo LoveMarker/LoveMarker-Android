@@ -85,10 +85,10 @@ fun ArchiveRoute(
     }
 
     LaunchedEffect(Unit) {
-        val connected = viewModel.getCoupleConnectState().await()
         viewModel.apply {
-            updateCoupleConnectState(connected = connected)
-            updateMatchingDialogState(showDialog = !connected)
+            updateMatchingDialogState(
+                showDialog = !viewModel.getCoupleConnectState().await()
+            )
         }
     }
 

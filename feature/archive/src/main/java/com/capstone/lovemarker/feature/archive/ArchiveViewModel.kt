@@ -44,31 +44,11 @@ class ArchiveViewModel @Inject constructor(
         }
     }
 
-    fun updateCoupleConnectState(connected: Boolean) {
-        _state.update {
-            it.copy(coupleConnected = connected)
-        }
-    }
-
     fun updateMatchingDialogState(showDialog: Boolean) {
         _state.update {
             it.copy(
                 showMatchingDialog = showDialog
             )
-        }
-    }
-
-    fun updateLoadPageState(isLoadPage: Boolean) {
-        _state.update {
-            it.copy(
-                isLoadPage = isLoadPage
-            )
-        }
-    }
-
-    fun updateMemories(memories: PersistentList<MemoryEntity>) {
-        _state.update {
-            it.copy(memories = memories)
         }
     }
 

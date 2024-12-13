@@ -65,7 +65,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-private const val CAMERA_DEFAULT_ZOOM = 12f
+private const val CAMERA_DEFAULT_ZOOM = 15f
 
 @Composable
 fun MapRoute(
