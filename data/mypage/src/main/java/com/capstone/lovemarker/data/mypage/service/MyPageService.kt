@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface MyPageService {
     @GET("/api/user")
-    suspend fun getCoupleInfo(): BaseResponse<MyPageResponse>
+    suspend fun getMyPageInfo(): BaseResponse<MyPageResponse>
 
     @DELETE("/api/couple")
     suspend fun deleteCouple(): BaseResponseNothing
