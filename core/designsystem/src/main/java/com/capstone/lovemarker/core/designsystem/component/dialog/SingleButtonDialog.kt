@@ -26,7 +26,7 @@ fun SingleButtonDialog(
     title: String,
     description: String,
     buttonText: String,
-    onConfirmButtonClick: () -> Unit,
+    onClick: () -> Unit,
     onDismiss: () -> Unit = {},
 ) {
     Dialog(
@@ -58,7 +58,7 @@ fun SingleButtonDialog(
                     Spacer(modifier = Modifier.height(6.dp))
                 }
                 LoveMarkerButton(
-                    onClick = onConfirmButtonClick,
+                    onClick = onClick,
                     buttonText = buttonText,
                     enabled = true,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)
@@ -76,7 +76,7 @@ private fun SingleButtonDialogPreview() {
             title = "커플 연결이 이미 해제되어 있습니다",
             description = "",
             buttonText = "확인",
-            onConfirmButtonClick = {}
+            onClick = {}
         )
     }
 }

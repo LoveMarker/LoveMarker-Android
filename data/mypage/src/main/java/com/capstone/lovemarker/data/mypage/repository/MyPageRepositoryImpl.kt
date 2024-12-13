@@ -8,8 +8,8 @@ import javax.inject.Inject
 class MyPageRepositoryImpl @Inject constructor(
     private val myPageDataSource: MyPageDataSource,
 ) : MyPageRepository {
-    override suspend fun getCoupleInfo(): Result<MyPageEntity> = runCatching {
-        myPageDataSource.getCoupleInfo().data.toDomain()
+    override suspend fun getMyPageInfo(): Result<MyPageEntity> = runCatching {
+        myPageDataSource.getMyPageInfo().data.toDomain()
     }
 
     override suspend fun deleteCouple(): Result<Unit> = runCatching {

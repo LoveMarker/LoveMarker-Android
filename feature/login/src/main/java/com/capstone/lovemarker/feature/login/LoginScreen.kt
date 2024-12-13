@@ -88,7 +88,7 @@ fun LoginRoute(
 private fun rememberGoogleAuthService(): OAuthService? {
     val activityContext = LocalContext.current as? ComponentActivity
     return runCatching {
-        requireNotNull(activityContext) { "Activity context is required for getting OAuthService" }
+        requireNotNull(activityContext) { "Activity context is required to get OAuthService" }
         val entryPoint = EntryPointAccessors.fromActivity<OAuthEntryPoint>(activityContext)
         entryPoint.googleAuthService()
     }.getOrElse { throwable ->

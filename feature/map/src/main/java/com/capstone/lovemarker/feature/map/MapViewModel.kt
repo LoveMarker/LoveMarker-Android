@@ -44,15 +44,17 @@ class MapViewModel @Inject constructor(
     val sideEffect: SharedFlow<MapSideEffect> = _sideEffect.asSharedFlow()
 
     init {
-        // 다른 화면에서 데이터 스토어 활용할 수 있도록 데이터 초기화
-        getCoupleInfo()
+        /**
+         * 다른 화면에서 데이터스토어 활용 가능하도록 유저 및 커플 정보 초기화
+         * */
+        getMyPageInfo()
     }
 
-    private fun getCoupleInfo() {
+    private fun getMyPageInfo() {
         viewModelScope.launch {
             updateUiState(UiState.Loading)
 
-            myPageRepository.getCoupleInfo()
+            myPageRepository.getMyPageInfo()
                 .onSuccess { response ->
                     userDataStore.updateNickname(response.nickname)
                     coupleDataStore.updateCoupleConnectState(response.connected)

@@ -3,6 +3,7 @@ package com.capstone.lovemarker.feature.mypage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
+import com.capstone.lovemarker.core.datastore.source.user.UserDataStore
 import com.capstone.lovemarker.domain.mypage.repository.MyPageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val myPageRepository: MyPageRepository,
+    private val userDataStore: UserDataStore,
     private val coupleDataStore: CoupleDataStore
 ) : ViewModel() {
     private val _state = MutableStateFlow(MyPageState())
@@ -29,7 +31,7 @@ class MyPageViewModel @Inject constructor(
 
     fun getMyPageInfo() {
         viewModelScope.launch {
-            myPageRepository.getCoupleInfo()
+            myPageRepository.getMyPageInfo()
                 .onSuccess { response ->
                     // 매칭 여부와 상관없이 표시
                     updateNickname(response.nickname)
@@ -76,6 +78,20 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
+    fun updateLogoutDialogState(showDialog: Boolean) {
+        _state.update {
+            it.copy(
+                showLogoutDialog = showDialog
+            )
+        }
+    }
+
+    fun clearUserDataStore() {
+        viewModelScope.launch {
+            userDataStore.clear()
+        }
+    }
+
     fun deleteCouple() {
         viewModelScope.launch {
             myPageRepository.deleteCouple()
@@ -109,6 +125,12 @@ class MyPageViewModel @Inject constructor(
     fun triggerMyFeedNavigationEffect() {
         viewModelScope.launch {
             _sideEffect.emit(MyPageSideEffect.NavigateToMyFeed)
+        }
+    }
+
+    fun triggerRestartAppEffect() {
+        viewModelScope.launch {
+            _sideEffect.emit(MyPageSideEffect.RestartApp)
         }
     }
 }

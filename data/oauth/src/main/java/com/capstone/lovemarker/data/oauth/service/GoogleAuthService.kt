@@ -1,13 +1,14 @@
 package com.capstone.lovemarker.data.oauth.service
 
 import android.content.Context
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialRequest.Builder
 import com.capstone.lovemarker.data.oauth.BuildConfig
 import com.capstone.lovemarker.domain.oauth.entity.OAuthToken
-import com.capstone.lovemarker.data.oauth.model.toDomainEntity
+import com.capstone.lovemarker.data.oauth.model.toDomain
 import com.capstone.lovemarker.domain.oauth.service.OAuthService
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -24,7 +25,7 @@ class GoogleAuthService @Inject constructor(
         .setAutoSelectEnabled(true)
         .build()
 
-    private val request: GetCredentialRequest = Builder()
+    private val getCredentialRequest: GetCredentialRequest = Builder()
         .addCredentialOption(googleIdOption)
         .build()
 
@@ -32,7 +33,7 @@ class GoogleAuthService @Inject constructor(
 
     override suspend fun signIn(): OAuthToken {
         val response = credentialManager.getCredential(
-            request = request,
+            request = getCredentialRequest,
             context = context,
         )
 
@@ -40,7 +41,7 @@ class GoogleAuthService @Inject constructor(
             is CustomCredential -> {
                 if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                     try {
-                        GoogleIdTokenCredential.createFrom(credential.data).toDomainEntity()
+                        GoogleIdTokenCredential.createFrom(credential.data).toDomain()
                     } catch (e: GoogleIdTokenParsingException) {
                         throw Exception("Received an invalid google id token response", e)
                     }
@@ -58,6 +59,6 @@ class GoogleAuthService @Inject constructor(
     }
 
     override suspend fun signOut() {
-        TODO("Not yet implemented")
+        credentialManager.clearCredentialState(ClearCredentialStateRequest())
     }
 }

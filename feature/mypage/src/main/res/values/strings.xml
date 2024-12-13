@@ -2,8 +2,9 @@
 <resources>
     <string name="mypage_anonymous_partner_nickname">나의 그대</string>
     <string name="mypage_disconnect_dialog_title">커플 연결을 해제하시겠어요?</string>
-    <string name="mypage_disconnect_dialog_confirm_text">확인</string>
-    <string name="mypage_disconnect_dialog_dimiss_text">취소</string>
+    <string name="mypage_logout_dialog_title">로그아웃 하시겠어요?</string>
+    <string name="mypage_dialog_dimiss_text">취소</string>
+    <string name="mypage_dialog_confirm_text">확인</string>
     <string name="mypage_already_disconnect_dialog_title">커플 연결이 이미 해제되어 있습니다</string>
     <string name="mypage_nickname_btn_title">닉네임 변경</string>
     <string name="mypage_myfeed_btn_title">내가 올린 추억</string>

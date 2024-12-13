@@ -9,8 +9,8 @@ import javax.inject.Inject
 class MyPageDataSourceImpl @Inject constructor(
     private val myPageService: MyPageService,
 ) : MyPageDataSource {
-    override suspend fun getCoupleInfo(): BaseResponse<MyPageResponse> =
-        myPageService.getCoupleInfo()
+    override suspend fun getMyPageInfo(): BaseResponse<MyPageResponse> =
+        myPageService.getMyPageInfo()
 
     override suspend fun deleteCouple(): BaseResponseNothing =
         myPageService.deleteCouple()

@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.feature.mypage
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.capstone.lovemarker.core.common.extension.noRippleClickable
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
 import com.capstone.lovemarker.core.designsystem.component.dialog.DoubleButtonDialog
@@ -40,7 +43,13 @@ import com.capstone.lovemarker.core.designsystem.theme.Gray800
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red500
 import com.capstone.lovemarker.core.designsystem.theme.White
+import com.capstone.lovemarker.domain.oauth.service.OAuthService
+import com.capstone.lovemarker.feature.mypage.di.OAuthEntryPoint
+import com.jakewharton.processphoenix.ProcessPhoenix
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
 fun MyPageRoute(
@@ -53,7 +62,9 @@ fun MyPageRoute(
     viewModel: MyPageViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val googleAuthService = rememberGoogleAuthService() ?: return
 
     LaunchedEffect(Unit) {
         viewModel.getMyPageInfo()
@@ -75,6 +86,10 @@ fun MyPageRoute(
                         navigateToMyFeed()
                     }
 
+                    is MyPageSideEffect.RestartApp -> {
+                        ProcessPhoenix.triggerRebirth(context)
+                    }
+
                     is MyPageSideEffect.ShowErrorSnackbar -> {
                         showErrorSnackbar(sideEffect.throwable)
                     }
@@ -88,21 +103,57 @@ fun MyPageRoute(
         anniversaryDays = state.anniversaryDays,
         coupleConnected = state.coupleConnected,
         partnerNickname = state.partnerNickname,
-        showDisconnectDialog = state.showDisconnectDialog,
-        onDisconnectButtonClick = {
+        showCoupleDisconnectDialog = state.showDisconnectDialog,
+        onCoupleDisconnectClick = {
             viewModel.updateDisconnectDialogState(true)
         },
-        onConfirmButtonClick = {
+        onCoupleDisconnectConfirm = {
             viewModel.updateDisconnectDialogState(false)
             viewModel.deleteCouple()
         },
-        onDismissButtonClick = {
+        onCoupleDisconnectDismiss = {
             viewModel.updateDisconnectDialogState(false)
         },
-        onMatchingButtonClick = viewModel::triggerMatchingNavigationEffect,
-        onNicknameButtonClick = viewModel::triggerNicknameNavigationEffect,
-        onMyFeedButtonClick = viewModel::triggerMyFeedNavigationEffect
+        onCoupleMatchingClick = viewModel::triggerMatchingNavigationEffect,
+        onNicknameModifyClick = viewModel::triggerNicknameNavigationEffect,
+        onMyFeedClick = viewModel::triggerMyFeedNavigationEffect,
+        showLogoutDialog = state.showLogoutDialog,
+        onLogoutClick = {
+            viewModel.updateLogoutDialogState(true)
+        },
+        onLogoutConfirm = {
+            viewModel.updateDisconnectDialogState(false)
+
+            lifecycleOwner.lifecycleScope.launch {
+                runCatching {
+                    googleAuthService.signOut()
+                }.onSuccess {
+                    viewModel.apply {
+                        clearUserDataStore()
+                        triggerRestartAppEffect()
+                    }
+                }.onFailure {
+                    showErrorSnackbar(it)
+                }
+            }
+        },
+        onLogoutDismiss = {
+            viewModel.updateLogoutDialogState(false)
+        },
     )
+}
+
+@Composable
+private fun rememberGoogleAuthService(): OAuthService? {
+    val activityContext = LocalContext.current as? ComponentActivity
+    return runCatching {
+        requireNotNull(activityContext) { "Activity context is required to get OAuthService" }
+        val entryPoint = EntryPointAccessors.fromActivity<OAuthEntryPoint>(activityContext)
+        entryPoint.googleAuthService()
+    }.getOrElse { throwable ->
+        Timber.e(throwable.message)
+        null
+    }
 }
 
 @Composable
@@ -112,13 +163,17 @@ fun MyPageScreen(
     anniversaryDays: Int,
     coupleConnected: Boolean,
     partnerNickname: String,
-    showDisconnectDialog: Boolean,
-    onDisconnectButtonClick: () -> Unit,
-    onConfirmButtonClick: () -> Unit,
-    onDismissButtonClick: () -> Unit,
-    onMatchingButtonClick: () -> Unit,
-    onNicknameButtonClick: () -> Unit,
-    onMyFeedButtonClick: () -> Unit,
+    showCoupleDisconnectDialog: Boolean,
+    onCoupleDisconnectClick: () -> Unit,
+    onCoupleDisconnectConfirm: () -> Unit,
+    onCoupleDisconnectDismiss: () -> Unit,
+    onCoupleMatchingClick: () -> Unit,
+    onNicknameModifyClick: () -> Unit,
+    onMyFeedClick: () -> Unit,
+    showLogoutDialog: Boolean,
+    onLogoutClick: () -> Unit,
+    onLogoutConfirm: () -> Unit,
+    onLogoutDismiss: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -135,7 +190,7 @@ fun MyPageScreen(
             anniversaryDays = anniversaryDays,
             coupleConnected = coupleConnected,
             partnerNickname = partnerNickname,
-            onMatchingButtonClick = onMatchingButtonClick
+            onMatchingButtonClick = onCoupleMatchingClick
         )
         Spacer(
             modifier = Modifier
@@ -144,10 +199,12 @@ fun MyPageScreen(
                 .padding(top = 8.dp)
         )
         SettingSection(
-            onNicknameButtonClick = onNicknameButtonClick,
-            onDisconnectButtonClick = onDisconnectButtonClick,
-            onMyFeedButtonClick = onMyFeedButtonClick
-        )
+            onCoupleDisconnectClick = onCoupleDisconnectClick,
+            onNicknameModifyClick = onNicknameModifyClick,
+            onMyFeedClick = onMyFeedClick,
+            onLogoutClick = onLogoutClick,
+
+            )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = "탈퇴하기",
@@ -157,25 +214,60 @@ fun MyPageScreen(
         )
     }
 
-    if (showDisconnectDialog) {
-        if (coupleConnected) {
-            DoubleButtonDialog(
-                title = stringResource(R.string.mypage_disconnect_dialog_title),
-                description = "",
-                confirmButtonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
-                dismissButtonText = stringResource(R.string.mypage_disconnect_dialog_dimiss_text),
-                onConfirmButtonClick = onConfirmButtonClick,
-                onDismissButtonClick = onDismissButtonClick,
-            )
-        } else {
-            SingleButtonDialog(
-                title = stringResource(R.string.mypage_already_disconnect_dialog_title),
-                description = "",
-                buttonText = stringResource(R.string.mypage_disconnect_dialog_confirm_text),
-                onConfirmButtonClick = onDismissButtonClick
-            )
-        }
+    if (showCoupleDisconnectDialog) {
+        CoupleDisconnectDialog(
+            coupleConnected = coupleConnected,
+            onConfirmButtonClick = onCoupleDisconnectConfirm,
+            onDismissButtonClick = onCoupleDisconnectDismiss,
+        )
     }
+
+    if (showLogoutDialog) {
+        LogoutDialog(
+            onConfirmButtonClick = onLogoutConfirm,
+            onDismissButtonClick = onLogoutDismiss,
+        )
+    }
+}
+
+@Composable
+fun CoupleDisconnectDialog(
+    coupleConnected: Boolean,
+    onConfirmButtonClick: () -> Unit,
+    onDismissButtonClick: () -> Unit,
+) {
+    if (coupleConnected) {
+        DoubleButtonDialog(
+            title = stringResource(R.string.mypage_disconnect_dialog_title),
+            description = "",
+            confirmButtonText = stringResource(R.string.mypage_dialog_confirm_text),
+            dismissButtonText = stringResource(R.string.mypage_dialog_dimiss_text),
+            onConfirmButtonClick = onConfirmButtonClick,
+            onDismissButtonClick = onDismissButtonClick,
+        )
+    } else {
+        SingleButtonDialog(
+            title = stringResource(R.string.mypage_already_disconnect_dialog_title),
+            description = "",
+            buttonText = stringResource(R.string.mypage_dialog_confirm_text),
+            onClick = onDismissButtonClick
+        )
+    }
+}
+
+@Composable
+fun LogoutDialog(
+    onConfirmButtonClick: () -> Unit,
+    onDismissButtonClick: () -> Unit,
+) {
+    DoubleButtonDialog(
+        title = stringResource(R.string.mypage_logout_dialog_title),
+        description = "",
+        confirmButtonText = stringResource(R.string.mypage_dialog_confirm_text),
+        dismissButtonText = stringResource(R.string.mypage_dialog_dimiss_text),
+        onConfirmButtonClick = onConfirmButtonClick,
+        onDismissButtonClick = onDismissButtonClick,
+    )
 }
 
 @Composable
@@ -197,54 +289,12 @@ fun CoupleSection(
             color = Gray800,
             modifier = Modifier.fillMaxWidth()
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 26.dp)
-        ) {
-            Text(
-                text = nickname, // todo: 닉네임 길이 제한 필요 (한 줄 넘지 않게)
-                style = LoveMarkerTheme.typography.headline18M,
-                textAlign = TextAlign.End,
-                color = Gray800,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 30.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.img_mypage_heart),
-                contentDescription = "heart image",
-                colorFilter = if (coupleConnected) ColorFilter.tint(Red500)
-                else ColorFilter.tint(Gray300)
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = if (coupleConnected) partnerNickname
-                    else stringResource(R.string.mypage_anonymous_partner_nickname),
-                    style = LoveMarkerTheme.typography.headline18M,
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 30.dp),
-                    color = if (coupleConnected) Gray800 else Gray400
-                )
-                if (!coupleConnected) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_mypage_setting_nav),
-                        contentDescription = "icon for navigate to nickname",
-                        tint = Gray300,
-                        modifier = Modifier
-                            .padding(end = 14.dp)
-                            .noRippleClickable {
-                                onMatchingButtonClick()
-                            }
-                    )
-                }
-            }
-
-        }
+        NicknameSection(
+            nickname = nickname,
+            coupleConnected = coupleConnected,
+            partnerNickname = partnerNickname,
+            onMatchingButtonClick = onMatchingButtonClick
+        )
         Image(
             painter = painterResource(id = R.drawable.img_mypage_couple),
             contentDescription = "couple image",
@@ -254,27 +304,84 @@ fun CoupleSection(
 }
 
 @Composable
+fun NicknameSection(
+    nickname: String,
+    coupleConnected: Boolean,
+    partnerNickname: String,
+    onMatchingButtonClick: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 26.dp)
+    ) {
+        Text(
+            text = nickname, // todo: 닉네임 길이 제한 필요 (한 줄 넘지 않게)
+            style = LoveMarkerTheme.typography.headline18M,
+            textAlign = TextAlign.End,
+            color = Gray800,
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 30.dp)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.img_mypage_heart),
+            contentDescription = "heart image",
+            colorFilter = if (coupleConnected) ColorFilter.tint(Red500)
+            else ColorFilter.tint(Gray300)
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = if (coupleConnected) partnerNickname
+                else stringResource(R.string.mypage_anonymous_partner_nickname),
+                style = LoveMarkerTheme.typography.headline18M,
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 30.dp),
+                color = if (coupleConnected) Gray800 else Gray400
+            )
+            if (!coupleConnected) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_mypage_setting_nav),
+                    contentDescription = "icon for navigate to nickname",
+                    tint = Gray300,
+                    modifier = Modifier
+                        .padding(end = 14.dp)
+                        .noRippleClickable {
+                            onMatchingButtonClick()
+                        }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun SettingSection(
-    onNicknameButtonClick: () -> Unit,
-    onMyFeedButtonClick: () -> Unit,
-    onDisconnectButtonClick: () -> Unit,
+    onCoupleDisconnectClick: () -> Unit,
+    onNicknameModifyClick: () -> Unit,
+    onMyFeedClick: () -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
     Column {
         SettingItem(
             title = stringResource(R.string.mypage_nickname_btn_title),
-            onItemClick = onNicknameButtonClick
+            onItemClick = onNicknameModifyClick
         )
         SettingItem(
             title = stringResource(R.string.mypage_myfeed_btn_title),
-            onItemClick = onMyFeedButtonClick
+            onItemClick = onMyFeedClick
         )
         SettingItem(
             title = stringResource(R.string.mypage_couple_disconnect_btn_title),
-            onItemClick = onDisconnectButtonClick
+            onItemClick = onCoupleDisconnectClick
         )
         SettingItem(
             title = stringResource(R.string.mypage_logout_btn_title),
-            onItemClick = {}
+            onItemClick = onLogoutClick
         )
     }
 }
