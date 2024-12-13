@@ -2,10 +2,11 @@ package com.capstone.lovemarker.feature.archive
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.datastore.source.couple.CoupleDataStore
+import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
 import com.capstone.lovemarker.domain.archive.repository.ArchiveRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,6 +19,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,14 +38,6 @@ class ArchiveViewModel @Inject constructor(
             _sideEffect.emit(ArchiveSideEffect.ShowErrorSnackbar(throwable))
         }
 
-    fun updateUiState(uiState: UiState<Unit>) {
-        _state.update {
-            it.copy(
-                uiState = uiState
-            )
-        }
-    }
-
     fun getCoupleConnectState(): Deferred<Boolean> {
         return viewModelScope.async {
             coupleDataStore.coupleData.first().connected
@@ -61,6 +55,20 @@ class ArchiveViewModel @Inject constructor(
             it.copy(
                 showMatchingDialog = showDialog
             )
+        }
+    }
+
+    fun updateLoadPageState(isLoadPage: Boolean) {
+        _state.update {
+            it.copy(
+                isLoadPage = isLoadPage
+            )
+        }
+    }
+
+    fun updateMemories(memories: PersistentList<MemoryEntity>) {
+        _state.update {
+            it.copy(memories = memories)
         }
     }
 

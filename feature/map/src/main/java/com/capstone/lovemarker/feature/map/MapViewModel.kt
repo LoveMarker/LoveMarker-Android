@@ -60,7 +60,7 @@ class MapViewModel @Inject constructor(
                     coupleDataStore.updateCoupleConnectState(response.connected)
                     updateUiState(UiState.Success(Unit))
                 }.onFailure {
-                    updateUiState(UiState.Failure(it.message.toString()))
+                    updateUiState(UiState.Failure(it))
                     _sideEffect.emit(MapSideEffect.ShowErrorSnackbar(it))
                 }
         }
