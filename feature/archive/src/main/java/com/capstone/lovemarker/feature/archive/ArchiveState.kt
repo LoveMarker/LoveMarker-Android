@@ -1,9 +1,12 @@
 package com.capstone.lovemarker.feature.archive
 
-import com.capstone.lovemarker.core.common.util.UiState
+import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 data class ArchiveState(
-    val uiState: UiState<Unit> = UiState.Empty,
-    val coupleConnected: Boolean = true,
-    val showMatchingDialog: Boolean = false
+    val coupleConnected: Boolean = false,
+    val showMatchingDialog: Boolean = true,
+    val isLoadPage: Boolean = false,
+    val memories: PersistentList<MemoryEntity> = persistentListOf()
 )

@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +38,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.capstone.lovemarker.core.common.extension.dropShadow
-import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
 import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
 import com.capstone.lovemarker.core.designsystem.component.progressbar.LoadingProgressBar
@@ -65,6 +62,7 @@ fun ArchiveRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val memories = viewModel.memories.collectAsLazyPagingItems()
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect
@@ -86,53 +84,35 @@ fun ArchiveRoute(
             }
     }
 
-    if (state.coupleConnected) {
-        val memories = viewModel.memories.collectAsLazyPagingItems()
-
-        when (val refreshState = memories.loadState.refresh) {
-            is LoadState.Loading -> {
-                viewModel.updateUiState(UiState.Loading)
-            }
-
-            is LoadState.Error -> {
-                viewModel.updateUiState(UiState.Failure("fail to load memory items"))
-                showErrorSnackbar(refreshState.error)
-            }
-
-            is LoadState.NotLoading -> {
-                viewModel.updateUiState(UiState.Success(Unit))
-            }
+    LaunchedEffect(Unit) {
+        val connected = viewModel.getCoupleConnectState().await()
+        viewModel.apply {
+            updateCoupleConnectState(connected = connected)
+            updateMatchingDialogState(showDialog = !connected)
         }
-
-        when (state.uiState) {
-            is UiState.Loading -> {
-                LoadingProgressBar()
-            }
-
-            is UiState.Success -> {
-                ArchiveScreen(
-                    innerPadding = innerPadding,
-                    memories = memories.itemSnapshotList.items.toPersistentList(),
-                    onMemoryItemClick = { memoryId ->
-                        viewModel.triggerDetailNavigationEffect(memoryId)
-                    }
-                )
-            }
-
-            else -> {}
-        }
-    } else {
-        ArchiveScreen(
-            innerPadding = innerPadding,
-            memories = persistentListOf(),
-        )
     }
 
-    LaunchedEffect(Unit) {
-        val coupleConnected = viewModel.getCoupleConnectState().await()
-        viewModel.apply {
-            updateCoupleConnectState(coupleConnected)
-            updateMatchingDialogState(!coupleConnected)
+    when (val refreshState = memories.loadState.refresh) {
+        is LoadState.Loading -> {
+            LoadingProgressBar()
+        }
+
+        is LoadState.NotLoading -> {
+            ArchiveScreen(
+                innerPadding = innerPadding,
+                memories = memories.itemSnapshotList.items.toPersistentList(),
+                onMemoryItemClick = { memoryId ->
+                    viewModel.triggerDetailNavigationEffect(memoryId)
+                }
+            )
+        }
+
+        is LoadState.Error -> {
+            Timber.e("${refreshState.error.message}")
+            ArchiveScreen(
+                innerPadding = innerPadding,
+                memories = persistentListOf(),
+            )
         }
     }
 
