@@ -145,15 +145,6 @@ fun MapRoute(
         onUploadButtonClick = viewModel::triggerPhotoNavigationEffect
     )
 
-    LaunchedEffect(state.currentLocation) {
-        state.currentLocation?.let { location ->
-            viewModel.getMemories(
-                latitude = location.latitude,
-                longitude = location.longitude
-            )
-        }
-    }
-
     when (state.uiState) {
         is UiState.Loading -> {
             LoadingProgressBar()
@@ -162,9 +153,19 @@ fun MapRoute(
         is UiState.Success -> {
             LaunchedEffect(Unit) {
                 val coupleConnected = viewModel.getCoupleConnectState().await()
+
                 viewModel.apply {
                     updateCoupleConnectState(connected = coupleConnected)
                     updateMatchingDialogState(showDialog = !coupleConnected)
+                }
+
+                if (coupleConnected) {
+                    state.currentLocation?.let { location ->
+                        viewModel.getMemories(
+                            latitude = location.latitude,
+                            longitude = location.longitude
+                        )
+                    }
                 }
             }
         }

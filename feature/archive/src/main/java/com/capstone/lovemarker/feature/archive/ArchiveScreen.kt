@@ -50,6 +50,7 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
@@ -62,42 +63,8 @@ fun ArchiveRoute(
     showErrorSnackbar: (Throwable?) -> Unit,
     viewModel: ArchiveViewModel = hiltViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val memories = viewModel.memories.collectAsLazyPagingItems()
-
-    when (val refreshState = memories.loadState.refresh) {
-        is LoadState.Loading -> {
-            viewModel.updateUiState(UiState.Loading)
-        }
-
-        is LoadState.Error -> {
-            viewModel.updateUiState(UiState.Failure("fail to load memory items"))
-            showErrorSnackbar(refreshState.error)
-        }
-
-        is LoadState.NotLoading -> {
-            viewModel.updateUiState(UiState.Success(Unit))
-        }
-    }
-
-    when (state.uiState) {
-        is UiState.Loading -> {
-            LoadingProgressBar()
-        }
-
-        is UiState.Success -> {
-            ArchiveScreen(
-                innerPadding = innerPadding,
-                memories = memories.itemSnapshotList.items.toPersistentList(),
-                onMemoryItemClick = { memoryId ->
-                    viewModel.triggerDetailNavigationEffect(memoryId)
-                }
-            )
-        }
-
-        else -> {}
-    }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
         viewModel.sideEffect
@@ -117,6 +84,48 @@ fun ArchiveRoute(
                     }
                 }
             }
+    }
+
+    if (state.coupleConnected) {
+        val memories = viewModel.memories.collectAsLazyPagingItems()
+
+        when (val refreshState = memories.loadState.refresh) {
+            is LoadState.Loading -> {
+                viewModel.updateUiState(UiState.Loading)
+            }
+
+            is LoadState.Error -> {
+                viewModel.updateUiState(UiState.Failure("fail to load memory items"))
+                showErrorSnackbar(refreshState.error)
+            }
+
+            is LoadState.NotLoading -> {
+                viewModel.updateUiState(UiState.Success(Unit))
+            }
+        }
+
+        when (state.uiState) {
+            is UiState.Loading -> {
+                LoadingProgressBar()
+            }
+
+            is UiState.Success -> {
+                ArchiveScreen(
+                    innerPadding = innerPadding,
+                    memories = memories.itemSnapshotList.items.toPersistentList(),
+                    onMemoryItemClick = { memoryId ->
+                        viewModel.triggerDetailNavigationEffect(memoryId)
+                    }
+                )
+            }
+
+            else -> {}
+        }
+    } else {
+        ArchiveScreen(
+            innerPadding = innerPadding,
+            memories = persistentListOf(),
+        )
     }
 
     LaunchedEffect(Unit) {
@@ -141,10 +150,8 @@ fun ArchiveRoute(
 fun ArchiveScreen(
     innerPadding: PaddingValues,
     memories: PersistentList<MemoryEntity>,
-    onMemoryItemClick: (Int) -> Unit,
+    onMemoryItemClick: (Int) -> Unit = {},
 ) {
-    Timber.d("$memories")
-
     Column(
         modifier = Modifier
             .fillMaxSize()
