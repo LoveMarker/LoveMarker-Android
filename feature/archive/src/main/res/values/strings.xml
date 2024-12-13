@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="archive_empty_image_desc">image for empty archive list</string>
-    <string name="archive_empty_guide_text">아직 등록한 장소가 없어요.\n추억을 기록하러 가볼까요?</string>
-    <string name="archive_item_image_desc">archive item image</string>
-</resources>

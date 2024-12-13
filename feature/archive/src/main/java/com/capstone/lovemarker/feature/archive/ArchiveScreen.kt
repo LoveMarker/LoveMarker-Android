@@ -1,5 +1,6 @@
 package com.capstone.lovemarker.feature.archive
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +26,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,8 +36,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.flowWithLifecycle
-import androidx.paging.CombinedLoadStates
-import androidx.paging.ItemSnapshotList
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -225,7 +222,9 @@ fun MemoryItem(
         Spacer(modifier = Modifier.padding(start = 16.dp))
         AsyncImage(
             model = item.imageUrl,
-            contentDescription = stringResource(R.string.archive_item_image_desc),
+            contentDescription = stringResource(
+                id = com.capstone.lovemarker.core.designsystem.R.string.memory_item_image_desc
+            ),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(56.dp)
@@ -264,13 +263,18 @@ fun EmptyArchiveResult() {
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.img_archive_empty),
-            contentDescription = stringResource(R.string.archive_empty_image_desc),
-            tint = Color.Unspecified
+        Image(
+            painter = painterResource(
+                id = com.capstone.lovemarker.core.designsystem.R.drawable.img_empty_memory
+            ),
+            contentDescription = stringResource(
+                id = com.capstone.lovemarker.core.designsystem.R.string.empty_memory_image_desc
+            ),
         )
         Text(
-            text = stringResource(R.string.archive_empty_guide_text),
+            text = stringResource(
+                id = com.capstone.lovemarker.core.designsystem.R.string.empty_memory_guide_text
+            ),
             style = LoveMarkerTheme.typography.body15M,
             color = Gray700,
             textAlign = TextAlign.Center,
@@ -284,6 +288,11 @@ fun EmptyArchiveResult() {
 @Composable
 private fun ArchivePreview() {
     LoveMarkerTheme {
-
+        ArchiveRoute(
+            innerPadding = PaddingValues(0.dp),
+            navigateToDetail = {},
+            navigateToMatching = {},
+            showErrorSnackbar = {},
+        )
     }
 }
