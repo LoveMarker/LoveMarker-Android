@@ -202,6 +202,9 @@ fun MemoryItem(
             contentDescription = stringResource(
                 id = com.capstone.lovemarker.core.designsystem.R.string.memory_item_image_desc
             ),
+            placeholder = painterResource(
+                id = com.capstone.lovemarker.core.designsystem.R.drawable.ic_memory_img_loading,
+            ),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(56.dp)
