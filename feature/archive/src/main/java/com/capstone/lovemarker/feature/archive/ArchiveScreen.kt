@@ -43,6 +43,7 @@ import com.capstone.lovemarker.core.common.extension.dropShadow
 import com.capstone.lovemarker.core.common.util.UiState
 import com.capstone.lovemarker.core.designsystem.component.appbar.LoveMarkerTopAppBar
 import com.capstone.lovemarker.core.designsystem.component.dialog.CoupleMatchingDialog
+import com.capstone.lovemarker.core.designsystem.component.progressbar.LoadingProgressBar
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
@@ -161,20 +162,6 @@ fun ArchiveScreen(
                 onMemoryItemClick = onMemoryItemClick
             )
         }
-    }
-}
-
-@Composable
-fun LoadingProgressBar() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            color = Gray200
-        )
     }
 }
 

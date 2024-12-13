@@ -26,6 +26,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,8 +38,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.capstone.lovemarker.core.common.extension.dropShadow
+import com.capstone.lovemarker.core.common.util.UiState
+import com.capstone.lovemarker.core.designsystem.component.progressbar.LoadingProgressBar
 import com.capstone.lovemarker.core.designsystem.theme.Gray200
 import com.capstone.lovemarker.core.designsystem.theme.Gray700
 import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
@@ -45,21 +55,70 @@ import com.capstone.lovemarker.core.designsystem.theme.White
 import com.capstone.lovemarker.domain.myfeed.entity.MemoryEntity
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun MyFeedRoute(
     navigateUp: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
+    viewModel: MyFeedViewModel = hiltViewModel()
 ) {
-    MyFeedScreen(
-        navigateUp = navigateUp
-    )
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val memories = viewModel.memories.collectAsLazyPagingItems()
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(viewModel.sideEffect, lifecycleOwner) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collectLatest { sideEffect ->
+                when (sideEffect) {
+                    is MyFeedSideEffect.ShowErrorSnackbar -> {
+                        showErrorSnackbar(sideEffect.throwable)
+                    }
+                }
+            }
+    }
+
+    when (val refreshState = memories.loadState.refresh) {
+        is LoadState.Loading -> {
+            viewModel.updateUiState(UiState.Loading)
+        }
+
+        is LoadState.Error -> {
+            showErrorSnackbar(refreshState.error)
+        }
+
+        is LoadState.NotLoading -> {
+            viewModel.updateUiState(UiState.Success(Unit))
+        }
+    }
+
+    when (state.uiState) {
+        is UiState.Loading -> {
+            LoadingProgressBar()
+        }
+
+        is UiState.Success -> {
+            MyFeedScreen(
+                memories = memories.itemSnapshotList.items.toPersistentList(),
+                navigateUp = navigateUp,
+                navigateToDetail = { memoryId ->
+                    navigateToDetail(memoryId)
+                }
+            )
+        }
+
+        else -> {}
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyFeedScreen(
+    memories: PersistentList<MemoryEntity>,
     navigateUp: () -> Unit,
+    navigateToDetail: (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -71,13 +130,13 @@ fun MyFeedScreen(
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "navigate up"
+                        contentDescription = stringResource(R.string.myfeed_back_btn_desc)
                     )
                 }
             },
             title = {
                 Text(
-                    text = "내가 올린 추억",
+                    text = stringResource(R.string.myfeed_top_app_bar_title),
                     style = LoveMarkerTheme.typography.body16B,
                 )
             },
@@ -90,8 +149,8 @@ fun MyFeedScreen(
             thickness = 1.dp
         )
         MyFeedItems(
-            memories = persistentListOf(),
-            onMemoryItemClick = { /* todo: navigate to detail */ }
+            memories = memories,
+            onMemoryItemClick = navigateToDetail
         )
     }
 }
@@ -208,6 +267,7 @@ private fun MyFeedPreview() {
     LoveMarkerTheme {
         MyFeedRoute(
             navigateUp = {},
+            navigateToDetail = {},
             showErrorSnackbar = {}
         )
     }

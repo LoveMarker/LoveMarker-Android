@@ -1,12 +1,12 @@
-package com.capstone.lovemarker.data.archive.dto.response
+package com.capstone.lovemarker.data.myfeed.dto
 
-import com.capstone.lovemarker.domain.archive.entity.ArchiveEntity
-import com.capstone.lovemarker.domain.archive.entity.MemoryEntity
+import com.capstone.lovemarker.domain.myfeed.entity.MemoryEntity
+import com.capstone.lovemarker.domain.myfeed.entity.MyFeedEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ArchiveResponse(
+data class MyFeedResponse(
     @SerialName("pageInfo")
     val pageInfo: PageInfo,
     @SerialName("memories")
@@ -35,7 +35,7 @@ data class ArchiveResponse(
     )
 }
 
-fun ArchiveResponse.toDomain() = ArchiveEntity(
+fun MyFeedResponse.toDomain() = MyFeedEntity(
     hasNextPage = pageInfo.hasNext,
     memories = memories.map { memory ->
         MemoryEntity(

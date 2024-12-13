@@ -5,4 +5,8 @@
     <string name="mypage_disconnect_dialog_confirm_text">확인</string>
     <string name="mypage_disconnect_dialog_dimiss_text">취소</string>
     <string name="mypage_already_disconnect_dialog_title">커플 연결이 이미 해제되어 있습니다</string>
+    <string name="mypage_nickname_btn_title">닉네임 변경</string>
+    <string name="mypage_myfeed_btn_title">내가 올린 추억</string>
+    <string name="mypage_couple_disconnect_btn_title">커플 연결 해제</string>
+    <string name="mypage_logout_btn_title">로그아웃</string>
 </resources>

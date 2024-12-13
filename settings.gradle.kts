@@ -38,6 +38,7 @@ include(
     ":data:map",
     ":data:archive",
     ":data:mypage",
+    ":data:myfeed",
     ":data:detail",
     ":data:upload",
     ":data:search",

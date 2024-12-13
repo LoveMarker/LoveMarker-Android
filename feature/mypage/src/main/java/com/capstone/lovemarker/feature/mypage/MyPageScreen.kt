@@ -41,13 +41,13 @@ import com.capstone.lovemarker.core.designsystem.theme.LoveMarkerTheme
 import com.capstone.lovemarker.core.designsystem.theme.Red500
 import com.capstone.lovemarker.core.designsystem.theme.White
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 @Composable
 fun MyPageRoute(
     innerPadding: PaddingValues,
     navigateToMatching: () -> Unit,
     navigateToNickname: (String) -> Unit,
+    navigateToMyFeed: () -> Unit,
     showErrorSnackbar: (Throwable?) -> Unit,
     modifiedNickname: String? = null,
     viewModel: MyPageViewModel = hiltViewModel()
@@ -69,6 +69,10 @@ fun MyPageRoute(
 
                     is MyPageSideEffect.NavigateToNickname -> {
                         navigateToNickname(sideEffect.nickname)
+                    }
+
+                    is MyPageSideEffect.NavigateToMyFeed -> {
+                        navigateToMyFeed()
                     }
 
                     is MyPageSideEffect.ShowErrorSnackbar -> {
@@ -96,7 +100,8 @@ fun MyPageRoute(
             viewModel.updateDisconnectDialogState(false)
         },
         onMatchingButtonClick = viewModel::triggerMatchingNavigationEffect,
-        onNicknameButtonClick = viewModel::triggerNicknameNavigationEffect
+        onNicknameButtonClick = viewModel::triggerNicknameNavigationEffect,
+        onMyFeedButtonClick = viewModel::triggerMyFeedNavigationEffect
     )
 }
 
@@ -113,6 +118,7 @@ fun MyPageScreen(
     onDismissButtonClick: () -> Unit,
     onMatchingButtonClick: () -> Unit,
     onNicknameButtonClick: () -> Unit,
+    onMyFeedButtonClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -139,7 +145,8 @@ fun MyPageScreen(
         )
         SettingSection(
             onNicknameButtonClick = onNicknameButtonClick,
-            onDisconnectButtonClick = onDisconnectButtonClick
+            onDisconnectButtonClick = onDisconnectButtonClick,
+            onMyFeedButtonClick = onMyFeedButtonClick
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
@@ -249,23 +256,24 @@ fun CoupleSection(
 @Composable
 fun SettingSection(
     onNicknameButtonClick: () -> Unit,
+    onMyFeedButtonClick: () -> Unit,
     onDisconnectButtonClick: () -> Unit,
 ) {
     Column {
         SettingItem(
-            title = "닉네임 변경",
+            title = stringResource(R.string.mypage_nickname_btn_title),
             onItemClick = onNicknameButtonClick
         )
         SettingItem(
-            title = "내가 올린 추억",
-            onItemClick = {}
+            title = stringResource(R.string.mypage_myfeed_btn_title),
+            onItemClick = onMyFeedButtonClick
         )
         SettingItem(
-            title = "커플 연결 해제",
+            title = stringResource(R.string.mypage_couple_disconnect_btn_title),
             onItemClick = onDisconnectButtonClick
         )
         SettingItem(
-            title = "로그아웃",
+            title = stringResource(R.string.mypage_logout_btn_title),
             onItemClick = {}
         )
     }
@@ -315,6 +323,7 @@ private fun MyPagePreview() {
             innerPadding = PaddingValues(),
             navigateToMatching = {},
             navigateToNickname = {},
+            navigateToMyFeed = {},
             showErrorSnackbar = {}
         )
     }
