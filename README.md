@@ -70,7 +70,8 @@ https://github.com/LoveMarker/LoveMarker-Android/releases/tag/v1.0.0
 - [ ] 추억 피드 생성 시간 단축
 - [ ] 이미지 캐싱으로 추억 목록 조회 시간 단축
 - [ ] 앱 용량 축소 및 난독화 
-- [ ] 더욱 세분화 된 예외 처리 
+- [ ] 더욱 세분화 된 예외 처리
+- [ ] enableEdgeToEdge()로 전체 화면 적용 
 
 ## 🌱 팀원 구성
 
